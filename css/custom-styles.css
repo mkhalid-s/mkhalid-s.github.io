@@ -1,5 +1,5 @@
 #hero {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://khalidshaikh.s3-website-us-east-1.amazonaws.com/images/bgh__01.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://khalidshaikh.s3.amazonaws.com/images/bgh__01.jpg');
     background-size: cover;
     min-height: 120vh;
 }
