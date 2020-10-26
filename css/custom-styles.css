@@ -1,0 +1,98 @@
+#hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://khalidshaikh.s3-website-us-east-1.amazonaws.com/images/bgh__01.jpg');
+    background-size: cover;
+    min-height: 120vh;
+}
+
+.h-text {
+    padding: 20% 2%;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-dark {
+    transition: 800ms ease;
+    background: transparent !important;
+}
+
+.bg-dark-scrolled {
+    background: darkslategrey !important;
+}
+
+.footer-red {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+}
+
+.footer {
+    position: relative;
+    padding: 1em;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: darkslategray;
+}
+
+.social-link {
+    text-decoration: none;
+}
+
+.social-link:hover {
+    text-decoration: none;
+}
+
+.social:hover {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    color: darkslategray;
+}
+
+.social {
+    -webkit-transform: scale(0.8);
+    /* Browser Variations: */
+    -moz-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+    color: black;
+    padding: 8px;
+}
+
+.section-site {
+    padding: 5em;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 75px;
+    right: 30px;
+    display: none;
+}
+
+.abt-sec-img {
+    border-radius: 50%;
+}
+
+/* [1] The container */
+.img-hover-zoom {
+    /*height: 300px;*/ /* [1.1] Set it as per your need */
+    overflow: fragments; /* [1.2] Hide the overflowing of child elements */
+}
+
+/* [2] Transition property for smooth transformation of images */
+.img-hover-zoom img {
+    transition: transform .6s ease;
+}
+
+/* [3] Finally, transforming the image when container gets hovered */
+.img-hover-zoom:hover img {
+    transform: scale(1.1);
+}
