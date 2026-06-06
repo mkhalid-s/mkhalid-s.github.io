@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Reveal from './components/Reveal'
 import Statement, { type Segment } from './components/Statement'
-import { nodes, profile } from './data/profile'
+import { certifications, nodes, profile, skillGroups, spokenLanguages } from './data/profile'
 import type { GraphNode } from './lib/types'
 
 // The hero statement. Bold terms map to entries in profile.ts and expand below.
@@ -224,6 +224,53 @@ export default function App() {
           />
         </section>
 
+        {/* skills */}
+        <section className="mt-24 sm:mt-32">
+          <Reveal>
+            <h2 className="mb-5 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Skills
+            </h2>
+          </Reveal>
+          <div className="space-y-5">
+            {skillGroups.map((g, i) => (
+              <Reveal key={g.label} delay={i * 0.04}>
+                <div className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr]">
+                  <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted sm:pt-1">
+                    {g.label}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {g.items.map((it) => (
+                      <span
+                        key={it}
+                        className="rounded-full border border-ink/12 px-3 py-1 text-[13px] text-ink/85"
+                      >
+                        {it}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* certifications */}
+        <section className="mt-24 sm:mt-32">
+          <Reveal>
+            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Certifications
+            </h2>
+            <ul className="space-y-2">
+              {certifications.map((c) => (
+                <li key={c} className="flex items-start gap-3 text-[15px] text-ink/85">
+                  <span className="mt-0.5 text-accent">✓</span>
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+
         {/* education */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
@@ -243,6 +290,9 @@ export default function App() {
                 )
               })}
             </div>
+            <p className="mt-5 font-mono text-[12px] text-muted">
+              Languages — {spokenLanguages.join(' · ')}
+            </p>
           </Reveal>
         </section>
 

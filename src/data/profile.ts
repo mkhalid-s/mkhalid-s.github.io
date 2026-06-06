@@ -260,3 +260,51 @@ export const nodes: GraphNode[] = [
       'do more with less efficiency minimalism signal noise compression tokens philosophy simplicity',
   },
 ]
+
+// ── Skills, certifications & languages (rendered as their own sections) ───────
+export interface SkillGroup {
+  label: string
+  items: string[]
+}
+
+export const skillGroups: SkillGroup[] = [
+  {
+    label: 'AI / LLM',
+    items: [
+      'LangChain',
+      'LangGraph',
+      'MCP',
+      'RAG',
+      'Agents',
+      'Qdrant',
+      'ChromaDB',
+      'Prompt engineering',
+    ],
+  },
+  {
+    label: 'Languages',
+    items: ['Java', 'Gosu', 'Python', 'TypeScript', 'JavaScript', 'SQL / PL-SQL'],
+  },
+  { label: 'Frameworks', items: ['Spring Boot', 'J2EE', 'React', 'Next.js', 'Angular 6/8/11'] },
+  {
+    label: 'Guidewire',
+    items: ['PolicyCenter', 'ClaimCenter', 'BillingCenter', 'PCF', 'GPM', 'Integration Framework'],
+  },
+  {
+    label: 'Cloud & DevOps',
+    items: ['AWS', 'Azure', 'Docker', 'TeamCity', 'Jenkins', 'GitHub Actions', 'DataDog'],
+  },
+  {
+    label: 'Data & Integration',
+    items: ['PostgreSQL', 'Oracle 12c', 'Berkeley DB', 'IBM-MQ', 'REST', 'SOAP', 'TIBCO'],
+  },
+]
+
+export const certifications: string[] = [
+  'AWS Solutions Architect – Associate',
+  'AWS Developer – Associate',
+  'AWS Cloud Practitioner',
+  'Microsoft Azure Fundamentals (AZ-900)',
+]
+
+export const spokenLanguages: string[] = ['English — Professional', 'Hindi', 'Marathi']
