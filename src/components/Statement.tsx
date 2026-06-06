@@ -18,7 +18,7 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
   // first term gets a one-time "teach" sweep so the interaction is discoverable
   const firstTermIdx = segments.findIndex((s) => s.t === 'term')
   return (
-    <h1 className="font-display text-[2rem] font-normal leading-[1.28] tracking-[-0.01em] text-ink sm:text-[2.9rem] sm:leading-[1.24] md:text-[3.4rem]">
+    <h1 className="font-display text-[2.1rem] font-normal leading-[1.3] tracking-[-0.01em] text-ink sm:text-[3rem] sm:leading-[1.2] md:text-[3.6rem] lg:text-[4.25rem] lg:leading-[1.1] lg:tracking-[-0.02em]">
       {segments.map((s, i) =>
         s.t === 'text' ? (
           <motion.span key={i} {...anim(i)}>

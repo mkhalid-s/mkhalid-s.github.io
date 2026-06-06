@@ -238,13 +238,13 @@ export default function App() {
           {/* impact strip */}
           <section id="work" className="mt-20 sm:mt-28">
             <Reveal>
-              <div className="grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10">
+              <div className="flex flex-col divide-y divide-ink/10 border-y border-ink/10 sm:flex-row sm:divide-x sm:divide-y-0">
                 {impactStats.map((s) => (
-                  <div key={s.label} className="bg-paper px-4 py-5 text-center">
-                    <div className="font-display text-3xl font-normal text-ink sm:text-4xl">
+                  <div key={s.label} className="flex-1 py-6 sm:px-7 sm:first:pl-0">
+                    <div className="font-display text-4xl font-normal leading-none text-ink sm:text-5xl">
                       {s.value}
                     </div>
-                    <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                    <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                       {s.label}
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export default function App() {
                       {g.items.map((it) => (
                         <span
                           key={it}
-                          className="rounded-full border border-ink/12 px-3 py-1 text-[13px] text-ink/85"
+                          className="rounded-md bg-ink/[0.05] px-2.5 py-1 text-[13px] text-ink/75 transition hover:bg-accent/10 hover:text-accent"
                         >
                           {it}
                         </span>
@@ -463,10 +463,12 @@ export default function App() {
 
 function SectionHeading({ n, title }: { n: string; title: string }) {
   return (
-    <div className="mb-5 flex items-center gap-3">
-      <span className="font-mono text-[12px] text-accent">{n}</span>
+    <div className="mb-6 flex items-baseline gap-3">
+      <span aria-hidden="true" className="font-display text-2xl leading-none text-accent/40">
+        {n}
+      </span>
       <h2 className="font-mono text-[12px] uppercase tracking-[0.25em] text-muted">{title}</h2>
-      <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
+      <span aria-hidden="true" className="h-px flex-1 self-center bg-ink/10" />
     </div>
   )
 }
