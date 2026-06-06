@@ -151,9 +151,9 @@ export const nodes: GraphNode[] = [
     kind: 'project',
     cluster: 'web',
     weight: 0.9,
-    meta: 'Personal · 2025',
+    meta: 'Personal · In progress',
     summary:
-      'A ground-up design for an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
+      'Building an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
     detail: [
       'Full scope: CRM, quotations & sales orders, GST e-invoicing (IRN, e-way bill, GSTR-1/3B), payments, inventory with serial tracking, vendor & purchase orders, and work-order / AMC management.',
       'Architected as a Progressive Web App — offline-first, installable, low-bandwidth, with background sync.',
