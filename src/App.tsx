@@ -2,7 +2,16 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Reveal from './components/Reveal'
 import Statement, { type Segment } from './components/Statement'
-import { certifications, nodes, profile, skillGroups, spokenLanguages } from './data/profile'
+import {
+  aiPillars,
+  aiProjects,
+  certifications,
+  impactStats,
+  nodes,
+  profile,
+  skillGroups,
+  spokenLanguages,
+} from './data/profile'
 import type { GraphNode } from './lib/types'
 
 // The hero statement. Bold terms map to entries in profile.ts and expand below.
@@ -21,7 +30,7 @@ const statement: Segment[] = [
   { t: 'text', v: ' & Gosu. I like fast systems, clean abstractions, and deleting code.' },
 ]
 
-const projectIds = ['proj-headroom', 'proj-framefuse', 'proj-erp', 'proj-react-tv']
+const projectIds = ['proj-framefuse', 'proj-erp', 'proj-react-tv']
 const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
 const educationIds = ['edu-be', 'edu-hsc']
 
@@ -194,8 +203,94 @@ export default function App() {
           </motion.button>
         </section>
 
+        {/* impact strip */}
+        <section id="work" className="mt-20 sm:mt-28">
+          <Reveal>
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-4">
+              {impactStats.map((s) => (
+                <div key={s.label} className="bg-paper px-4 py-5 text-center">
+                  <div className="font-display text-3xl font-normal text-ink sm:text-4xl">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+
+        {/* AI engineering */}
+        <section className="mt-24 sm:mt-32">
+          <Reveal>
+            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              AI engineering
+            </h2>
+            <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
+              Over the last year I’ve built and prototyped LLM systems end-to-end — from retrieval
+              and agents to evaluation and cost optimization.
+            </p>
+          </Reveal>
+
+          <div className="mb-8 grid gap-3 sm:grid-cols-2">
+            {aiPillars.map((p, i) => (
+              <Reveal key={p.label} delay={i * 0.04}>
+                <div className="rounded-xl border border-ink/10 p-4">
+                  <div className="font-display text-lg font-normal text-ink">{p.label}</div>
+                  <p className="mt-1 text-[14px] leading-relaxed text-muted">{p.blurb}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="divide-y divide-ink/10 border-y border-ink/10">
+            {aiProjects.map((ap, i) => {
+              const n = ap.nodeId ? byId.get(ap.nodeId) : undefined
+              const title = n?.label ?? ap.title ?? ''
+              const blurb = n?.summary ?? ap.blurb ?? ''
+              const meta = n?.meta?.split(' · ').slice(-1)[0] ?? ap.outcome ?? ''
+              const href = n?.links?.[0]?.href ?? ap.href
+              return (
+                <Reveal key={title + i} delay={i * 0.04}>
+                  <div className="py-5">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <span className="font-display text-2xl font-normal text-ink sm:text-3xl">
+                        {title}
+                      </span>
+                      {meta && (
+                        <span className="shrink-0 font-mono text-[12px] text-muted">{meta}</span>
+                      )}
+                    </div>
+                    {blurb && (
+                      <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-ink/80">
+                        {blurb}
+                      </p>
+                    )}
+                    {(ap.stack || n) && (
+                      <p className="mt-2 font-mono text-[12px] text-muted">
+                        {ap.stack ?? (n?.tags ?? []).slice(0, 6).join(' · ')}
+                      </p>
+                    )}
+                    {href && (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-block font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                      >
+                        View ↗
+                      </a>
+                    )}
+                  </div>
+                </Reveal>
+              )
+            })}
+          </div>
+        </section>
+
         {/* selected work */}
-        <section id="work" className="mt-28 sm:mt-36">
+        <section className="mt-24 sm:mt-32">
           <Reveal>
             <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
               Selected projects

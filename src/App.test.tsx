@@ -20,7 +20,11 @@ describe('App', () => {
   it('opens a footnote from a deep-link hash', () => {
     window.location.hash = '#proj-headroom'
     render(<App />)
-    expect(screen.getByText(/Compress tool outputs/i)).toBeInTheDocument()
+    // the hero term should be in its expanded (active) state
+    expect(screen.getByRole('button', { name: 'headroom' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    )
     window.location.hash = ''
   })
 })

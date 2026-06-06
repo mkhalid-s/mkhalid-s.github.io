@@ -5,7 +5,7 @@ import type { Cluster, GraphNode, Profile } from '../lib/types'
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
-  title: 'Senior Software Engineer',
+  title: 'Senior Software Engineer → AI Engineer',
   tagline: 'I build tools that do more with less.',
   location: 'Bengaluru, India',
   blurb:
@@ -171,7 +171,7 @@ export const nodes: GraphNode[] = [
     cluster: 'web',
     weight: 0.8,
     meta: 'Personal · 2025',
-    summary: 'ERP systems for small businesses, including an electronics-trade variant.',
+    summary: 'Full-stack ERP for small businesses.',
     tags: ['full-stack', 'erp', 'postgresql', 'web'],
     keywords:
       'business erp electronics enterprise resource planning small business full stack postgresql inventory',
@@ -308,3 +308,46 @@ export const certifications: string[] = [
 ]
 
 export const spokenLanguages: string[] = ['English — Professional', 'Hindi', 'Marathi']
+
+// ── Impact stats (skim strip) & AI capability pillars ────────────────────────
+export interface Stat {
+  value: string
+  label: string
+}
+export const impactStats: Stat[] = [
+  { value: '12+', label: 'years engineering' },
+  { value: '5', label: 'engineers led' },
+  { value: '60–95%', label: 'LLM token savings' },
+  { value: '4', label: 'cloud certifications' },
+]
+
+export interface AiPillar {
+  label: string
+  blurb: string
+}
+export const aiPillars: AiPillar[] = [
+  {
+    label: 'RAG & vector search',
+    blurb: 'Retrieval pipelines & embeddings over Qdrant / ChromaDB.',
+  },
+  { label: 'Agents & MCP', blurb: 'Tool-using agents and Model Context Protocol servers.' },
+  { label: 'Orchestration', blurb: 'Multi-step LLM workflows with LangChain & LangGraph.' },
+  { label: 'Evals & cost', blurb: 'LLM evaluation and token / latency optimization.' },
+]
+
+// AI projects/POCs shown in the AI Engineering section.
+// `nodeId` references an entry in `nodes` (e.g. the shipped flagship);
+// inline entries are standalone POCs — add yours here.
+export interface AiProject {
+  nodeId?: string
+  title?: string
+  blurb?: string
+  stack?: string
+  outcome?: string
+  href?: string
+}
+export const aiProjects: AiProject[] = [
+  { nodeId: 'proj-headroom' },
+  // ── Add your POCs below, e.g.:
+  // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
+]
