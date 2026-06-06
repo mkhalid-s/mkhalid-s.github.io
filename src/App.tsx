@@ -21,9 +21,10 @@ const statement: Segment[] = [
     v: 'I’m Khalid Shaikh — a senior software engineer with 12+ years across BFSI & telecom. I build ',
   },
   { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  { t: 'text', v: '. Lately that’s ' },
-  { t: 'term', v: 'headroom', id: 'proj-headroom' },
-  { t: 'text', v: ', cutting LLM costs 60–95%. By day I ship on the ' },
+  {
+    t: 'text',
+    v: '. Lately I’ve been building LLM applications — RAG, agents and evaluation. By day I ship on the ',
+  },
   { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
   { t: 'text', v: ' in ' },
   { t: 'term', v: 'Java', id: 'sk-java' },
@@ -206,7 +207,7 @@ export default function App() {
         {/* impact strip */}
         <section id="work" className="mt-20 sm:mt-28">
           <Reveal>
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-4">
+            <div className="grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10">
               {impactStats.map((s) => (
                 <div key={s.label} className="bg-paper px-4 py-5 text-center">
                   <div className="font-display text-3xl font-normal text-ink sm:text-4xl">
@@ -228,12 +229,12 @@ export default function App() {
               AI engineering
             </h2>
             <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
-              Over the last year I’ve built and prototyped LLM systems end-to-end — from retrieval
-              and agents to evaluation and cost optimization.
+              Over the last year I’ve been building LLM applications and POCs — across retrieval,
+              agents, orchestration and evaluation.
             </p>
           </Reveal>
 
-          <div className="mb-8 grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {aiPillars.map((p, i) => (
               <Reveal key={p.label} delay={i * 0.04}>
                 <div className="rounded-xl border border-ink/10 p-4">
@@ -244,7 +245,11 @@ export default function App() {
             ))}
           </div>
 
-          <div className="divide-y divide-ink/10 border-y border-ink/10">
+          <div
+            className={
+              aiProjects.length ? 'mt-8 divide-y divide-ink/10 border-y border-ink/10' : ''
+            }
+          >
             {aiProjects.map((ap, i) => {
               const n = ap.nodeId ? byId.get(ap.nodeId) : undefined
               const title = n?.label ?? ap.title ?? ''

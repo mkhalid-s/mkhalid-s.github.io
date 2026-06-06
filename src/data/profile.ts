@@ -10,8 +10,8 @@ export const profile: Profile = {
   location: 'Bengaluru, India',
   blurb:
     'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
-    'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform — and lately ' +
-    'I build LLM tooling that makes AI cheaper and sharper, most notably headroom. ' +
+    'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform, and over the ' +
+    'last year I’ve been building LLM applications — RAG, agents and evaluation. ' +
     'I like leading teams, clean abstractions, and deleting code.',
   email: 'mshaikh@guidewire.com',
   cvHref: 'Khalid_Shaikh_CV.pdf',
@@ -127,25 +127,6 @@ export const nodes: GraphNode[] = [
   },
 
   // ── Projects ───────────────────────────────────────────────────────────────
-  {
-    id: 'proj-headroom',
-    label: 'headroom',
-    kind: 'project',
-    cluster: 'llm',
-    weight: 1.5,
-    meta: 'Open source · 2026',
-    summary:
-      'Compress tool outputs, logs, files & RAG chunks before they hit the LLM. 60–95% fewer tokens, same answers.',
-    detail: [
-      'Library, proxy and MCP server for token-level compression of context fed to LLMs.',
-      'Cuts 60–95% of tokens while preserving answer quality — cheaper, faster, longer context.',
-      'Polyglot: Python core with Rust + TypeScript components.',
-    ],
-    tags: ['llm', 'tokens', 'mcp', 'python', 'rust', 'typescript', 'ai'],
-    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/headroom' }],
-    keywords:
-      'headroom compress tokens token killer llm rag chunks logs proxy mcp server python rust typescript context window cost optimization compression',
-  },
   {
     id: 'proj-framefuse',
     label: 'framefusevid',
@@ -317,7 +298,6 @@ export interface Stat {
 export const impactStats: Stat[] = [
   { value: '12+', label: 'years engineering' },
   { value: '5', label: 'engineers led' },
-  { value: '60–95%', label: 'LLM token savings' },
   { value: '4', label: 'cloud certifications' },
 ]
 
@@ -347,7 +327,6 @@ export interface AiProject {
   href?: string
 }
 export const aiProjects: AiProject[] = [
-  { nodeId: 'proj-headroom' },
-  // ── Add your POCs below, e.g.:
+  // Add your real POCs here, e.g.:
   // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
 ]

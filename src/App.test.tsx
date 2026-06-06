@@ -6,9 +6,12 @@ describe('App', () => {
   it('renders the name, statement and key sections', () => {
     render(<App />)
     expect(screen.getAllByText(/Khalid Shaikh/i).length).toBeGreaterThan(0)
-    expect(screen.getAllByRole('button', { name: /headroom/i }).length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByRole('button', { name: /Guidewire cloud platform/i }).length,
+    ).toBeGreaterThan(0)
     expect(screen.getByRole('heading', { name: /Selected projects/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^Experience$/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /AI engineering/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /github/i }).length).toBeGreaterThan(0)
   })
 
@@ -18,10 +21,10 @@ describe('App', () => {
   })
 
   it('opens a footnote from a deep-link hash', () => {
-    window.location.hash = '#proj-headroom'
+    window.location.hash = '#exp-guidewire'
     render(<App />)
     // the hero term should be in its expanded (active) state
-    expect(screen.getByRole('button', { name: 'headroom' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Guidewire cloud platform' })).toHaveAttribute(
       'aria-expanded',
       'true',
     )
