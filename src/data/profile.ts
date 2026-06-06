@@ -5,7 +5,7 @@ import type { Cluster, GraphNode, Profile } from '../lib/types'
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
-  title: 'Senior Software Engineer → AI Engineer',
+  title: 'Senior Software Engineer',
   tagline: 'I build tools that do more with less.',
   location: 'Bengaluru, India',
   blurb:
@@ -147,15 +147,21 @@ export const nodes: GraphNode[] = [
   },
   {
     id: 'proj-erp',
-    label: 'Business ERP',
+    label: 'Electronics Business ERP',
     kind: 'project',
     cluster: 'web',
-    weight: 0.8,
+    weight: 0.9,
     meta: 'Personal · 2025',
-    summary: 'Full-stack ERP for small businesses.',
-    tags: ['full-stack', 'erp', 'postgresql', 'web'],
+    summary:
+      'A ground-up design for an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
+    detail: [
+      'Full scope: CRM, quotations & sales orders, GST e-invoicing (IRN, e-way bill, GSTR-1/3B), payments, inventory with serial tracking, vendor & purchase orders, and work-order / AMC management.',
+      'Architected as a Progressive Web App — offline-first, installable, low-bandwidth, with background sync.',
+      'Includes full requirements analysis, architecture, technology-stack comparison and a phased MVP roadmap.',
+    ],
+    tags: ['erp', 'pwa', 'gst', 'offline-first', 'india'],
     keywords:
-      'business erp electronics enterprise resource planning small business full stack postgresql inventory',
+      'electronics business erp enterprise resource planning india gst e-invoice irn e-way bill gstr crm inventory invoicing amc work order pwa offline first progressive web app',
   },
   {
     id: 'proj-react-tv',
@@ -183,13 +189,13 @@ export const nodes: GraphNode[] = [
   },
   {
     id: 'sk-llm',
-    label: 'LLM / MCP',
+    label: 'LLM',
     kind: 'skill',
     cluster: 'llm',
     weight: 1.2,
-    summary: 'Agents, tool use, MCP servers, LangChain/LangGraph, token optimization.',
-    tags: ['llm', 'mcp', 'ai', 'tokens'],
-    keywords: 'llm mcp agents tool use langchain langgraph token optimization anthropic claude',
+    summary: 'RAG, agents, tool use, LangChain / LangGraph, evaluation.',
+    tags: ['llm', 'rag', 'ai', 'agents'],
+    keywords: 'llm rag agents tool use langchain langgraph evaluation anthropic claude',
   },
   {
     id: 'sk-react',
@@ -251,16 +257,7 @@ export interface SkillGroup {
 export const skillGroups: SkillGroup[] = [
   {
     label: 'AI / LLM',
-    items: [
-      'LangChain',
-      'LangGraph',
-      'MCP',
-      'RAG',
-      'Agents',
-      'Qdrant',
-      'ChromaDB',
-      'Prompt engineering',
-    ],
+    items: ['LangChain', 'LangGraph', 'RAG', 'Agents', 'Qdrant', 'ChromaDB', 'Prompt engineering'],
   },
   {
     label: 'Languages',
@@ -310,7 +307,7 @@ export const aiPillars: AiPillar[] = [
     label: 'RAG & vector search',
     blurb: 'Retrieval pipelines & embeddings over Qdrant / ChromaDB.',
   },
-  { label: 'Agents & MCP', blurb: 'Tool-using agents and Model Context Protocol servers.' },
+  { label: 'Agents & tools', blurb: 'Tool-using agents and tool-calling workflows.' },
   { label: 'Orchestration', blurb: 'Multi-step LLM workflows with LangChain & LangGraph.' },
   { label: 'Evals & cost', blurb: 'LLM evaluation and token / latency optimization.' },
 ]
