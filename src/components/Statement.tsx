@@ -15,6 +15,8 @@ const anim = (i: number) => ({
 })
 
 export default function Statement({ segments, activeId, onToggle }: Props) {
+  // first term gets a one-time "teach" sweep so the interaction is discoverable
+  const firstTermIdx = segments.findIndex((s) => s.t === 'term')
   return (
     <h1 className="font-display text-[2rem] font-normal leading-[1.28] tracking-[-0.01em] text-ink sm:text-[2.9rem] sm:leading-[1.24] md:text-[3.4rem]">
       {segments.map((s, i) =>
@@ -29,7 +31,7 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
             key={i}
             role="button"
             tabIndex={0}
-            className="term font-medium italic"
+            className={`term font-medium italic${i === firstTermIdx ? ' term--hint' : ''}`}
             data-active={activeId === s.id}
             aria-expanded={activeId === s.id}
             onClick={() => onToggle(s.id)}

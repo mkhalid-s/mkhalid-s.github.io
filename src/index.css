@@ -79,13 +79,22 @@ a {
   cursor: pointer;
   background-color: transparent;
   border: 0;
-  padding: 0;
+  padding: 0 0.06em;
+  margin: 0 -0.06em; /* bigger tap target without shifting text */
   font: inherit;
   color: inherit;
-  background-image: linear-gradient(rgb(var(--accent) / 0.22), rgb(var(--accent) / 0.22));
-  background-repeat: no-repeat;
-  background-position: 0 86%;
-  background-size: 0% 0.44em;
+  /* two layers: [0] the fill swipe (grows on hover/active) + [1] an always-on
+     thin underline so the word LOOKS interactive before any hover. */
+  background-image:
+    linear-gradient(rgb(var(--accent) / 0.22), rgb(var(--accent) / 0.22)),
+    linear-gradient(rgb(var(--accent) / 0.55), rgb(var(--accent) / 0.55));
+  background-repeat: no-repeat, no-repeat;
+  background-position:
+    0 86%,
+    0 94%;
+  background-size:
+    0% 0.44em,
+    100% 1.5px;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   transition:
@@ -94,7 +103,9 @@ a {
 }
 .term:hover,
 .term[data-active='true'] {
-  background-size: 100% 0.44em;
+  background-size:
+    100% 0.44em,
+    100% 1.5px;
 }
 .term[data-active='true'] {
   color: rgb(var(--accent));
@@ -103,6 +114,30 @@ a {
   outline: 2px solid rgb(var(--accent));
   outline-offset: 3px;
   border-radius: 3px;
+}
+
+/* one-time "teach" sweep on the first term so the interaction is discoverable */
+@keyframes termHint {
+  0%,
+  100% {
+    background-size:
+      0% 0.44em,
+      100% 1.5px;
+  }
+  45%,
+  55% {
+    background-size:
+      100% 0.44em,
+      100% 1.5px;
+  }
+}
+.term--hint {
+  animation: termHint 2.4s ease 1.2s 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .term--hint {
+    animation: none;
+  }
 }
 
 .scroll-thin::-webkit-scrollbar {

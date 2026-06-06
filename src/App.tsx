@@ -171,13 +171,23 @@ export default function App() {
                 <Reveal key={id} delay={i * 0.05}>
                   <button
                     onClick={() => setOpenWork(open ? null : id)}
+                    aria-expanded={open}
                     className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
                   >
                     <span className="font-display text-2xl font-normal text-ink transition group-hover:text-accent sm:text-3xl">
                       {n.label}
                     </span>
-                    <span className="shrink-0 font-mono text-[12px] text-muted">
-                      {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
+                    <span className="flex shrink-0 items-center gap-3">
+                      <span className="font-mono text-[12px] text-muted">
+                        {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
+                        style={{ transform: open ? 'rotate(45deg)' : 'none' }}
+                      >
+                        +
+                      </span>
                     </span>
                   </button>
                   <AnimatePresence>
