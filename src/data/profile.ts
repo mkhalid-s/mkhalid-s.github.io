@@ -1,4 +1,4 @@
-import type { Cluster, GraphNode, Profile } from '../lib/types'
+import type { GraphNode, Profile } from '../lib/types'
 
 // Content decoded from the 2026 CV — all entries verified.
 // Editing this file reshapes the whole site.
@@ -20,15 +20,6 @@ export const profile: Profile = {
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mkhalidshaikh' },
   ],
 }
-
-// Kept for typing/back-compat; not used by the current layout.
-export const clusters: Cluster[] = [
-  { id: 'llm', label: 'LLM Tooling & AI', blurb: '', color: '#2540ff', anchor: { x: 1, y: 0 } },
-  { id: 'jvm', label: 'JVM & Enterprise', blurb: '', color: '#7c5cff', anchor: { x: -1, y: 0 } },
-  { id: 'media', label: 'Media & Desktop', blurb: '', color: '#19a974', anchor: { x: 0, y: 1 } },
-  { id: 'web', label: 'Web & Full-stack', blurb: '', color: '#e0529c', anchor: { x: 0, y: -1 } },
-  { id: 'foundations', label: 'Foundations', blurb: '', color: '#d98a00', anchor: { x: 0, y: 0 } },
-]
 
 export const nodes: GraphNode[] = [
   // ── Experience ─────────────────────────────────────────────────────────────
@@ -163,20 +154,8 @@ export const nodes: GraphNode[] = [
     keywords:
       'electronics business erp enterprise resource planning india gst e-invoice irn e-way bill gstr crm inventory invoicing amc work order pwa offline first progressive web app',
   },
-  {
-    id: 'proj-react-tv',
-    label: 'TV Series Search',
-    kind: 'project',
-    cluster: 'web',
-    weight: 0.7,
-    meta: 'Open source · 2026',
-    summary: 'A sample React app for searching TV series.',
-    tags: ['react', 'typescript', 'web', 'api'],
-    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/react-app' }],
-    keywords: 'react app tv series search sample web frontend api',
-  },
 
-  // ── Skills (referenced by the hero statement) ──────────────────────────────
+  // ── Skill (referenced by the hero statement) ───────────────────────────────
   {
     id: 'sk-java',
     label: 'Java',
@@ -186,26 +165,6 @@ export const nodes: GraphNode[] = [
     summary: 'Primary language for 12+ years — enterprise scale, plus Gosu on Guidewire.',
     tags: ['java', 'gosu', 'jvm'],
     keywords: 'java gosu jvm enterprise backend spring',
-  },
-  {
-    id: 'sk-llm',
-    label: 'LLM',
-    kind: 'skill',
-    cluster: 'llm',
-    weight: 1.2,
-    summary: 'RAG, agents, tool use, LangChain / LangGraph, evaluation.',
-    tags: ['llm', 'rag', 'ai', 'agents'],
-    keywords: 'llm rag agents tool use langchain langgraph evaluation anthropic claude',
-  },
-  {
-    id: 'sk-react',
-    label: 'Web',
-    kind: 'skill',
-    cluster: 'web',
-    weight: 1.0,
-    summary: 'React, Angular, Next.js, Spring Boot — full-stack product work.',
-    tags: ['react', 'angular', 'web'],
-    keywords: 'react angular next.js typescript frontend spring boot full stack',
   },
 
   // ── Education ──────────────────────────────────────────────────────────────

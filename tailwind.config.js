@@ -14,7 +14,6 @@ export default {
         ink: 'rgb(var(--ink) / <alpha-value>)',
         muted: 'rgb(var(--muted) / <alpha-value>)',
         accent: 'rgb(var(--accent) / <alpha-value>)',
-        accent2: 'rgb(var(--accent2) / <alpha-value>)',
       },
     },
   },

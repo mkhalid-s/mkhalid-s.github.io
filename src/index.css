@@ -8,7 +8,6 @@
   --ink: 23 20 16;
   --muted: 111 102 87;
   --accent: 37 64 255;
-  --accent2: 255 90 44;
   color-scheme: light;
 }
 
@@ -18,7 +17,6 @@
   --ink: 236 231 219;
   --muted: 150 141 124;
   --accent: 122 142 255;
-  --accent2: 255 122 92;
   color-scheme: dark;
 }
 
@@ -93,22 +91,22 @@ a {
   cursor: pointer;
   background-color: transparent;
   border: 0;
-  padding: 0 0.06em;
-  margin: 0 -0.06em; /* bigger tap target without shifting text */
+  padding: 0.12em 0.08em; /* larger tap target (≈ touch-friendly) */
+  margin: 0 -0.08em;
   font: inherit;
   color: inherit;
   /* two layers: [0] the fill swipe (grows on hover/active) + [1] an always-on
-     thin underline so the word LOOKS interactive before any hover. */
+     underline (≥3:1 contrast) so the word LOOKS interactive before any hover. */
   background-image:
-    linear-gradient(rgb(var(--accent) / 0.22), rgb(var(--accent) / 0.22)),
-    linear-gradient(rgb(var(--accent) / 0.55), rgb(var(--accent) / 0.55));
+    linear-gradient(rgb(var(--accent) / 0.28), rgb(var(--accent) / 0.28)),
+    linear-gradient(rgb(var(--accent) / 0.85), rgb(var(--accent) / 0.85));
   background-repeat: no-repeat, no-repeat;
   background-position:
-    0 86%,
-    0 94%;
+    0 82%,
+    0 90%;
   background-size:
-    0% 0.44em,
-    100% 1.5px;
+    0% 0.42em,
+    100% 2px;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   transition:
@@ -118,8 +116,8 @@ a {
 .term:hover,
 .term[data-active='true'] {
   background-size:
-    100% 0.44em,
-    100% 1.5px;
+    100% 0.42em,
+    100% 2px;
 }
 .term[data-active='true'] {
   color: rgb(var(--accent));
@@ -135,14 +133,14 @@ a {
   0%,
   100% {
     background-size:
-      0% 0.44em,
-      100% 1.5px;
+      0% 0.42em,
+      100% 2px;
   }
   45%,
   55% {
     background-size:
-      100% 0.44em,
-      100% 1.5px;
+      100% 0.42em,
+      100% 2px;
   }
 }
 .term--hint {
@@ -152,14 +150,6 @@ a {
   .term--hint {
     animation: none;
   }
-}
-
-.scroll-thin::-webkit-scrollbar {
-  width: 8px;
-}
-.scroll-thin::-webkit-scrollbar-thumb {
-  background: rgb(var(--ink) / 0.18);
-  border-radius: 8px;
 }
 
 @media (prefers-reduced-motion: reduce) {

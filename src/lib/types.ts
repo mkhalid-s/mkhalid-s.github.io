@@ -2,15 +2,6 @@ export type NodeKind = 'project' | 'experience' | 'skill' | 'education' | 'idea'
 
 export type ClusterId = 'llm' | 'jvm' | 'media' | 'web' | 'foundations'
 
-export interface Cluster {
-  id: ClusterId
-  label: string
-  blurb: string
-  color: string // hex
-  /** Unit-ish direction the cluster sits in, in world space (centered at 0,0). */
-  anchor: { x: number; y: number }
-}
-
 export interface Link {
   label: string
   href: string
@@ -31,13 +22,6 @@ export interface GraphNode {
   links?: Link[]
   /** Free-text bag of words used for the semantic-ish search. */
   keywords: string
-}
-
-export interface Edge {
-  a: string
-  b: string
-  /** 0..1 strength, drives line opacity. */
-  w: number
 }
 
 export interface Profile {

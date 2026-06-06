@@ -34,6 +34,7 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
             className={`term font-medium italic${i === firstTermIdx ? ' term--hint' : ''}`}
             data-active={activeId === s.id}
             aria-expanded={activeId === s.id}
+            aria-controls={`fn-${s.id}`}
             onClick={() => onToggle(s.id)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
