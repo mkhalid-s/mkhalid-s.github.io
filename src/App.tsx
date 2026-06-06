@@ -7,22 +7,23 @@ import type { GraphNode } from './lib/types'
 
 // The hero statement. Bold terms map to entries in profile.ts and expand below.
 const statement: Segment[] = [
-  { t: 'text', v: 'I’m Khalid Shaikh — a software engineer who builds ' },
+  {
+    t: 'text',
+    v: 'I’m Khalid Shaikh — a senior software engineer with 12+ years across BFSI & telecom. I build ',
+  },
   { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  { t: 'text', v: '. Lately that means ' },
+  { t: 'text', v: '. Lately that’s ' },
   { t: 'term', v: 'headroom', id: 'proj-headroom' },
-  { t: 'text', v: ', cutting LLM costs by 60–95%. Before that, years on the ' },
-  { t: 'term', v: 'Guidewire', id: 'exp-guidewire' },
-  { t: 'text', v: ' cloud platform, and a decade across ' },
+  { t: 'text', v: ', cutting LLM costs 60–95%. By day I ship on the ' },
+  { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
+  { t: 'text', v: ' in ' },
   { t: 'term', v: 'Java', id: 'sk-java' },
-  { t: 'text', v: ', ' },
-  { t: 'term', v: 'the web', id: 'sk-react' },
-  { t: 'text', v: ', and ' },
-  { t: 'term', v: 'LLMs', id: 'sk-llm' },
-  { t: 'text', v: '. I like fast systems, clean abstractions, and deleting code.' },
+  { t: 'text', v: ' & Gosu. I like fast systems, clean abstractions, and deleting code.' },
 ]
 
-const workIds = ['proj-headroom', 'proj-framefuse', 'exp-guidewire', 'exp-egain', 'proj-erp']
+const projectIds = ['proj-headroom', 'proj-framefuse', 'proj-erp', 'proj-react-tv']
+const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
+const educationIds = ['edu-be', 'edu-hsc']
 
 // term ids that can appear in the URL hash for deep-linking
 const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
@@ -197,85 +198,52 @@ export default function App() {
         <section id="work" className="mt-28 sm:mt-36">
           <Reveal>
             <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Selected work
+              Selected projects
             </h2>
           </Reveal>
-          <div className="divide-y divide-ink/10 border-y border-ink/10">
-            {workIds.map((id, i) => {
-              const n = byId.get(id)!
-              const open = openWork === id
-              return (
-                <Reveal key={id} delay={i * 0.05}>
-                  <button
-                    onClick={() => setOpenWork(open ? null : id)}
-                    aria-expanded={open}
-                    className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
-                  >
-                    <span className="font-display text-2xl font-normal text-ink transition group-hover:text-accent sm:text-3xl">
+          <CollapsibleList
+            ids={projectIds}
+            byId={byId}
+            openId={openWork}
+            onToggle={(id) => setOpenWork((cur) => (cur === id ? null : id))}
+          />
+        </section>
+
+        {/* experience */}
+        <section className="mt-24 sm:mt-32">
+          <Reveal>
+            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Experience
+            </h2>
+          </Reveal>
+          <CollapsibleList
+            ids={experienceIds}
+            byId={byId}
+            openId={openWork}
+            onToggle={(id) => setOpenWork((cur) => (cur === id ? null : id))}
+          />
+        </section>
+
+        {/* education */}
+        <section className="mt-24 sm:mt-32">
+          <Reveal>
+            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Education
+            </h2>
+            <div className="space-y-3">
+              {educationIds.map((id) => {
+                const n = byId.get(id)!
+                return (
+                  <div key={id} className="flex items-baseline justify-between gap-4">
+                    <span className="font-display text-xl font-normal text-ink sm:text-2xl">
                       {n.label}
                     </span>
-                    <span className="flex shrink-0 items-center gap-3">
-                      <span className="font-mono text-[12px] text-muted">
-                        {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
-                        style={{ transform: open ? 'rotate(45deg)' : 'none' }}
-                      >
-                        +
-                      </span>
-                    </span>
-                  </button>
-                  <AnimatePresence>
-                    {open && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pb-6 pr-2">
-                          <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">
-                            {n.summary}
-                          </p>
-                          {n.detail && (
-                            <ul className="mt-3 space-y-1.5">
-                              {n.detail.slice(0, 4).map((d, j) => (
-                                <li
-                                  key={j}
-                                  className="flex gap-2 text-[14px] leading-relaxed text-muted"
-                                >
-                                  <span className="text-accent">—</span>
-                                  <span>{d}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                          {n.links && (
-                            <div className="mt-4 flex gap-4">
-                              {n.links.map((l) => (
-                                <a
-                                  key={l.href}
-                                  href={l.href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
-                                >
-                                  {l.label} ↗
-                                </a>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Reveal>
-              )
-            })}
-          </div>
+                    <span className="text-right font-mono text-[12px] text-muted">{n.meta}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </Reveal>
         </section>
 
         {/* contact */}
@@ -321,6 +289,94 @@ export default function App() {
           © {new Date().getFullYear()} Khalid Shaikh · built to be small.
         </footer>
       </main>
+    </div>
+  )
+}
+
+function CollapsibleList({
+  ids,
+  byId,
+  openId,
+  onToggle,
+}: {
+  ids: string[]
+  byId: Map<string, GraphNode>
+  openId: string | null
+  onToggle: (id: string) => void
+}) {
+  return (
+    <div className="divide-y divide-ink/10 border-y border-ink/10">
+      {ids.map((id, i) => {
+        const n = byId.get(id)
+        if (!n) return null
+        const open = openId === id
+        return (
+          <Reveal key={id} delay={i * 0.04}>
+            <button
+              onClick={() => onToggle(id)}
+              aria-expanded={open}
+              className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
+            >
+              <span className="font-display text-2xl font-normal text-ink transition group-hover:text-accent sm:text-3xl">
+                {n.label}
+              </span>
+              <span className="flex shrink-0 items-center gap-3">
+                <span className="font-mono text-[12px] text-muted">
+                  {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
+                  style={{ transform: open ? 'rotate(45deg)' : 'none' }}
+                >
+                  +
+                </span>
+              </span>
+            </button>
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="pb-6 pr-2">
+                    {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
+                    <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
+                    {n.detail && (
+                      <ul className="mt-3 space-y-1.5">
+                        {n.detail.map((d, j) => (
+                          <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
+                            <span className="text-accent">—</span>
+                            <span>{d}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {n.links && (
+                      <div className="mt-4 flex gap-4">
+                        {n.links.map((l) => (
+                          <a
+                            key={l.href}
+                            href={l.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                          >
+                            {l.label} ↗
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Reveal>
+        )
+      })}
     </div>
   )
 }

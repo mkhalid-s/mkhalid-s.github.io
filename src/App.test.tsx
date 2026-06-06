@@ -7,7 +7,8 @@ describe('App', () => {
     render(<App />)
     expect(screen.getAllByText(/Khalid Shaikh/i).length).toBeGreaterThan(0)
     expect(screen.getAllByRole('button', { name: /headroom/i }).length).toBeGreaterThan(0)
-    expect(screen.getByRole('heading', { name: /Selected work/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Selected projects/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^Experience$/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /github/i }).length).toBeGreaterThan(0)
   })
 
