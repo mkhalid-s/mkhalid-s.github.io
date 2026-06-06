@@ -1,198 +1,235 @@
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import LatentCanvas, { type FlyTarget } from './components/LatentCanvas'
-import DetailPanel from './components/DetailPanel'
-import Intro from './components/Intro'
-import Legend from './components/Legend'
-import ResumeMode from './components/ResumeMode'
-import SearchBar from './components/SearchBar'
-import { clusters, nodes, profile } from './data/profile'
-import { buildEdges, layout, search } from './lib/layout'
+import Reveal from './components/Reveal'
+import Statement, { type Segment } from './components/Statement'
+import { nodes, profile } from './data/profile'
+import type { GraphNode } from './lib/types'
 
-type Mode = 'intro' | 'map' | 'resume'
+// The hero statement. Bold terms map to entries in profile.ts and expand below.
+const statement: Segment[] = [
+  { t: 'text', v: "I’m Khalid Shaikh — a software engineer who builds " },
+  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
+  { t: 'text', v: '. Lately that means ' },
+  { t: 'term', v: 'headroom', id: 'proj-headroom' },
+  { t: 'text', v: ', cutting LLM costs by 60–95%. Before that, years on the ' },
+  { t: 'term', v: 'Guidewire', id: 'exp-guidewire' },
+  { t: 'text', v: ' cloud platform, and a decade across ' },
+  { t: 'term', v: 'Java', id: 'sk-java' },
+  { t: 'text', v: ', ' },
+  { t: 'term', v: 'the web', id: 'sk-react' },
+  { t: 'text', v: ', and ' },
+  { t: 'term', v: 'LLMs', id: 'sk-llm' },
+  { t: 'text', v: '. I like fast systems, clean abstractions, and deleting code.' },
+]
+
+const workIds = ['proj-headroom', 'proj-framefuse', 'exp-guidewire', 'exp-egain', 'proj-erp']
 
 export default function App() {
-  const placed = useMemo(() => layout(nodes, clusters), [])
-  const edges = useMemo(() => buildEdges(nodes), [])
-  const nodeById = useMemo(() => new Map(placed.map((n) => [n.id, n])), [placed])
-  const adjacency = useMemo(() => {
-    const m = new Map<string, { id: string; w: number }[]>()
-    for (const e of edges) {
-      ;(m.get(e.a) ?? m.set(e.a, []).get(e.a)!).push({ id: e.b, w: e.w })
-      ;(m.get(e.b) ?? m.set(e.b, []).get(e.b)!).push({ id: e.a, w: e.w })
-    }
-    return m
-  }, [edges])
+  const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
+  const [termId, setTermId] = useState<string | null>(null)
+  const [openWork, setOpenWork] = useState<string | null>(null)
+  const glowRef = useRef<HTMLDivElement>(null)
 
-  const [mode, setMode] = useState<Mode>('intro')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [, setHoverId] = useState<string | null>(null)
-  const [highlight, setHighlight] = useState<Set<string>>(new Set())
-  const [matchCount, setMatchCount] = useState<number | null>(null)
-  const [flyTo, setFlyTo] = useState<FlyTarget | null>(null)
-  const nonce = useRef(0)
-
-  const reduceMotion = useMemo(
-    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    [],
-  )
-
-  const fly = (x: number, y: number, zoom?: number) => {
-    nonce.current += 1
-    setFlyTo({ x, y, zoom, nonce: nonce.current })
-  }
-
-  const selectNode = (id: string | null) => {
-    setSelectedId(id)
-    if (id) {
-      const n = nodeById.get(id)
-      if (n) fly(n.x, n.y, Math.max(1.3, 1.3))
-    }
-  }
-
-  const focusCluster = (clusterId: string) => {
-    const c = clusters.find((cl) => cl.id === clusterId)
-    if (c) fly(c.anchor.x * 1000 * 0.62, c.anchor.y * 1000 * 0.62, 0.95)
-  }
-
-  const onSearch = (q: string) => {
-    if (!q.trim()) {
-      setHighlight(new Set())
-      setMatchCount(null)
-      return
-    }
-    const results = search(q, nodes)
-    setMatchCount(results.length)
-    const top = results.slice(0, 8)
-    setHighlight(new Set(top.map((r) => r.id)))
-    if (top.length) {
-      // fly to the centroid of the strongest matches
-      const strong = top.slice(0, Math.min(4, top.length))
-      let sx = 0
-      let sy = 0
-      for (const m of strong) {
-        const n = nodeById.get(m.id)!
-        sx += n.x
-        sy += n.y
-      }
-      fly(sx / strong.length, sy / strong.length, top.length === 1 ? 1.4 : 0.85)
-    }
-  }
-
-  // Esc closes the detail panel.
+  // soft accent glow that follows the cursor — subtle life on the light page
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedId) setSelectedId(null)
+    let raf = 0
+    let tx = -999
+    let ty = -999
+    const onMove = (e: PointerEvent) => {
+      tx = e.clientX
+      ty = e.clientY
+      if (!raf)
+        raf = requestAnimationFrame(() => {
+          raf = 0
+          if (glowRef.current) glowRef.current.style.transform = `translate(${tx - 300}px, ${ty - 300}px)`
+        })
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [selectedId])
+    window.addEventListener('pointermove', onMove)
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [])
 
-  const selected = selectedId ? nodes.find((n) => n.id === selectedId) ?? null : null
-  const selectedCluster = selected ? clusters.find((c) => c.id === selected.cluster) ?? null : null
-  const related = useMemo(() => {
-    if (!selectedId) return []
-    const list = (adjacency.get(selectedId) ?? []).slice().sort((a, b) => b.w - a.w).slice(0, 5)
-    return list.map((l) => nodes.find((n) => n.id === l.id)!).filter(Boolean)
-  }, [selectedId, adjacency])
-
-  const openFromResume = (id: string) => {
-    setMode('map')
-    setSelectedId(id)
-    const n = nodeById.get(id)
-    if (n) setTimeout(() => fly(n.x, n.y, 1.3), 60)
-  }
+  const term = termId ? byId.get(termId) ?? null : null
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-ink">
-      <LatentCanvas
-        placed={placed}
-        edges={edges}
-        clusters={clusters}
-        selectedId={selectedId}
-        highlight={highlight}
-        searchActive={highlight.size > 0}
-        flyTo={flyTo}
-        reduceMotion={reduceMotion}
-        onSelect={selectNode}
-        onHover={setHoverId}
+    <div className="grain relative min-h-full overflow-x-hidden bg-paper">
+      {/* cursor glow */}
+      <div
+        ref={glowRef}
+        className="pointer-events-none fixed left-0 top-0 z-0 h-[600px] w-[600px] rounded-full opacity-50 blur-3xl"
+        style={{ background: 'radial-gradient(circle, rgba(37,64,255,0.10), transparent 70%)' }}
       />
 
-      {/* top brand */}
-      <div className="pointer-events-none absolute left-4 top-4 z-20 select-none">
-        <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-cyan-300/70">latent space</div>
-        <button
-          onClick={() => fly(0, 0, 0.62)}
-          className="pointer-events-auto text-left text-lg font-semibold text-white transition hover:text-cyan-200"
-        >
-          {profile.name}
-        </button>
-        <div className="text-xs text-slate-400">{profile.title}</div>
-      </div>
+      {/* top bar */}
+      <header className="relative z-10 mx-auto flex max-w-3xl items-center justify-between px-6 py-6 sm:px-8">
+        <a href="#top" className="font-mono text-sm font-medium tracking-tight">
+          khalid<span className="text-accent">.</span>
+        </a>
+        <nav className="flex items-center gap-5 font-mono text-[13px] text-muted">
+          <a href="#work" className="transition hover:text-ink">work</a>
+          <a href={profile.cvHref} target="_blank" rel="noreferrer" className="transition hover:text-ink">cv ↗</a>
+          <a href={profile.social[0].href} target="_blank" rel="noreferrer" className="transition hover:text-ink">github ↗</a>
+        </nav>
+      </header>
 
-      {/* top-right controls */}
-      <div className="absolute right-3 top-4 z-30 flex items-center gap-2">
-        {!selected && (
-          <>
-            <a
-              href={profile.cvHref}
-              target="_blank"
-              rel="noreferrer"
-              className="glass hidden rounded-xl px-3 py-2 text-xs font-medium text-slate-200 transition hover:bg-white/5 sm:block"
-            >
-              CV ↗
-            </a>
-            <button
-              onClick={() => setMode('resume')}
-              className="glass rounded-xl px-3 py-2 text-xs font-medium text-slate-100 transition hover:bg-white/5"
-            >
-              Resume mode
-            </button>
-          </>
-        )}
-      </div>
+      <main id="top" className="relative z-10 mx-auto max-w-3xl px-6 sm:px-8">
+        {/* hero */}
+        <section className="pt-[12vh] sm:pt-[16vh]">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="mb-7 font-mono text-[13px] uppercase tracking-[0.25em] text-muted"
+          >
+            {profile.title} · {profile.location}
+          </motion.p>
 
-      {/* search */}
-      {mode === 'map' && (
-        <div className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2">
-          <SearchBar matchCount={matchCount} onChange={onSearch} />
-        </div>
-      )}
-
-      {/* legend */}
-      {mode === 'map' && (
-        <div className="absolute bottom-4 left-4 z-20 hidden sm:block">
-          <Legend clusters={clusters} onFocus={focusCluster} />
-        </div>
-      )}
-
-      {/* controls hint */}
-      {mode === 'map' && !selected && (
-        <div className="pointer-events-none absolute bottom-4 right-4 z-10 hidden font-mono text-[11px] text-slate-600 lg:block">
-          drag · scroll · click · press “/” to search
-        </div>
-      )}
-
-      <DetailPanel
-        node={selected}
-        cluster={selectedCluster}
-        related={related}
-        onClose={() => setSelectedId(null)}
-        onSelect={(id) => selectNode(id)}
-      />
-
-      <AnimatePresence>
-        {mode === 'intro' && (
-          <Intro
-            key="intro"
-            onExplore={() => setMode('map')}
-            onResume={() => setMode('resume')}
+          <Statement
+            segments={statement}
+            activeId={termId}
+            onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
           />
-        )}
-        {mode === 'resume' && (
-          <ResumeMode key="resume" onClose={() => setMode('map')} onOpenNode={openFromResume} />
-        )}
-      </AnimatePresence>
+
+          {/* footnote detail */}
+          <AnimatePresence mode="wait">
+            {term && (
+              <motion.div
+                key={term.id}
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginTop: 28 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
+                className="overflow-hidden"
+              >
+                <Footnote node={term} onClose={() => setTermId(null)} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mt-10 font-mono text-[12px] text-muted"
+          >
+            ↑ tap the underlined words
+          </motion.p>
+        </section>
+
+        {/* selected work */}
+        <section id="work" className="mt-28 sm:mt-36">
+          <Reveal>
+            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">Selected work</h2>
+          </Reveal>
+          <div className="divide-y divide-ink/10 border-y border-ink/10">
+            {workIds.map((id, i) => {
+              const n = byId.get(id)!
+              const open = openWork === id
+              return (
+                <Reveal key={id} delay={i * 0.05}>
+                  <button
+                    onClick={() => setOpenWork(open ? null : id)}
+                    className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
+                  >
+                    <span className="font-display text-2xl font-normal text-ink transition group-hover:text-accent sm:text-3xl">
+                      {n.label}
+                    </span>
+                    <span className="shrink-0 font-mono text-[12px] text-muted">
+                      {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
+                    </span>
+                  </button>
+                  <AnimatePresence>
+                    {open && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pb-6 pr-2">
+                          <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
+                          {n.detail && (
+                            <ul className="mt-3 space-y-1.5">
+                              {n.detail.slice(0, 4).map((d, j) => (
+                                <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
+                                  <span className="text-accent">—</span>
+                                  <span>{d}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {n.links && (
+                            <div className="mt-4 flex gap-4">
+                              {n.links.map((l) => (
+                                <a key={l.href} href={l.href} target="_blank" rel="noreferrer"
+                                   className="font-mono text-[13px] text-accent underline-offset-4 hover:underline">
+                                  {l.label} ↗
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Reveal>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* contact */}
+        <section className="mt-28 pb-24 sm:mt-36">
+          <Reveal>
+            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">Elsewhere</h2>
+            <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
+              Building something that needs to do more with less?{' '}
+              <a href={`mailto:${profile.email}`} className="term font-medium" data-active="true">
+                Let’s talk.
+              </a>
+            </p>
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-mono text-[14px] text-muted">
+              <a href={profile.cvHref} target="_blank" rel="noreferrer" className="transition hover:text-ink">Résumé (PDF) ↗</a>
+              {profile.social.map((s) => (
+                <a key={s.href} href={s.href} target="_blank" rel="noreferrer" className="transition hover:text-ink">
+                  {s.label} ↗
+                </a>
+              ))}
+              <a href={`mailto:${profile.email}`} className="transition hover:text-ink">Email ↗</a>
+            </div>
+          </Reveal>
+        </section>
+
+        <footer className="border-t border-ink/10 py-6 font-mono text-[11px] text-muted">
+          © {new Date().getFullYear()} Khalid Shaikh · built to be small.
+        </footer>
+      </main>
+    </div>
+  )
+}
+
+function Footnote({ node, onClose }: { node: GraphNode; onClose: () => void }) {
+  return (
+    <div className="relative rounded-2xl border border-ink/10 bg-paper2/60 p-5 backdrop-blur-sm sm:p-6">
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 font-mono text-[12px] text-muted transition hover:text-ink"
+        aria-label="close"
+      >
+        ✕
+      </button>
+      {node.meta && <p className="mb-1 font-mono text-[12px] text-muted">{node.meta}</p>}
+      <p className="max-w-xl text-[15px] leading-relaxed text-ink/85 sm:text-base">{node.summary}</p>
+      {node.links && (
+        <div className="mt-4 flex gap-4">
+          {node.links.map((l) => (
+            <a key={l.href} href={l.href} target="_blank" rel="noreferrer"
+               className="font-mono text-[13px] text-accent underline-offset-4 hover:underline">
+              {l.label} ↗
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

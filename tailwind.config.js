@@ -4,20 +4,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
-        ink: '#05060a',
-        panel: 'rgba(12,14,22,0.72)',
+        paper: '#f4f1ea',
+        paper2: '#ece7dc',
+        ink: '#171410',
+        muted: '#6f6657',
+        accent: '#2540ff',
+        accent2: '#ff5a2c',
       },
-      keyframes: {
-        fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-      },
-      animation: { fadeUp: 'fadeUp .5s ease both' },
     },
   },
   plugins: [],

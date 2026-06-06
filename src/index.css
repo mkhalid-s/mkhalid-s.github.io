@@ -2,37 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-}
+html, body, #root { height: 100%; margin: 0; }
 
 body {
-  background: #05060a;
-  color: #e6ecf7;
+  background: #f4f1ea;
+  color: #171410;
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+  text-rendering: optimizeLegibility;
 }
 
-::selection {
-  background: rgba(110, 231, 255, 0.25);
+::selection { background: #2540ff; color: #f4f1ea; }
+
+a { color: inherit; }
+
+/* faint paper grain so the flat light bg has texture */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* thin scrollbars inside panels */
+/* animated marker-swipe under interactive words */
+.term {
+  position: relative;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+.term::after {
+  content: '';
+  position: absolute;
+  left: -2px; right: -2px; bottom: 0.06em;
+  height: 0.5em;
+  background: rgba(37, 64, 255, 0.18);
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), background .2s;
+  border-radius: 2px;
+}
+.term:hover::after, .term[data-active='true']::after { transform: scaleX(1); }
+.term[data-active='true'] { color: #2540ff; }
+
 .scroll-thin::-webkit-scrollbar { width: 8px; }
-.scroll-thin::-webkit-scrollbar-thumb { background: rgba(120,140,180,0.25); border-radius: 8px; }
-.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgba(23,20,16,0.18); border-radius: 8px; }
 
-.glass {
-  background: rgba(12, 14, 22, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(120, 140, 180, 0.14);
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }
