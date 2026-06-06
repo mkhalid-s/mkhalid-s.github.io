@@ -42,7 +42,7 @@ export const nodes: GraphNode[] = [
     summary:
       'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
     detail: [
-      'Led a team of 5 engineers; mentored interns, new joiners and SD1/SD2 engineers on Guidewire best practices and workflows.',
+      'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
       'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
       'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
       'Pioneered AI-powered products within the Guidewire ecosystem, leveraging emerging LLM capabilities for claims & policy workflows.',
@@ -294,7 +294,7 @@ export interface Stat {
 }
 export const impactStats: Stat[] = [
   { value: '12+', label: 'years engineering' },
-  { value: '5', label: 'engineers led' },
+  { value: '5', label: 'engineers led & mentored' },
   { value: '4', label: 'cloud certifications' },
 ]
 
