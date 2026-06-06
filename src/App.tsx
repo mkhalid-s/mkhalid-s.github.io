@@ -29,6 +29,22 @@ export default function App() {
   const [termId, setTermId] = useState<string | null>(null)
   const [openWork, setOpenWork] = useState<string | null>(null)
   const glowRef = useRef<HTMLDivElement>(null)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light',
+  )
+  const toggleTheme = () =>
+    setTheme((t) => {
+      const next = t === 'light' ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', next)
+      try {
+        localStorage.setItem('theme', next)
+      } catch {
+        /* ignore */
+      }
+      return next
+    })
 
   // soft accent glow that follows the cursor — subtle life on the light page
   useEffect(() => {
@@ -55,8 +71,8 @@ export default function App() {
       {/* cursor glow */}
       <div
         ref={glowRef}
-        className="pointer-events-none fixed left-0 top-0 z-0 h-[600px] w-[600px] rounded-full opacity-50 blur-3xl"
-        style={{ background: 'radial-gradient(circle, rgba(37,64,255,0.10), transparent 70%)' }}
+        aria-hidden="true"
+        className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[600px] w-[600px] rounded-full opacity-60 blur-3xl sm:block"
       />
 
       {/* top bar */}
@@ -68,6 +84,13 @@ export default function App() {
           <a href="#work" className="transition hover:text-ink">work</a>
           <a href={profile.cvHref} target="_blank" rel="noreferrer" className="transition hover:text-ink">cv ↗</a>
           <a href={profile.social[0].href} target="_blank" rel="noreferrer" className="transition hover:text-ink">github ↗</a>
+          <button
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
+          >
+            {theme === 'dark' ? '☀' : '☾'}
+          </button>
         </nav>
       </header>
 

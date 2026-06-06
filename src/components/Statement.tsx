@@ -10,31 +10,32 @@ interface Props {
   onToggle: (id: string) => void
 }
 
+const anim = (i: number) => ({
+  initial: { opacity: 0, filter: 'blur(6px)', y: 6 },
+  animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
+  transition: { duration: 0.5, delay: 0.05 + i * 0.03 },
+})
+
 export default function Statement({ segments, activeId, onToggle }: Props) {
   return (
     <h1 className="font-display text-[2rem] font-normal leading-[1.28] tracking-[-0.01em] text-ink sm:text-[2.9rem] sm:leading-[1.24] md:text-[3.4rem]">
       {segments.map((s, i) =>
         s.t === 'text' ? (
-          <motion.span
-            key={i}
-            initial={{ opacity: 0, filter: 'blur(6px)', y: 6 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 + i * 0.035 }}
-          >
+          <motion.span key={i} {...anim(i)}>
             {s.v}
           </motion.span>
         ) : (
-          <motion.span
+          <motion.button
             key={i}
-            className="term font-medium"
+            type="button"
+            className="term font-medium italic"
             data-active={activeId === s.id}
+            aria-expanded={activeId === s.id}
             onClick={() => onToggle(s.id)}
-            initial={{ opacity: 0, filter: 'blur(6px)', y: 6 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 + i * 0.035 }}
+            {...anim(i)}
           >
             {s.v}
-          </motion.span>
+          </motion.button>
         ),
       )}
     </h1>
