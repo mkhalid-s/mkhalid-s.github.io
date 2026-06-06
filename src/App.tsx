@@ -24,6 +24,10 @@ const statement: Segment[] = [
 
 const workIds = ['proj-headroom', 'proj-framefuse', 'exp-guidewire', 'exp-egain', 'proj-erp']
 
+// term ids that can appear in the URL hash for deep-linking
+const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
+const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
+
 export default function App() {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
   const [termId, setTermId] = useState<string | null>(null)
@@ -65,6 +69,26 @@ export default function App() {
     window.addEventListener('pointermove', onMove)
     return () => window.removeEventListener('pointermove', onMove)
   }, [])
+
+  // deep-linkable terms: open a footnote from the URL hash (and on back/forward)
+  useEffect(() => {
+    const sync = () => {
+      const h = hashId()
+      if (termIds.has(h)) setTermId(h)
+    }
+    sync()
+    window.addEventListener('hashchange', sync)
+    return () => window.removeEventListener('hashchange', sync)
+  }, [])
+
+  // keep the URL in sync with the open term (replaceState = no history spam)
+  useEffect(() => {
+    if (termId) {
+      history.replaceState(null, '', '#' + termId)
+    } else if (termIds.has(hashId())) {
+      history.replaceState(null, '', location.pathname + location.search)
+    }
+  }, [termId])
 
   const term = termId ? (byId.get(termId) ?? null) : null
 
@@ -114,7 +138,7 @@ export default function App() {
 
       <main id="top" className="relative z-10 mx-auto max-w-3xl px-6 sm:px-8">
         {/* hero */}
-        <section className="pt-[12vh] sm:pt-[16vh]">
+        <section className="flex min-h-[88vh] flex-col pt-[12vh] sm:pt-[16vh]">
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -154,6 +178,19 @@ export default function App() {
           >
             ↑ tap the underlined words
           </motion.p>
+
+          {/* scroll cue — sits at the bottom of the hero, flows with content */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1 }}
+            onClick={() => document.getElementById('work')?.scrollIntoView()}
+            aria-label="Scroll to selected work"
+            className="mt-auto flex flex-col items-center gap-1 self-center pt-12 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition hover:text-ink"
+          >
+            <span>work</span>
+            <span className="cue-arrow text-sm">↓</span>
+          </motion.button>
         </section>
 
         {/* selected work */}

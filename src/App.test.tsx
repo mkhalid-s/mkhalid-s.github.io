@@ -15,4 +15,11 @@ describe('App', () => {
     render(<App />)
     expect(screen.getByRole('button', { name: /dark mode|light mode/i })).toBeInTheDocument()
   })
+
+  it('opens a footnote from a deep-link hash', () => {
+    window.location.hash = '#proj-headroom'
+    render(<App />)
+    expect(screen.getByText(/Compress tool outputs/i)).toBeInTheDocument()
+    window.location.hash = ''
+  })
 })

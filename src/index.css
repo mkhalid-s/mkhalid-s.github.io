@@ -56,6 +56,20 @@ a {
   background: radial-gradient(circle, rgb(var(--accent) / 0.1), transparent 70%);
 }
 
+/* scroll-cue arrow gentle bounce */
+@keyframes cueBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+.cue-arrow {
+  animation: cueBounce 1.8s ease-in-out infinite;
+}
+
 /* faint paper grain */
 .grain::before {
   content: '';
