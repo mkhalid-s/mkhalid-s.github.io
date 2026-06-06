@@ -1,11 +1,6 @@
 export type NodeKind = 'project' | 'experience' | 'skill' | 'education' | 'idea'
 
-export type ClusterId =
-  | 'llm'
-  | 'jvm'
-  | 'media'
-  | 'web'
-  | 'foundations'
+export type ClusterId = 'llm' | 'jvm' | 'media' | 'web' | 'foundations'
 
 export interface Cluster {
   id: ClusterId

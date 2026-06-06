@@ -7,7 +7,7 @@ import type { GraphNode } from './lib/types'
 
 // The hero statement. Bold terms map to entries in profile.ts and expand below.
 const statement: Segment[] = [
-  { t: 'text', v: "I’m Khalid Shaikh — a software engineer who builds " },
+  { t: 'text', v: 'I’m Khalid Shaikh — a software engineer who builds ' },
   { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
   { t: 'text', v: '. Lately that means ' },
   { t: 'term', v: 'headroom', id: 'proj-headroom' },
@@ -30,7 +30,8 @@ export default function App() {
   const [openWork, setOpenWork] = useState<string | null>(null)
   const glowRef = useRef<HTMLDivElement>(null)
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
-    typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark'
+    typeof document !== 'undefined' &&
+    document.documentElement.getAttribute('data-theme') === 'dark'
       ? 'dark'
       : 'light',
   )
@@ -57,14 +58,15 @@ export default function App() {
       if (!raf)
         raf = requestAnimationFrame(() => {
           raf = 0
-          if (glowRef.current) glowRef.current.style.transform = `translate(${tx - 300}px, ${ty - 300}px)`
+          if (glowRef.current)
+            glowRef.current.style.transform = `translate(${tx - 300}px, ${ty - 300}px)`
         })
     }
     window.addEventListener('pointermove', onMove)
     return () => window.removeEventListener('pointermove', onMove)
   }, [])
 
-  const term = termId ? byId.get(termId) ?? null : null
+  const term = termId ? (byId.get(termId) ?? null) : null
 
   return (
     <div className="grain relative min-h-full overflow-x-hidden bg-paper">
@@ -81,9 +83,25 @@ export default function App() {
           khalid<span className="text-accent">.</span>
         </a>
         <nav className="flex items-center gap-5 font-mono text-[13px] text-muted">
-          <a href="#work" className="transition hover:text-ink">work</a>
-          <a href={profile.cvHref} target="_blank" rel="noreferrer" className="transition hover:text-ink">cv ↗</a>
-          <a href={profile.social[0].href} target="_blank" rel="noreferrer" className="transition hover:text-ink">github ↗</a>
+          <a href="#work" className="transition hover:text-ink">
+            work
+          </a>
+          <a
+            href={profile.cvHref}
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-ink"
+          >
+            cv ↗
+          </a>
+          <a
+            href={profile.social[0].href}
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-ink"
+          >
+            github ↗
+          </a>
           <button
             onClick={toggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -141,7 +159,9 @@ export default function App() {
         {/* selected work */}
         <section id="work" className="mt-28 sm:mt-36">
           <Reveal>
-            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">Selected work</h2>
+            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Selected work
+            </h2>
           </Reveal>
           <div className="divide-y divide-ink/10 border-y border-ink/10">
             {workIds.map((id, i) => {
@@ -170,11 +190,16 @@ export default function App() {
                         className="overflow-hidden"
                       >
                         <div className="pb-6 pr-2">
-                          <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
+                          <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">
+                            {n.summary}
+                          </p>
                           {n.detail && (
                             <ul className="mt-3 space-y-1.5">
                               {n.detail.slice(0, 4).map((d, j) => (
-                                <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
+                                <li
+                                  key={j}
+                                  className="flex gap-2 text-[14px] leading-relaxed text-muted"
+                                >
                                   <span className="text-accent">—</span>
                                   <span>{d}</span>
                                 </li>
@@ -184,8 +209,13 @@ export default function App() {
                           {n.links && (
                             <div className="mt-4 flex gap-4">
                               {n.links.map((l) => (
-                                <a key={l.href} href={l.href} target="_blank" rel="noreferrer"
-                                   className="font-mono text-[13px] text-accent underline-offset-4 hover:underline">
+                                <a
+                                  key={l.href}
+                                  href={l.href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                                >
                                   {l.label} ↗
                                 </a>
                               ))}
@@ -204,7 +234,9 @@ export default function App() {
         {/* contact */}
         <section className="mt-28 pb-24 sm:mt-36">
           <Reveal>
-            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">Elsewhere</h2>
+            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
+              Elsewhere
+            </h2>
             <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
               Building something that needs to do more with less?{' '}
               <a href={`mailto:${profile.email}`} className="term font-medium" data-active="true">
@@ -212,13 +244,28 @@ export default function App() {
               </a>
             </p>
             <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-mono text-[14px] text-muted">
-              <a href={profile.cvHref} target="_blank" rel="noreferrer" className="transition hover:text-ink">Résumé (PDF) ↗</a>
+              <a
+                href={profile.cvHref}
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-ink"
+              >
+                Résumé (PDF) ↗
+              </a>
               {profile.social.map((s) => (
-                <a key={s.href} href={s.href} target="_blank" rel="noreferrer" className="transition hover:text-ink">
+                <a
+                  key={s.href}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition hover:text-ink"
+                >
                   {s.label} ↗
                 </a>
               ))}
-              <a href={`mailto:${profile.email}`} className="transition hover:text-ink">Email ↗</a>
+              <a href={`mailto:${profile.email}`} className="transition hover:text-ink">
+                Email ↗
+              </a>
             </div>
           </Reveal>
         </section>
@@ -242,12 +289,19 @@ function Footnote({ node, onClose }: { node: GraphNode; onClose: () => void }) {
         ✕
       </button>
       {node.meta && <p className="mb-1 font-mono text-[12px] text-muted">{node.meta}</p>}
-      <p className="max-w-xl text-[15px] leading-relaxed text-ink/85 sm:text-base">{node.summary}</p>
+      <p className="max-w-xl text-[15px] leading-relaxed text-ink/85 sm:text-base">
+        {node.summary}
+      </p>
       {node.links && (
         <div className="mt-4 flex gap-4">
           {node.links.map((l) => (
-            <a key={l.href} href={l.href} target="_blank" rel="noreferrer"
-               className="font-mono text-[13px] text-accent underline-offset-4 hover:underline">
+            <a
+              key={l.href}
+              href={l.href}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+            >
               {l.label} ↗
             </a>
           ))}

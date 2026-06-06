@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
 
-export type Segment =
-  | { t: 'text'; v: string }
-  | { t: 'term'; v: string; id: string }
+export type Segment = { t: 'text'; v: string } | { t: 'term'; v: string; id: string }
 
 interface Props {
   segments: Segment[]
@@ -25,17 +23,26 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
             {s.v}
           </motion.span>
         ) : (
-          <motion.button
+          // role=button span (not <button>) so the term flows as inline text and
+          // never orphans a trailing "." onto a new line; keyboard-accessible.
+          <motion.span
             key={i}
-            type="button"
+            role="button"
+            tabIndex={0}
             className="term font-medium italic"
             data-active={activeId === s.id}
             aria-expanded={activeId === s.id}
             onClick={() => onToggle(s.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onToggle(s.id)
+              }
+            }}
             {...anim(i)}
           >
             {s.v}
-          </motion.button>
+          </motion.span>
         ),
       )}
     </h1>

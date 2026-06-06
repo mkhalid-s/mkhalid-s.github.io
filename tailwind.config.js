@@ -4,12 +4,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        display: ['"Fraunces Variable"', 'Fraunces', 'ui-serif', 'Georgia', 'serif'],
+        sans: ['"Inter Variable"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
-        // driven by CSS vars so the light/dark themes flip everything at once
         paper: 'rgb(var(--paper) / <alpha-value>)',
         paper2: 'rgb(var(--paper2) / <alpha-value>)',
         ink: 'rgb(var(--ink) / <alpha-value>)',

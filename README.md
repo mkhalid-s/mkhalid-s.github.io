@@ -7,6 +7,7 @@ coming back to: **do more with less.**
 🔗 **Live:** https://mkhalid-s.github.io
 
 ## Stack
+
 React + TypeScript, Tailwind, Framer Motion, Vite. Light "paper" theme,
 Fraunces for display type. Deployed to GitHub Pages via Actions.
 

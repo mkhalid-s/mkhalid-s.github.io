@@ -7,9 +7,15 @@
     <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#12110e" media="(prefers-color-scheme: dark)" />
     <title>Khalid Shaikh</title>
-    <meta name="description" content="Khalid Shaikh — a software engineer who builds tools that do more with less. Most recently headroom; before that, the Guidewire cloud platform." />
+    <meta
+      name="description"
+      content="Khalid Shaikh — a software engineer who builds tools that do more with less. Most recently headroom; before that, the Guidewire cloud platform."
+    />
     <meta property="og:title" content="Khalid Shaikh — Software Engineer" />
-    <meta property="og:description" content="I build tools that do more with less. Most recently headroom — cutting LLM costs 60–95%." />
+    <meta
+      property="og:description"
+      content="I build tools that do more with less. Most recently headroom — cutting LLM costs 60–95%."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mkhalid-s.github.io" />
     <meta property="og:image" content="https://mkhalid-s.github.io/og.png" />
@@ -19,17 +25,16 @@
     <meta name="twitter:image" content="https://mkhalid-s.github.io/og.png" />
     <!-- set theme before paint to avoid a flash -->
     <script>
-      (function () {
+      ;(function () {
         try {
-          var s = localStorage.getItem('theme');
-          var d = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (d) document.documentElement.setAttribute('data-theme', 'dark');
+          var s = localStorage.getItem('theme')
+          var d = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+          if (d) document.documentElement.setAttribute('data-theme', 'dark')
         } catch (e) {}
-      })();
+      })()
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <!-- fonts are self-hosted via @fontsource (bundled by Vite) -->
   </head>
   <body>
     <div id="root"></div>
