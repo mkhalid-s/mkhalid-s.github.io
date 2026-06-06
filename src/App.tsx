@@ -31,7 +31,7 @@ const statement: Segment[] = [
   { t: 'text', v: ' & Gosu. I like fast systems, clean abstractions, and deleting code.' },
 ]
 
-const projectIds = ['proj-framefuse', 'proj-erp', 'proj-react-tv']
+const projectIds = ['proj-framefuse', 'proj-erp']
 const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
 const educationIds = ['edu-be', 'edu-hsc']
 
@@ -101,10 +101,25 @@ export default function App() {
     }
   }, [termId])
 
+  // Escape closes the open footnote
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setTermId(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   const term = termId ? (byId.get(termId) ?? null) : null
 
   return (
     <div className="grain relative min-h-full overflow-x-hidden bg-paper">
+      <a
+        href="#top"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-sm focus:text-paper"
+      >
+        Skip to content
+      </a>
       {/* cursor glow */}
       <div
         ref={glowRef}
@@ -225,9 +240,7 @@ export default function App() {
         {/* AI engineering */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              AI engineering
-            </h2>
+            <SectionHeading n="01" title="AI engineering" />
             <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
               Over the last year I’ve been building LLM applications and POCs — across retrieval,
               agents, orchestration and evaluation.
@@ -297,9 +310,7 @@ export default function App() {
         {/* selected work */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Selected projects
-            </h2>
+            <SectionHeading n="02" title="Selected projects" />
           </Reveal>
           <CollapsibleList
             ids={projectIds}
@@ -312,9 +323,7 @@ export default function App() {
         {/* experience */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-2 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Experience
-            </h2>
+            <SectionHeading n="03" title="Experience" />
           </Reveal>
           <CollapsibleList
             ids={experienceIds}
@@ -327,9 +336,7 @@ export default function App() {
         {/* skills */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-5 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Skills
-            </h2>
+            <SectionHeading n="04" title="Skills" />
           </Reveal>
           <div className="space-y-5">
             {skillGroups.map((g, i) => (
@@ -357,9 +364,7 @@ export default function App() {
         {/* certifications */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Certifications
-            </h2>
+            <SectionHeading n="05" title="Certifications" />
             <ul className="space-y-2">
               {certifications.map((c) => (
                 <li key={c} className="flex items-start gap-3 text-[15px] text-ink/85">
@@ -374,9 +379,7 @@ export default function App() {
         {/* education */}
         <section className="mt-24 sm:mt-32">
           <Reveal>
-            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Education
-            </h2>
+            <SectionHeading n="06" title="Education" />
             <div className="space-y-3">
               {educationIds.map((id) => {
                 const n = byId.get(id)!
@@ -399,9 +402,7 @@ export default function App() {
         {/* contact */}
         <section className="mt-28 pb-24 sm:mt-36">
           <Reveal>
-            <h2 className="mb-4 font-mono text-[12px] uppercase tracking-[0.25em] text-muted">
-              Elsewhere
-            </h2>
+            <SectionHeading n="07" title="Elsewhere" />
             <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
               Building something that needs to do more with less?{' '}
               <a href={`mailto:${profile.email}`} className="term font-medium" data-active="true">
@@ -439,6 +440,16 @@ export default function App() {
           © {new Date().getFullYear()} Khalid Shaikh · built to be small.
         </footer>
       </main>
+    </div>
+  )
+}
+
+function SectionHeading({ n, title }: { n: string; title: string }) {
+  return (
+    <div className="mb-5 flex items-center gap-3">
+      <span className="font-mono text-[12px] text-accent">{n}</span>
+      <h2 className="font-mono text-[12px] uppercase tracking-[0.25em] text-muted">{title}</h2>
+      <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
     </div>
   )
 }
