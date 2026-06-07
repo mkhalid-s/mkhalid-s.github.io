@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 export type Segment = { t: 'text'; v: string } | { t: 'term'; v: string; id: string }
 
@@ -21,13 +21,13 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
     <h1 className="font-display text-[2.1rem] font-normal leading-[1.3] tracking-[-0.01em] text-ink sm:text-[3rem] sm:leading-[1.2] md:text-[3.6rem] lg:text-[4.25rem] lg:leading-[1.1] lg:tracking-[-0.02em]">
       {segments.map((s, i) =>
         s.t === 'text' ? (
-          <motion.span key={i} {...anim(i)}>
+          <m.span key={i} {...anim(i)}>
             {s.v}
-          </motion.span>
+          </m.span>
         ) : (
           // role=button span (not <button>) so the term flows as inline text and
           // never orphans a trailing "." onto a new line; keyboard-accessible.
-          <motion.span
+          <m.span
             key={i}
             role="button"
             tabIndex={0}
@@ -45,7 +45,7 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
             {...anim(i)}
           >
             {s.v}
-          </motion.span>
+          </m.span>
         ),
       )}
     </h1>
