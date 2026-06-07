@@ -49,6 +49,16 @@ a {
   color: inherit;
 }
 
+/* Fraunces: let opsz follow the font size (display cut large, text cut small)
+   and turn on its ligatures/contextual alternates for a crafted serif. */
+.font-display {
+  font-optical-sizing: auto;
+  font-feature-settings:
+    'liga' 1,
+    'dlig' 1,
+    'calt' 1;
+}
+
 /* cursor glow (theme-aware via var) */
 .cursor-glow {
   background: radial-gradient(circle, rgb(var(--accent) / 0.1), transparent 70%);

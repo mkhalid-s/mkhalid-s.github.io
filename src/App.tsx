@@ -46,7 +46,17 @@ const navSections = [
   { id: 'ai', label: 'ai' },
   { id: 'contact', label: 'contact' },
 ]
-const navIds = navSections.map((s) => s.id)
+// all sections, so the nav only lights up when its section is truly current
+// (otherwise 'ai' would stay lit through skills/certs/education)
+const sectionIds = [
+  'experience',
+  'projects',
+  'ai',
+  'skills',
+  'certifications',
+  'education',
+  'contact',
+]
 
 // returns the id of the last section whose top has scrolled past the header line
 function useActiveSection(ids: string[]) {
@@ -80,7 +90,8 @@ function useActiveSection(ids: string[]) {
 export default function App() {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
   const [termId, setTermId] = useState<string | null>(null)
-  const [openWork, setOpenWork] = useState<string | null>(null)
+  const [openExp, setOpenExp] = useState<string | null>(null)
+  const [openProj, setOpenProj] = useState<string | null>(null)
   const glowRef = useRef<HTMLDivElement>(null)
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' &&
@@ -160,7 +171,7 @@ export default function App() {
   }, [termId])
 
   const term = termId ? (byId.get(termId) ?? null) : null
-  const activeSection = useActiveSection(navIds)
+  const activeSection = useActiveSection(sectionIds)
 
   return (
     <LazyMotion features={domAnimation}>
@@ -180,18 +191,18 @@ export default function App() {
           />
 
           {/* top bar (sticky) */}
-          <header className="sticky top-0 z-30 border-b border-ink/5 bg-paper/70 backdrop-blur-md">
+          <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur-md">
             <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
               <a href="#top" className="font-mono text-sm font-medium tracking-tight">
                 khalid<span className="text-accent">.</span>
               </a>
-              <nav className="flex items-center gap-5 font-mono text-[13px] text-muted">
+              <nav className="flex items-center gap-5 font-mono text-[13px] text-ink/65">
                 <div className="hidden items-center gap-5 md:flex">
                   {navSections.map((s) => (
                     <a
                       key={s.id}
                       href={`#${s.id}`}
-                      aria-current={activeSection === s.id ? 'true' : undefined}
+                      aria-current={activeSection === s.id ? 'location' : undefined}
                       className={`underline-offset-[6px] transition hover:text-ink ${
                         activeSection === s.id
                           ? 'text-ink underline decoration-accent decoration-2'
@@ -317,8 +328,8 @@ export default function App() {
               <Timeline
                 ids={experienceIds}
                 byId={byId}
-                openId={openWork}
-                onToggle={(id) => setOpenWork((cur) => (cur === id ? null : id))}
+                openId={openExp}
+                onToggle={(id) => setOpenExp((cur) => (cur === id ? null : id))}
               />
             </section>
 
@@ -330,8 +341,8 @@ export default function App() {
               <CollapsibleList
                 ids={projectIds}
                 byId={byId}
-                openId={openWork}
-                onToggle={(id) => setOpenWork((cur) => (cur === id ? null : id))}
+                openId={openProj}
+                onToggle={(id) => setOpenProj((cur) => (cur === id ? null : id))}
               />
             </section>
 
@@ -343,6 +354,9 @@ export default function App() {
                   Over the last year I’ve been building LLM applications and POCs — across
                   retrieval, agents, orchestration and evaluation.
                 </p>
+                <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
+                  Focus areas
+                </div>
               </Reveal>
 
               <div className="grid gap-3 sm:grid-cols-2">
@@ -528,7 +542,10 @@ export default function App() {
 function SectionHeading({ n, title }: { n: string; title: string }) {
   return (
     <div className="mb-6 flex items-baseline gap-3">
-      <span aria-hidden="true" className="font-display text-2xl leading-none text-accent/40">
+      <span
+        aria-hidden="true"
+        className="font-display text-3xl leading-none text-accent/30 sm:text-4xl"
+      >
         {n}
       </span>
       <h2 className="font-mono text-[12px] uppercase tracking-[0.25em] text-muted">{title}</h2>
@@ -637,7 +654,7 @@ function Timeline({
   onToggle: (id: string) => void
 }) {
   return (
-    <ol className="relative ml-1 border-l border-ink/20">
+    <ol className="relative ml-1 border-l border-ink/25">
       {ids.map((id, i) => {
         const n = byId.get(id)
         if (!n) return null
@@ -650,7 +667,7 @@ function Timeline({
             <span
               aria-hidden="true"
               className={`absolute -left-[5px] top-[7px] h-2.5 w-2.5 rounded-full ring-4 ring-paper transition-all duration-300 group-hover/item:scale-125 group-hover/item:bg-accent ${
-                open ? 'bg-accent' : 'bg-ink/40'
+                open ? 'bg-accent' : 'bg-ink/50'
               }`}
             />
             <Reveal y={10} delay={i * 0.05}>

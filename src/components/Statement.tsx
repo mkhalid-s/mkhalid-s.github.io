@@ -31,7 +31,7 @@ export default function Statement({ segments, activeId, onToggle }: Props) {
             key={i}
             role="button"
             tabIndex={0}
-            className={`term font-medium italic${i === firstTermIdx ? ' term--hint' : ''}`}
+            className={`term scroll-mt-24 font-medium italic${i === firstTermIdx ? ' term--hint' : ''}`}
             data-active={activeId === s.id}
             aria-expanded={activeId === s.id}
             aria-controls={`fn-${s.id}`}
