@@ -93,7 +93,6 @@ export default function App() {
   const [openExp, setOpenExp] = useState<string | null>(null)
   const [openProj, setOpenProj] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const glowRef = useRef<HTMLDivElement>(null)
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' &&
     document.documentElement.getAttribute('data-theme') === 'dark'
@@ -111,26 +110,6 @@ export default function App() {
       }
       return next
     })
-
-  // soft accent glow that follows the cursor — subtle life on the light page
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let raf = 0
-    let tx = -999
-    let ty = -999
-    const onMove = (e: PointerEvent) => {
-      tx = e.clientX
-      ty = e.clientY
-      if (!raf)
-        raf = requestAnimationFrame(() => {
-          raf = 0
-          if (glowRef.current)
-            glowRef.current.style.transform = `translate(${tx - 220}px, ${ty - 220}px)`
-        })
-    }
-    window.addEventListener('pointermove', onMove)
-    return () => window.removeEventListener('pointermove', onMove)
-  }, [])
 
   // deep-linkable terms: open/close a footnote from the URL hash (and on back/forward)
   useEffect(() => {
@@ -195,13 +174,6 @@ export default function App() {
           >
             Skip to content
           </a>
-          {/* cursor glow */}
-          <div
-            ref={glowRef}
-            aria-hidden="true"
-            className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[440px] w-[440px] rounded-full opacity-40 blur-3xl sm:block"
-          />
-
           {/* top bar (sticky) */}
           <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur-md">
             <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
@@ -369,7 +341,7 @@ export default function App() {
             {/* selected work */}
             <section id="projects" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="02" title="Selected projects" />
+                <SectionHeading n="02" title="Projects" />
               </Reveal>
               <CollapsibleList
                 ids={projectIds}
@@ -479,28 +451,30 @@ export default function App() {
                     </div>
                   </Reveal>
                 ))}
+                <Reveal delay={skillGroups.length * 0.04}>
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr]">
+                    <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted sm:pt-1">
+                      Certified
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {certifications.map((c) => (
+                        <span
+                          key={c}
+                          className="rounded-md bg-ink/[0.05] px-2.5 py-1 text-[13px] text-ink/75"
+                        >
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
               </div>
-            </section>
-
-            {/* certifications */}
-            <section id="certifications" className="scroll-mt-20 mt-24 sm:mt-32">
-              <Reveal>
-                <SectionHeading n="05" title="Certifications" />
-                <ul className="space-y-2">
-                  {certifications.map((c) => (
-                    <li key={c} className="flex items-start gap-3 text-[15px] text-ink/85">
-                      <span className="mt-0.5 text-accent">✓</span>
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
             </section>
 
             {/* education */}
             <section id="education" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="06" title="Education" />
+                <SectionHeading n="05" title="Education" />
                 <div className="space-y-3">
                   {educationIds.map((id) => {
                     const n = byId.get(id)!
@@ -525,7 +499,7 @@ export default function App() {
             {/* contact */}
             <section id="contact" className="scroll-mt-20 mt-28 pb-24 sm:mt-36">
               <Reveal>
-                <SectionHeading n="07" title="Elsewhere" />
+                <SectionHeading n="06" title="Contact" />
                 <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
                   Building something that needs to do more with less?{' '}
                   <a

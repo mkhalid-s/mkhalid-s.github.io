@@ -9,7 +9,7 @@ describe('App', () => {
     expect(
       screen.getAllByRole('button', { name: /Guidewire cloud platform/i }).length,
     ).toBeGreaterThan(0)
-    expect(screen.getByRole('heading', { name: /Selected projects/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^Projects$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^Experience$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /AI engineering/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /github/i }).length).toBeGreaterThan(0)

@@ -69,11 +69,6 @@ button:focus-visible {
     'calt' 1;
 }
 
-/* cursor glow (theme-aware via var) */
-.cursor-glow {
-  background: radial-gradient(circle, rgb(var(--accent) / 0.1), transparent 70%);
-}
-
 /* scroll-cue arrow gentle bounce */
 @keyframes cueBounce {
   0%,
