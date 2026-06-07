@@ -1,5 +1,5 @@
 import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m } from 'framer-motion'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import Reveal from './components/Reveal'
 import Statement, { type Segment } from './components/Statement'
 import {
@@ -92,6 +92,7 @@ export default function App() {
   const [termId, setTermId] = useState<string | null>(null)
   const [openExp, setOpenExp] = useState<string | null>(null)
   const [openProj, setOpenProj] = useState<string | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const glowRef = useRef<HTMLDivElement>(null)
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' &&
@@ -124,7 +125,7 @@ export default function App() {
         raf = requestAnimationFrame(() => {
           raf = 0
           if (glowRef.current)
-            glowRef.current.style.transform = `translate(${tx - 300}px, ${ty - 300}px)`
+            glowRef.current.style.transform = `translate(${tx - 220}px, ${ty - 220}px)`
         })
     }
     window.addEventListener('pointermove', onMove)
@@ -151,10 +152,13 @@ export default function App() {
     }
   }, [termId])
 
-  // Escape closes the open footnote
+  // Escape closes the open footnote / mobile menu
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setTermId(null)
+      if (e.key === 'Escape') {
+        setTermId(null)
+        setMenuOpen(false)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -187,7 +191,7 @@ export default function App() {
           <div
             ref={glowRef}
             aria-hidden="true"
-            className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[600px] w-[600px] rounded-full opacity-60 blur-3xl sm:block"
+            className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[440px] w-[440px] rounded-full opacity-40 blur-3xl sm:block"
           />
 
           {/* top bar (sticky) */}
@@ -237,8 +241,38 @@ export default function App() {
                 >
                   {theme === 'dark' ? '☀' : '☾'}
                 </button>
+                <button
+                  onClick={() => setMenuOpen((o) => !o)}
+                  aria-expanded={menuOpen}
+                  aria-controls="mobile-nav"
+                  aria-label="Sections menu"
+                  className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40 md:hidden"
+                >
+                  {menuOpen ? '✕' : '☰'}
+                </button>
               </nav>
             </div>
+            {/* mobile section nav */}
+            <Collapse open={menuOpen}>
+              <nav
+                id="mobile-nav"
+                className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2 md:hidden"
+              >
+                {navSections.map((s) => (
+                  <a
+                    key={s.id}
+                    href={`#${s.id}`}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={activeSection === s.id ? 'location' : undefined}
+                    className={`block py-2 font-mono text-[13px] transition ${
+                      activeSection === s.id ? 'text-accent' : 'text-ink/70 hover:text-ink'
+                    }`}
+                  >
+                    {s.label}
+                  </a>
+                ))}
+              </nav>
+            </Collapse>
           </header>
 
           <main
@@ -554,6 +588,51 @@ function SectionHeading({ n, title }: { n: string; title: string }) {
   )
 }
 
+// rotating + → × marker used by both collapsible lists
+function ExpandMarker({ open }: { open: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
+      style={{ transform: open ? 'rotate(45deg)' : 'none' }}
+    >
+      +
+    </span>
+  )
+}
+
+// height/opacity collapse wrapper
+function Collapse({ open, children }: { open: boolean; children: ReactNode }) {
+  return (
+    <AnimatePresence initial={false}>
+      {open && (
+        <m.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
+          className="overflow-hidden"
+        >
+          {children}
+        </m.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function DetailList({ items }: { items: string[] }) {
+  return (
+    <ul className="mt-3 space-y-1.5">
+      {items.map((d, j) => (
+        <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
+          <span className="text-accent">—</span>
+          <span>{d}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function CollapsibleList({
   ids,
   byId,
@@ -585,56 +664,31 @@ function CollapsibleList({
                 <span className="font-mono text-[12px] text-muted">
                   {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
                 </span>
-                <span
-                  aria-hidden="true"
-                  className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
-                  style={{ transform: open ? 'rotate(45deg)' : 'none' }}
-                >
-                  +
-                </span>
+                <ExpandMarker open={open} />
               </span>
             </button>
-            <AnimatePresence>
-              {open && (
-                <m.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="border-l border-accent/30 pb-6 pl-4">
-                    {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
-                    <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
-                    {n.detail && (
-                      <ul className="mt-3 space-y-1.5">
-                        {n.detail.map((d, j) => (
-                          <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
-                            <span className="text-accent">—</span>
-                            <span>{d}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {n.links && (
-                      <div className="mt-4 flex gap-4">
-                        {n.links.map((l) => (
-                          <a
-                            key={l.href}
-                            href={l.href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
-                          >
-                            {l.label} ↗
-                          </a>
-                        ))}
-                      </div>
-                    )}
+            <Collapse open={open}>
+              <div className="border-l border-accent/30 pb-6 pl-4">
+                {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
+                <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
+                {n.detail && <DetailList items={n.detail} />}
+                {n.links && (
+                  <div className="mt-4 flex gap-4">
+                    {n.links.map((l) => (
+                      <a
+                        key={l.href}
+                        href={l.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                      >
+                        {l.label} ↗
+                      </a>
+                    ))}
                   </div>
-                </m.div>
-              )}
-            </AnimatePresence>
+                )}
+              </div>
+            </Collapse>
           </Reveal>
         )
       })}
@@ -682,36 +736,13 @@ function Timeline({
                 <span className="font-display text-xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-2xl">
                   {n.label}
                 </span>
-                <span
-                  aria-hidden="true"
-                  className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
-                  style={{ transform: open ? 'rotate(45deg)' : 'none' }}
-                >
-                  +
-                </span>
+                <ExpandMarker open={open} />
               </button>
               {roleLoc && <div className="font-mono text-[12px] text-muted">{roleLoc}</div>}
               <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
-              <AnimatePresence>
-                {open && n.detail && (
-                  <m.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <ul className="mt-3 space-y-1.5">
-                      {n.detail.map((d, j) => (
-                        <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
-                          <span className="text-accent">—</span>
-                          <span>{d}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </m.div>
-                )}
-              </AnimatePresence>
+              <Collapse open={open && !!n.detail}>
+                {n.detail && <DetailList items={n.detail} />}
+              </Collapse>
             </Reveal>
           </li>
         )

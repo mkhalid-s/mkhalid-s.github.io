@@ -8,6 +8,7 @@
   --ink: 23 20 16;
   --muted: 111 102 87;
   --accent: 37 64 255;
+  --term-fill: 0.28; /* highlight-swipe opacity behind interactive words */
   color-scheme: light;
 }
 
@@ -17,6 +18,7 @@
   --ink: 236 231 219;
   --muted: 150 141 124;
   --accent: 122 142 255;
+  --term-fill: 0.2; /* lighter accent reads hotter on near-black — soften it */
   color-scheme: dark;
 }
 
@@ -108,7 +110,7 @@ a {
   /* two layers: [0] the fill swipe (grows on hover/active) + [1] an always-on
      underline (≥3:1 contrast) so the word LOOKS interactive before any hover. */
   background-image:
-    linear-gradient(rgb(var(--accent) / 0.28), rgb(var(--accent) / 0.28)),
+    linear-gradient(rgb(var(--accent) / var(--term-fill)), rgb(var(--accent) / var(--term-fill))),
     linear-gradient(rgb(var(--accent) / 0.85), rgb(var(--accent) / 0.85));
   background-repeat: no-repeat, no-repeat;
   background-position:
