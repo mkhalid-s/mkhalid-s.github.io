@@ -36,7 +36,7 @@ export const nodes: GraphNode[] = [
       'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
       'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
       'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
-      'Pioneered AI-powered products within the Guidewire ecosystem, leveraging emerging LLM capabilities for claims & policy workflows.',
+      'Built AI-powered features for claims & policy workflows using LLMs, inside the Guidewire ecosystem.',
       'Built TeamCity CI/CD pipelines; configured Integration Gateway for London Market message processing; resolved critical cross-release defects.',
       'Stack: Java, Gosu, PCF, InsuranceSuite, SOAP/REST, Stash, Docker, Bash, DataDog.',
     ],
@@ -55,7 +55,6 @@ export const nodes: GraphNode[] = [
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
     detail: [
-      'Led full-stack delivery of a technical knowledge-base platform (PTC Arbortext) for agricultural & construction equipment.',
       'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
       'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
     ],
@@ -74,7 +73,6 @@ export const nodes: GraphNode[] = [
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
     detail: [
-      'Led integration & deployment of digital eServices solutions for a major telecommunications platform.',
       'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
     ],
     tags: ['java', 'spring-boot', 'tibco', 'sap', 'telecom', 'mobile'],
@@ -91,7 +89,6 @@ export const nodes: GraphNode[] = [
     meta: 'Technical Engineer · Pune · Jun 2016 – Feb 2017',
     summary: 'Customised multichannel chat & email customer-engagement software.',
     detail: [
-      'Customised multichannel chat & email customer-engagement software.',
       'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
     ],
     tags: ['java', 'web', 'security', 'customer-engagement'],
@@ -266,9 +263,12 @@ export const aiPillars: AiPillar[] = [
     label: 'RAG & vector search',
     blurb: 'Retrieval pipelines & embeddings over Qdrant / ChromaDB.',
   },
-  { label: 'Agents & tools', blurb: 'Tool-using agents and tool-calling workflows.' },
+  {
+    label: 'Agents & tools',
+    blurb: 'Agents that call tools and chain steps to complete real tasks.',
+  },
   { label: 'Orchestration', blurb: 'Multi-step LLM workflows with LangChain & LangGraph.' },
-  { label: 'Evals & cost', blurb: 'LLM evaluation and token / latency optimization.' },
+  { label: 'Evals & cost', blurb: 'Measuring output quality; cutting token and latency cost.' },
 ]
 
 // AI projects/POCs shown in the AI Engineering section.

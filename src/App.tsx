@@ -18,17 +18,14 @@ import type { GraphNode } from './lib/types'
 const statement: Segment[] = [
   {
     t: 'text',
-    v: 'I’m Khalid Shaikh — a senior software engineer with 12+ years across BFSI & telecom. I build ',
+    v: 'I’m Khalid Shaikh — a senior software engineer, 12+ years across BFSI & telecom, now building LLM applications: RAG, agents and evaluation. I build ',
   },
   { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  {
-    t: 'text',
-    v: '. Lately I’ve been building LLM applications — RAG, agents and evaluation. By day I ship on the ',
-  },
+  { t: 'text', v: '. I ship on the ' },
   { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
   { t: 'text', v: ' in ' },
   { t: 'term', v: 'Java', id: 'sk-java' },
-  { t: 'text', v: ' & Gosu. I like fast systems, clean abstractions, and deleting code.' },
+  { t: 'text', v: ' & Gosu, and I like fast systems, clean abstractions, and deleting code.' },
 ]
 
 const projectIds = ['proj-framefuse', 'proj-erp']
