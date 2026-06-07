@@ -174,6 +174,14 @@ export default function App() {
     prevTerm.current = termId
   }, [termId])
 
+  // when the mobile menu closes, return focus to its toggle button
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
+  const prevMenu = useRef(false)
+  useEffect(() => {
+    if (prevMenu.current && !menuOpen) menuBtnRef.current?.focus()
+    prevMenu.current = menuOpen
+  }, [menuOpen])
+
   const term = termId ? (byId.get(termId) ?? null) : null
   const activeSection = useActiveSection(sectionIds)
 
@@ -242,37 +250,37 @@ export default function App() {
                   {theme === 'dark' ? '☀' : '☾'}
                 </button>
                 <button
+                  ref={menuBtnRef}
                   onClick={() => setMenuOpen((o) => !o)}
                   aria-expanded={menuOpen}
                   aria-controls="mobile-nav"
                   aria-label="Sections menu"
-                  className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40 md:hidden"
+                  className="grid h-8 w-8 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40 md:hidden"
                 >
                   {menuOpen ? '✕' : '☰'}
                 </button>
               </nav>
             </div>
-            {/* mobile section nav */}
-            <Collapse open={menuOpen}>
-              <nav
-                id="mobile-nav"
-                className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2 md:hidden"
-              >
-                {navSections.map((s) => (
-                  <a
-                    key={s.id}
-                    href={`#${s.id}`}
-                    onClick={() => setMenuOpen(false)}
-                    aria-current={activeSection === s.id ? 'location' : undefined}
-                    className={`block py-2 font-mono text-[13px] transition ${
-                      activeSection === s.id ? 'text-accent' : 'text-ink/70 hover:text-ink'
-                    }`}
-                  >
-                    {s.label}
-                  </a>
-                ))}
-              </nav>
-            </Collapse>
+            {/* mobile section nav (wrapper stays mounted so aria-controls resolves) */}
+            <div id="mobile-nav" className="md:hidden">
+              <Collapse open={menuOpen}>
+                <nav className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2">
+                  {navSections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#${s.id}`}
+                      onClick={() => setMenuOpen(false)}
+                      aria-current={activeSection === s.id ? 'location' : undefined}
+                      className={`block py-2.5 font-mono text-[13px] transition ${
+                        activeSection === s.id ? 'text-accent' : 'text-ink/70 hover:text-ink'
+                      }`}
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                </nav>
+              </Collapse>
+            </div>
           </header>
 
           <main
@@ -313,15 +321,6 @@ export default function App() {
                 )}
               </AnimatePresence>
 
-              <m.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-                className="mt-10 font-mono text-[12px] text-muted"
-              >
-                ↑ tap the underlined words
-              </m.p>
-
               {/* scroll cue — sits at the bottom of the hero, flows with content */}
               <m.button
                 initial={{ opacity: 0 }}
@@ -337,7 +336,7 @@ export default function App() {
             </section>
 
             {/* impact strip */}
-            <section id="work" className="mt-20 sm:mt-28">
+            <section id="work" className="scroll-mt-20 mt-20 sm:mt-28">
               <Reveal>
                 <div className="flex flex-col divide-y divide-ink/15 border-y border-ink/15 sm:flex-row sm:divide-x sm:divide-y-0">
                   {impactStats.map((s) => (
@@ -385,8 +384,8 @@ export default function App() {
               <Reveal>
                 <SectionHeading n="03" title="AI engineering" />
                 <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
-                  Over the last year I’ve been building LLM applications and POCs — across
-                  retrieval, agents, orchestration and evaluation.
+                  Bringing a decade of production engineering discipline to LLM systems —
+                  prototyping, measuring and hardening them for real workloads, not demos.
                 </p>
                 <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
                   Focus areas
@@ -757,7 +756,7 @@ function Footnote({ node, onClose }: { node: GraphNode; onClose: () => void }) {
       id={`fn-${node.id}`}
       role="region"
       aria-label={`${node.label} — details`}
-      className="relative rounded-2xl border border-ink/10 bg-paper2/60 p-5 backdrop-blur-sm sm:p-6"
+      className="relative rounded-xl border border-ink/10 bg-paper2/60 p-5 backdrop-blur-sm sm:p-6"
     >
       <button
         onClick={onClose}
