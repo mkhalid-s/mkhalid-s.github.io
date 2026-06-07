@@ -39,6 +39,44 @@ const educationIds = ['edu-be', 'edu-hsc']
 const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
 const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
 
+// header scroll-spy nav
+const navSections = [
+  { id: 'experience', label: 'experience' },
+  { id: 'projects', label: 'projects' },
+  { id: 'ai', label: 'ai' },
+  { id: 'contact', label: 'contact' },
+]
+const navIds = navSections.map((s) => s.id)
+
+// returns the id of the last section whose top has scrolled past the header line
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState('')
+  useEffect(() => {
+    let raf = 0
+    const compute = () => {
+      raf = 0
+      let current = ''
+      for (const id of ids) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 100) current = id
+      }
+      setActive(current)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(compute)
+    }
+    compute()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [ids])
+  return active
+}
+
 export default function App() {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
   const [termId, setTermId] = useState<string | null>(null)
@@ -122,11 +160,12 @@ export default function App() {
   }, [termId])
 
   const term = termId ? (byId.get(termId) ?? null) : null
+  const activeSection = useActiveSection(navIds)
 
   return (
     <LazyMotion features={domAnimation}>
       <MotionConfig reducedMotion="user">
-        <div className="grain relative min-h-full overflow-x-hidden bg-paper">
+        <div className="grain relative min-h-full overflow-x-clip bg-paper">
           <a
             href="#top"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-sm focus:text-paper"
@@ -140,39 +179,55 @@ export default function App() {
             className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[600px] w-[600px] rounded-full opacity-60 blur-3xl sm:block"
           />
 
-          {/* top bar */}
-          <header className="relative z-10 mx-auto flex max-w-3xl items-center justify-between px-6 py-6 sm:px-8">
-            <a href="#top" className="font-mono text-sm font-medium tracking-tight">
-              khalid<span className="text-accent">.</span>
-            </a>
-            <nav className="flex items-center gap-5 font-mono text-[13px] text-muted">
-              <a href="#work" className="transition hover:text-ink">
-                work
+          {/* top bar (sticky) */}
+          <header className="sticky top-0 z-30 border-b border-ink/5 bg-paper/70 backdrop-blur-md">
+            <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
+              <a href="#top" className="font-mono text-sm font-medium tracking-tight">
+                khalid<span className="text-accent">.</span>
               </a>
-              <a
-                href={profile.cvHref}
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:text-ink"
-              >
-                cv ↗
-              </a>
-              <a
-                href={profile.social[0].href}
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:text-ink"
-              >
-                github ↗
-              </a>
-              <button
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-                className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
-              >
-                {theme === 'dark' ? '☀' : '☾'}
-              </button>
-            </nav>
+              <nav className="flex items-center gap-5 font-mono text-[13px] text-muted">
+                <div className="hidden items-center gap-5 md:flex">
+                  {navSections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#${s.id}`}
+                      aria-current={activeSection === s.id ? 'true' : undefined}
+                      className={`underline-offset-[6px] transition hover:text-ink ${
+                        activeSection === s.id
+                          ? 'text-ink underline decoration-accent decoration-2'
+                          : ''
+                      }`}
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                  <span aria-hidden="true" className="h-3 w-px bg-ink/15" />
+                </div>
+                <a
+                  href={profile.cvHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition hover:text-ink"
+                >
+                  cv ↗
+                </a>
+                <a
+                  href={profile.social[0].href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition hover:text-ink"
+                >
+                  github ↗
+                </a>
+                <button
+                  onClick={toggleTheme}
+                  aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                  className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
+                >
+                  {theme === 'dark' ? '☀' : '☾'}
+                </button>
+              </nav>
+            </div>
           </header>
 
           <main
@@ -255,7 +310,7 @@ export default function App() {
             </section>
 
             {/* experience */}
-            <section className="mt-24 sm:mt-32">
+            <section id="experience" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="01" title="Experience" />
               </Reveal>
@@ -268,7 +323,7 @@ export default function App() {
             </section>
 
             {/* selected work */}
-            <section className="mt-24 sm:mt-32">
+            <section id="projects" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="02" title="Selected projects" />
               </Reveal>
@@ -281,7 +336,7 @@ export default function App() {
             </section>
 
             {/* AI engineering */}
-            <section className="mt-24 sm:mt-32">
+            <section id="ai" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="03" title="AI engineering" />
                 <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
@@ -353,7 +408,7 @@ export default function App() {
             </section>
 
             {/* skills */}
-            <section className="mt-24 sm:mt-32">
+            <section id="skills" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="04" title="Skills" />
               </Reveal>
@@ -381,7 +436,7 @@ export default function App() {
             </section>
 
             {/* certifications */}
-            <section className="mt-24 sm:mt-32">
+            <section id="certifications" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="05" title="Certifications" />
                 <ul className="space-y-2">
@@ -396,7 +451,7 @@ export default function App() {
             </section>
 
             {/* education */}
-            <section className="mt-24 sm:mt-32">
+            <section id="education" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
                 <SectionHeading n="06" title="Education" />
                 <div className="space-y-3">
@@ -421,7 +476,7 @@ export default function App() {
             </section>
 
             {/* contact */}
-            <section className="mt-28 pb-24 sm:mt-36">
+            <section id="contact" className="scroll-mt-20 mt-28 pb-24 sm:mt-36">
               <Reveal>
                 <SectionHeading n="07" title="Elsewhere" />
                 <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
