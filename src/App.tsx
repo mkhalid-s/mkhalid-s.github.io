@@ -259,7 +259,7 @@ export default function App() {
               <Reveal>
                 <SectionHeading n="01" title="Experience" />
               </Reveal>
-              <CollapsibleList
+              <Timeline
                 ids={experienceIds}
                 byId={byId}
                 openId={openWork}
@@ -293,7 +293,7 @@ export default function App() {
               <div className="grid gap-3 sm:grid-cols-2">
                 {aiPillars.map((p, i) => (
                   <Reveal key={p.label} delay={i * 0.04}>
-                    <div className="rounded-xl border border-ink/10 p-4">
+                    <div className="rounded-xl border border-ink/10 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent/40">
                       <div className="font-display text-lg font-normal text-ink">{p.label}</div>
                       <p className="mt-1 text-[14px] leading-relaxed text-muted">{p.blurb}</p>
                     </div>
@@ -428,8 +428,7 @@ export default function App() {
                   Building something that needs to do more with less?{' '}
                   <a
                     href={`mailto:${profile.email}`}
-                    className="term font-medium"
-                    data-active="true"
+                    className="font-medium text-accent underline decoration-2 underline-offset-4 transition hover:opacity-70"
                   >
                     Let’s talk.
                   </a>
@@ -507,7 +506,7 @@ function CollapsibleList({
               aria-expanded={open}
               className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
             >
-              <span className="font-display text-2xl font-normal text-ink transition group-hover:text-accent sm:text-3xl">
+              <span className="font-display text-2xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-3xl">
                 {n.label}
               </span>
               <span className="flex shrink-0 items-center gap-3">
@@ -532,7 +531,7 @@ function CollapsibleList({
                   transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="pb-6 pr-2">
+                  <div className="border-l border-accent/30 pb-6 pl-4">
                     {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
                     <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
                     {n.detail && (
@@ -568,6 +567,84 @@ function CollapsibleList({
         )
       })}
     </div>
+  )
+}
+
+function Timeline({
+  ids,
+  byId,
+  openId,
+  onToggle,
+}: {
+  ids: string[]
+  byId: Map<string, GraphNode>
+  openId: string | null
+  onToggle: (id: string) => void
+}) {
+  return (
+    <ol className="relative ml-1 border-l border-ink/15">
+      {ids.map((id, i) => {
+        const n = byId.get(id)
+        if (!n) return null
+        const open = openId === id
+        const parts = n.meta ? n.meta.split(' · ') : []
+        const period = parts.length ? parts[parts.length - 1] : ''
+        const roleLoc = parts.slice(0, -1).join(' · ')
+        return (
+          <li key={id} className="relative pb-9 pl-6 last:pb-1">
+            <span
+              aria-hidden="true"
+              className={`absolute -left-[5px] top-[7px] h-2.5 w-2.5 rounded-full ring-4 ring-paper transition-colors ${
+                open ? 'bg-accent' : 'bg-ink/30'
+              }`}
+            />
+            <Reveal y={10} delay={i * 0.05}>
+              <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                {period}
+              </div>
+              <button
+                onClick={() => onToggle(id)}
+                aria-expanded={open}
+                className="group mt-1 flex w-full items-baseline justify-between gap-3 text-left"
+              >
+                <span className="font-display text-xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-2xl">
+                  {n.label}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-base text-muted transition-transform duration-300 group-hover:text-accent"
+                  style={{ transform: open ? 'rotate(45deg)' : 'none' }}
+                >
+                  +
+                </span>
+              </button>
+              {roleLoc && <div className="font-mono text-[12px] text-muted">{roleLoc}</div>}
+              <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
+              <AnimatePresence>
+                {open && n.detail && (
+                  <m.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <ul className="mt-3 space-y-1.5">
+                      {n.detail.map((d, j) => (
+                        <li key={j} className="flex gap-2 text-[14px] leading-relaxed text-muted">
+                          <span className="text-accent">—</span>
+                          <span>{d}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </m.div>
+                )}
+              </AnimatePresence>
+            </Reveal>
+          </li>
+        )
+      })}
+    </ol>
   )
 }
 
