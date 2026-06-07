@@ -239,7 +239,7 @@ export default function App() {
             {/* impact strip */}
             <section id="work" className="mt-20 sm:mt-28">
               <Reveal>
-                <div className="flex flex-col divide-y divide-ink/10 border-y border-ink/10 sm:flex-row sm:divide-x sm:divide-y-0">
+                <div className="flex flex-col divide-y divide-ink/15 border-y border-ink/15 sm:flex-row sm:divide-x sm:divide-y-0">
                   {impactStats.map((s) => (
                     <div key={s.label} className="flex-1 py-6 sm:px-7 sm:first:pl-0">
                       <div className="font-display text-4xl font-normal leading-none text-ink sm:text-5xl">
@@ -303,7 +303,7 @@ export default function App() {
 
               <div
                 className={
-                  aiProjects.length ? 'mt-8 divide-y divide-ink/10 border-y border-ink/10' : ''
+                  aiProjects.length ? 'mt-8 divide-y divide-ink/15 border-y border-ink/15' : ''
                 }
               >
                 {aiProjects.map((ap, i) => {
@@ -477,7 +477,7 @@ function SectionHeading({ n, title }: { n: string; title: string }) {
         {n}
       </span>
       <h2 className="font-mono text-[12px] uppercase tracking-[0.25em] text-muted">{title}</h2>
-      <span aria-hidden="true" className="h-px flex-1 self-center bg-ink/10" />
+      <span aria-hidden="true" className="h-px flex-1 self-center bg-ink/15" />
     </div>
   )
 }
@@ -494,7 +494,7 @@ function CollapsibleList({
   onToggle: (id: string) => void
 }) {
   return (
-    <div className="divide-y divide-ink/10 border-y border-ink/10">
+    <div className="divide-y divide-ink/15 border-y border-ink/15">
       {ids.map((id, i) => {
         const n = byId.get(id)
         if (!n) return null
@@ -582,7 +582,7 @@ function Timeline({
   onToggle: (id: string) => void
 }) {
   return (
-    <ol className="relative ml-1 border-l border-ink/15">
+    <ol className="relative ml-1 border-l border-ink/20">
       {ids.map((id, i) => {
         const n = byId.get(id)
         if (!n) return null
@@ -591,11 +591,11 @@ function Timeline({
         const period = parts.length ? parts[parts.length - 1] : ''
         const roleLoc = parts.slice(0, -1).join(' · ')
         return (
-          <li key={id} className="relative pb-9 pl-6 last:pb-1">
+          <li key={id} className="group/item relative pb-9 pl-6 last:pb-1">
             <span
               aria-hidden="true"
-              className={`absolute -left-[5px] top-[7px] h-2.5 w-2.5 rounded-full ring-4 ring-paper transition-colors ${
-                open ? 'bg-accent' : 'bg-ink/30'
+              className={`absolute -left-[5px] top-[7px] h-2.5 w-2.5 rounded-full ring-4 ring-paper transition-all duration-300 group-hover/item:scale-125 group-hover/item:bg-accent ${
+                open ? 'bg-accent' : 'bg-ink/40'
               }`}
             />
             <Reveal y={10} delay={i * 0.05}>
