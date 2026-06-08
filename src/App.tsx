@@ -23,9 +23,10 @@ const statement: Segment[] = [
   { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
   { t: 'text', v: '. I ship on the ' },
   { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
-  { t: 'text', v: ' in ' },
-  { t: 'term', v: 'Java', id: 'sk-java' },
-  { t: 'text', v: ' & Gosu, and I like fast systems, clean abstractions, and deleting code.' },
+  {
+    t: 'text',
+    v: ' in Java & Gosu, and I like fast systems, clean abstractions, and deleting code.',
+  },
 ]
 
 const projectIds = ['proj-framefuse', 'proj-erp']
@@ -87,7 +88,8 @@ function useActiveSection(ids: string[]) {
 export default function App() {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
   const [termId, setTermId] = useState<string | null>(null)
-  const [openExp, setOpenExp] = useState<string | null>(null)
+  // current role opens by default so its strongest bullets are visible without a tap
+  const [openExp, setOpenExp] = useState<string | null>('exp-guidewire')
   const [openProj, setOpenProj] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
@@ -157,6 +159,23 @@ export default function App() {
     if (prevMenu.current && !menuOpen) menuBtnRef.current?.focus()
     prevMenu.current = menuOpen
   }, [menuOpen])
+
+  // follow OS theme changes live, unless the user has chosen a theme manually
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = (e: MediaQueryListEvent) => {
+      try {
+        if (localStorage.getItem('theme')) return
+      } catch {
+        /* ignore */
+      }
+      const next = e.matches ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', next)
+      setTheme(next)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   const term = termId ? (byId.get(termId) ?? null) : null
   const activeSection = useActiveSection(sectionIds)
@@ -637,10 +656,11 @@ function CollapsibleList({
                 <ExpandMarker open={open} />
               </span>
             </button>
+            <p className="-mt-2 max-w-xl pb-5 text-[15px] leading-relaxed text-ink/80">
+              {n.summary}
+            </p>
             <Collapse open={open}>
               <div className="border-l border-accent/30 pb-6 pl-4">
-                {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
-                <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
                 {n.detail && <DetailList items={n.detail} />}
                 {n.links && (
                   <div className="mt-4 flex gap-4">
