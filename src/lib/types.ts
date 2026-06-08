@@ -27,7 +27,6 @@ export interface GraphNode {
 export interface Profile {
   name: string
   title: string
-  tagline: string
   location: string
   blurb: string
   email?: string

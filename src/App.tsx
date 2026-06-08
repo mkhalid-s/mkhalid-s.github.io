@@ -639,11 +639,12 @@ function CollapsibleList({
         const n = byId.get(id)
         if (!n) return null
         const open = openId === id
+        const hasMore = !!(n.detail?.length || n.links?.length)
         return (
           <Reveal key={id} delay={i * 0.04}>
             <button
-              onClick={() => onToggle(id)}
-              aria-expanded={open}
+              onClick={() => hasMore && onToggle(id)}
+              aria-expanded={hasMore ? open : undefined}
               className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
             >
               <span className="font-display text-2xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-3xl">
@@ -653,13 +654,13 @@ function CollapsibleList({
                 <span className="font-mono text-[12px] text-muted">
                   {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
                 </span>
-                <ExpandMarker open={open} />
+                {hasMore && <ExpandMarker open={open} />}
               </span>
             </button>
             <p className="-mt-2 max-w-xl pb-5 text-[15px] leading-relaxed text-ink/80">
               {n.summary}
             </p>
-            <Collapse open={open}>
+            <Collapse open={open && hasMore}>
               <div className="border-l border-accent/30 pb-6 pl-4">
                 {n.detail && <DetailList items={n.detail} />}
                 {n.links && (

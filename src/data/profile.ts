@@ -6,7 +6,6 @@ import type { GraphNode, Profile } from '../lib/types'
 export const profile: Profile = {
   name: 'Khalid Shaikh',
   title: 'Senior Software Engineer',
-  tagline: 'I build tools that do more with less.',
   location: 'Bengaluru, India',
   blurb:
     'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
@@ -150,18 +149,6 @@ export const nodes: GraphNode[] = [
     tags: ['erp', 'pwa', 'gst', 'offline-first', 'india'],
     keywords:
       'electronics business erp enterprise resource planning india gst e-invoice irn e-way bill gstr crm inventory invoicing amc work order pwa offline first progressive web app',
-  },
-
-  // ── Skill (referenced by the hero statement) ───────────────────────────────
-  {
-    id: 'sk-java',
-    label: 'Java',
-    kind: 'skill',
-    cluster: 'jvm',
-    weight: 1.3,
-    summary: 'Primary language for 12+ years — enterprise scale, plus Gosu on Guidewire.',
-    tags: ['java', 'gosu', 'jvm'],
-    keywords: 'java gosu jvm enterprise backend spring',
   },
 
   // ── Education ──────────────────────────────────────────────────────────────
