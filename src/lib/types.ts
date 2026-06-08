@@ -1,27 +1,22 @@
 export type NodeKind = 'project' | 'experience' | 'skill' | 'education' | 'idea'
 
-export type ClusterId = 'llm' | 'jvm' | 'media' | 'web' | 'foundations'
-
 export interface Link {
   label: string
   href: string
 }
 
+// A content entry (experience / project / education / idea). Rendered by the
+// timeline, the collapsible lists, and the hero footnotes.
 export interface GraphNode {
   id: string
   label: string
   kind: NodeKind
-  cluster: ClusterId
-  /** 0.5 - 1.6, drives node radius + label priority. */
-  weight: number
+  /** period / role line, e.g. "Senior Software Engineer · Bengaluru · …" */
+  meta?: string
   summary: string
-  /** Longer markdown-ish detail lines shown in the panel. */
+  /** detail bullets shown when the entry is expanded */
   detail?: string[]
-  meta?: string // e.g. period or role line
-  tags: string[]
   links?: Link[]
-  /** Free-text bag of words used for the semantic-ish search. */
-  keywords: string
 }
 
 export interface Profile {

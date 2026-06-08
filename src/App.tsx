@@ -473,10 +473,8 @@ export default function App() {
                             {blurb}
                           </p>
                         )}
-                        {(ap.stack || n) && (
-                          <p className="mt-2 font-mono text-[12px] text-muted">
-                            {ap.stack ?? (n?.tags ?? []).slice(0, 6).join(' · ')}
-                          </p>
+                        {ap.stack && (
+                          <p className="mt-2 font-mono text-[12px] text-muted">{ap.stack}</p>
                         )}
                         {href && (
                           <a

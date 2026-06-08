@@ -48,10 +48,10 @@ body {
   color: rgb(var(--paper));
 }
 
-/* theme switch (View Transitions API): the new theme circle-reveals from the
-   toggle button, while the ☾/☀ icon spins/crossfades on top. */
-/* the active effect is chosen via html[data-fx]; origin vars (--vt-x/y/r) are set
-   by the toggle handler. Default (and 'crossfade') = a calm full-page dissolve. */
+/* Theme switch (View Transitions API). The effect is chosen via html[data-fx]
+   (see THEME_FX / ?fx= in App.tsx); origin vars (--vt-x/y/r) are set by the toggle
+   handler for the reveal effects, and the ☾/☀ icon spins/crossfades on top.
+   No data-fx (or an unknown one) falls back to a calm crossfade. */
 @property --vt-r2 {
   syntax: '<length>';
   inherits: false;
