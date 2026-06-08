@@ -48,11 +48,50 @@ body {
   color: rgb(var(--paper));
 }
 
-/* theme switch: smooth full-page crossfade (View Transitions API) */
-::view-transition-old(root),
+/* theme switch (View Transitions API): the new theme circle-reveals from the
+   toggle button, while the ☾/☀ icon spins/crossfades on top. */
+::view-transition-old(root) {
+  animation: none;
+}
 ::view-transition-new(root) {
-  animation-duration: 0.35s;
-  animation-timing-function: ease;
+  animation: theme-reveal 0.5s ease both;
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+  to {
+    clip-path: circle(var(--vt-r, 150%) at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+}
+.theme-toggle {
+  view-transition-name: theme-toggle;
+}
+::view-transition-old(theme-toggle) {
+  animation: theme-icon-out 0.4s ease both;
+}
+::view-transition-new(theme-toggle) {
+  animation: theme-icon-in 0.4s ease both;
+}
+@keyframes theme-icon-out {
+  from {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(-120deg) scale(0.3);
+  }
+}
+@keyframes theme-icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(120deg) scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
 }
 a {
   color: inherit;

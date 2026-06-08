@@ -107,13 +107,26 @@ export default function App() {
     }
     setTheme(next)
   }
-  const toggleTheme = () => {
+  const toggleTheme = (origin?: HTMLElement) => {
     const next = theme === 'light' ? 'dark' : 'light'
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    // smooth full-page crossfade where supported (Chromium); graceful snap otherwise
     const doc = document as Document & { startViewTransition?: (cb: () => void) => void }
-    if (doc.startViewTransition && !reduce) doc.startViewTransition(() => applyTheme(next))
-    else applyTheme(next)
+    if (!doc.startViewTransition || reduce) {
+      applyTheme(next)
+      return
+    }
+    // circle-reveal the new theme from the toggle button
+    if (origin) {
+      const r = origin.getBoundingClientRect()
+      const x = r.left + r.width / 2
+      const y = r.top + r.height / 2
+      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+      const root = document.documentElement
+      root.style.setProperty('--vt-x', `${x}px`)
+      root.style.setProperty('--vt-y', `${y}px`)
+      root.style.setProperty('--vt-r', `${radius}px`)
+    }
+    doc.startViewTransition(() => applyTheme(next))
   }
 
   // deep-linkable terms: open/close a footnote from the URL hash (and on back/forward)
@@ -237,9 +250,9 @@ export default function App() {
                   github ↗
                 </a>
                 <button
-                  onClick={toggleTheme}
+                  onClick={(e) => toggleTheme(e.currentTarget)}
                   aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-                  className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
+                  className="theme-toggle grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
                 >
                   {theme === 'dark' ? '☀' : '☾'}
                 </button>
