@@ -34,13 +34,39 @@
     <meta name="twitter:description" content="I build tools that do more with less." />
     <meta name="twitter:image" content="https://mkhalid-s.github.io/og.png" />
     <meta name="twitter:image:alt" content="Khalid Shaikh — Senior Software Engineer, Bengaluru." />
-    <!-- set theme before paint to avoid a flash -->
+    <!-- set theme + accent before paint to avoid a flash -->
     <script>
       ;(function () {
+        var r = document.documentElement
         try {
           var s = localStorage.getItem('theme')
           var d = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-          if (d) document.documentElement.setAttribute('data-theme', 'dark')
+          if (d) r.setAttribute('data-theme', 'dark')
+        } catch (e) {}
+        // random accent (stable per session; ?accent=NAME overrides). [light, dark] rgb.
+        try {
+          var ACC = {
+            blue: ['37 64 255', '122 142 255'],
+            violet: ['109 40 217', '167 139 250'],
+            emerald: ['15 122 82', '52 211 153'],
+            rust: ['180 71 12', '245 158 11'],
+            magenta: ['190 24 93', '244 114 182'],
+            teal: ['14 116 144', '34 211 238'],
+          }
+          var keys = Object.keys(ACC)
+          var p = new URLSearchParams(location.search).get('accent')
+          var key = p && ACC[p] ? p : null
+          if (!key) {
+            try {
+              key = sessionStorage.getItem('accent')
+            } catch (e) {}
+          }
+          if (!key || !ACC[key]) key = keys[(Math.random() * keys.length) | 0]
+          try {
+            sessionStorage.setItem('accent', key)
+          } catch (e) {}
+          r.style.setProperty('--accent-l', ACC[key][0])
+          r.style.setProperty('--accent-d', ACC[key][1])
         } catch (e) {}
       })()
     </script>

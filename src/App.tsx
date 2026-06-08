@@ -38,6 +38,8 @@ const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : []))
 const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
 
 // theme-switch transition effects, selectable via ?fx=NAME (persists to localStorage)
+// theme-switch transition effects. With no ?fx= override, a random one is used
+// on each toggle (so different visitors/interactions see different effects).
 const THEME_FX = [
   'crossfade', // calm full-page dissolve
   'circle', // hard circular reveal from the toggle
@@ -50,7 +52,7 @@ const THEME_FX = [
   'split', // opens from the centre line outward
   'blinds', // venetian-blind bars sweep open
 ] as const
-const DEFAULT_FX: (typeof THEME_FX)[number] = 'feather'
+const randomFx = () => THEME_FX[(Math.random() * THEME_FX.length) | 0]
 
 // header scroll-spy nav
 const navSections = [
@@ -107,6 +109,7 @@ export default function App() {
   const [openExp, setOpenExp] = useState<string | null>('exp-guidewire')
   const [openProj, setOpenProj] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const explicitFx = useRef<string | null>(null) // set when ?fx= / saved fx pins one
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' &&
     document.documentElement.getAttribute('data-theme') === 'dark'
@@ -130,7 +133,9 @@ export default function App() {
       applyTheme(next)
       return
     }
-    // circle-reveal the new theme from the toggle button
+    // pick the effect for this interaction (pinned one, or random)
+    document.documentElement.dataset.fx = explicitFx.current ?? randomFx()
+    // reveal effects radiate from the toggle button
     if (origin) {
       const r = origin.getBoundingClientRect()
       const x = r.left + r.width / 2
@@ -194,23 +199,22 @@ export default function App() {
     prevMenu.current = menuOpen
   }, [menuOpen])
 
-  // resolve the theme-switch effect: ?fx=NAME (sticky) → saved → default
+  // pin a specific effect only if ?fx=NAME (sticky) or a saved one exists; else random
   useEffect(() => {
-    let fx: string = DEFAULT_FX
     try {
       const all = THEME_FX as readonly string[]
       const param = new URLSearchParams(window.location.search).get('fx')
       if (param && all.includes(param)) {
-        fx = param
+        explicitFx.current = param
         localStorage.setItem('fx', param)
       } else {
         const saved = localStorage.getItem('fx')
-        if (saved && all.includes(saved)) fx = saved
+        if (saved && all.includes(saved)) explicitFx.current = saved
       }
     } catch {
       /* ignore */
     }
-    document.documentElement.dataset.fx = fx
+    if (explicitFx.current) document.documentElement.dataset.fx = explicitFx.current
   }, [])
 
   // follow OS theme changes live, unless the user has chosen a theme manually

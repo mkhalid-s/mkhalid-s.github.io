@@ -7,7 +7,8 @@
   --paper2: 236 231 220;
   --ink: 23 20 16;
   --muted: 111 102 87;
-  --accent: 37 64 255;
+  /* accent is a random palette pick (set pre-paint in index.html); per-theme value */
+  --accent: var(--accent-l, 37 64 255);
   --term-fill: 0.28; /* highlight-swipe opacity behind interactive words */
   color-scheme: light;
 }
@@ -17,7 +18,7 @@
   --paper2: 31 28 23;
   --ink: 236 231 219;
   --muted: 150 141 124;
-  --accent: 122 142 255;
+  --accent: var(--accent-d, 122 142 255);
   --term-fill: 0.2; /* lighter accent reads hotter on near-black — soften it */
   color-scheme: dark;
 }
