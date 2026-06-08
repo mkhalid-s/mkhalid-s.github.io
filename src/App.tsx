@@ -37,6 +37,10 @@ const educationIds = ['edu-be', 'edu-hsc']
 const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
 const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
 
+// theme-switch transition effects, selectable via ?fx=NAME (persists to localStorage)
+const THEME_FX = ['crossfade', 'circle', 'feather', 'diagonal'] as const
+const DEFAULT_FX: (typeof THEME_FX)[number] = 'circle'
+
 // header scroll-spy nav
 const navSections = [
   { id: 'experience', label: 'experience' },
@@ -178,6 +182,25 @@ export default function App() {
     if (prevMenu.current && !menuOpen) menuBtnRef.current?.focus()
     prevMenu.current = menuOpen
   }, [menuOpen])
+
+  // resolve the theme-switch effect: ?fx=NAME (sticky) → saved → default
+  useEffect(() => {
+    let fx: string = DEFAULT_FX
+    try {
+      const all = THEME_FX as readonly string[]
+      const param = new URLSearchParams(window.location.search).get('fx')
+      if (param && all.includes(param)) {
+        fx = param
+        localStorage.setItem('fx', param)
+      } else {
+        const saved = localStorage.getItem('fx')
+        if (saved && all.includes(saved)) fx = saved
+      }
+    } catch {
+      /* ignore */
+    }
+    document.documentElement.dataset.fx = fx
+  }, [])
 
   // follow OS theme changes live, unless the user has chosen a theme manually
   useEffect(() => {

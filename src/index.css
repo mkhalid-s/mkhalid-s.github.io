@@ -50,18 +50,75 @@ body {
 
 /* theme switch (View Transitions API): the new theme circle-reveals from the
    toggle button, while the ☾/☀ icon spins/crossfades on top. */
+/* the active effect is chosen via html[data-fx]; origin vars (--vt-x/y/r) are set
+   by the toggle handler. Default (and 'crossfade') = a calm full-page dissolve. */
+@property --vt-r2 {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
 ::view-transition-old(root) {
-  animation: none;
+  animation: fx-fade-out 0.4s ease both;
 }
 ::view-transition-new(root) {
-  animation: theme-reveal 0.5s ease both;
+  animation: fx-fade-in 0.4s ease both;
 }
-@keyframes theme-reveal {
+:root[data-fx='circle']::view-transition-old(root),
+:root[data-fx='feather']::view-transition-old(root),
+:root[data-fx='diagonal']::view-transition-old(root) {
+  animation: none;
+}
+:root[data-fx='circle']::view-transition-new(root) {
+  animation: fx-circle 0.5s ease both;
+}
+:root[data-fx='feather']::view-transition-new(root) {
+  animation: fx-feather 0.55s ease both;
+  -webkit-mask: radial-gradient(
+    circle at var(--vt-x, 50%) var(--vt-y, 0),
+    #000 calc(var(--vt-r2) - 90px),
+    transparent var(--vt-r2)
+  );
+  mask: radial-gradient(
+    circle at var(--vt-x, 50%) var(--vt-y, 0),
+    #000 calc(var(--vt-r2) - 90px),
+    transparent var(--vt-r2)
+  );
+}
+:root[data-fx='diagonal']::view-transition-new(root) {
+  animation: fx-diagonal 0.5s ease both;
+}
+@keyframes fx-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fx-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fx-circle {
   from {
     clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
   }
   to {
     clip-path: circle(var(--vt-r, 150%) at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+}
+@keyframes fx-feather {
+  from {
+    --vt-r2: 0px;
+  }
+  to {
+    --vt-r2: var(--vt-r, 1500px);
+  }
+}
+@keyframes fx-diagonal {
+  from {
+    clip-path: polygon(0 0, 0 0, -40% 100%, -40% 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 140% 0, 100% 100%, -40% 100%);
   }
 }
 .theme-toggle {
