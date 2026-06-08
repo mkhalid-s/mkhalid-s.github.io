@@ -39,7 +39,7 @@ const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
 
 // theme-switch transition effects, selectable via ?fx=NAME (persists to localStorage)
 const THEME_FX = ['crossfade', 'circle', 'feather', 'diagonal'] as const
-const DEFAULT_FX: (typeof THEME_FX)[number] = 'circle'
+const DEFAULT_FX: (typeof THEME_FX)[number] = 'feather'
 
 // header scroll-spy nav
 const navSections = [
