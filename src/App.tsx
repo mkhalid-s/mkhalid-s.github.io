@@ -98,17 +98,23 @@ export default function App() {
       ? 'dark'
       : 'light',
   )
-  const toggleTheme = () =>
-    setTheme((t) => {
-      const next = t === 'light' ? 'dark' : 'light'
-      document.documentElement.setAttribute('data-theme', next)
-      try {
-        localStorage.setItem('theme', next)
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
+  const applyTheme = (next: 'light' | 'dark') => {
+    document.documentElement.setAttribute('data-theme', next)
+    try {
+      localStorage.setItem('theme', next)
+    } catch {
+      /* ignore */
+    }
+    setTheme(next)
+  }
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light'
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // smooth full-page crossfade where supported (Chromium); graceful snap otherwise
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => void }
+    if (doc.startViewTransition && !reduce) doc.startViewTransition(() => applyTheme(next))
+    else applyTheme(next)
+  }
 
   // deep-linkable terms: open/close a footnote from the URL hash (and on back/forward)
   useEffect(() => {

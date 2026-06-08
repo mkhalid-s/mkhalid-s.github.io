@@ -47,6 +47,13 @@ body {
   background: rgb(var(--accent));
   color: rgb(var(--paper));
 }
+
+/* theme switch: smooth full-page crossfade (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease;
+}
 a {
   color: inherit;
 }
