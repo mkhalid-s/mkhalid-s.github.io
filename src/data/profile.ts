@@ -6,12 +6,16 @@ import type { GraphNode, Profile } from '../lib/types'
 export const profile: Profile = {
   name: 'Khalid Shaikh',
   title: 'Senior Software Engineer',
+  headline:
+    'Guidewire platform engineer turning enterprise complexity into useful, reliable tools.',
   location: 'Bengaluru, India',
   blurb:
-    'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
-    'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform, and over the ' +
-    'last year I’ve been building LLM applications — RAG, agents and evaluation. ' +
-    'I like leading teams, clean abstractions, and deleting code.',
+    'I bring 12+ years across BFSI and telecom, with a deep Guidewire InsuranceSuite ' +
+    'foundation, cloud migration experience, and a growing practice in LLM systems. ' +
+    'My work sits where delivery pressure, architecture, and product usefulness meet.',
+  availability:
+    'Best fit: Guidewire modernization, enterprise AI enablement, senior IC / technical lead roles.',
+  contactPitch: 'Have a platform, insurance, or AI workflow that needs calmer execution?',
   email: 'mshaikh@guidewire.com',
   cvHref: 'Khalid_Shaikh_CV.pdf',
   social: [
@@ -28,13 +32,13 @@ export const nodes: GraphNode[] = [
     kind: 'experience',
     meta: 'Senior Software Engineer · Bengaluru · Oct 2021 – Present',
     summary:
-      'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
+      'Modernising cloud delivery for global insurers while exploring practical AI features inside InsuranceSuite workflows.',
     detail: [
-      'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
-      'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
-      'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
-      'Built AI-powered features for claims & policy workflows using LLMs, inside the Guidewire ecosystem.',
-      'Built TeamCity CI/CD pipelines; configured Integration Gateway for London Market message processing; resolved critical cross-release defects.',
+      'Lead and mentor interns, new joiners, SD1/SD2 engineers and the wider delivery team on Guidewire patterns, review practices and development workflows.',
+      'Drove end-to-end customer migrations from Classic AWS infrastructure to the Guidewire Cloud Platform with zero-downtime transitions.',
+      'Designed and delivered PolicyCenter, ClaimCenter and BillingCenter features for Australian Workers’ Compensation and London insurance markets.',
+      'Built AI-powered claims and policy workflow features using LLMs inside the Guidewire ecosystem.',
+      'Built TeamCity CI/CD pipelines, configured Integration Gateway for London Market message processing, and resolved critical cross-release defects.',
       'Stack: Java, Gosu, PCF, InsuranceSuite, SOAP/REST, Stash, Docker, Bash, DataDog.',
     ],
     links: [{ label: 'Guidewire', href: 'https://www.guidewire.com' }],
@@ -45,10 +49,10 @@ export const nodes: GraphNode[] = [
     kind: 'experience',
     meta: 'Senior Consultant · Navi Mumbai · Aug 2018 – Oct 2021',
     summary:
-      'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
+      'Led full-stack delivery for a technical knowledge-base platform used across agricultural and construction equipment programs.',
     detail: [
-      'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
-      'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
+      'Delivered Java, Angular, Spring Boot and Oracle features while integrating AWS and Azure services into enterprise workflows.',
+      'Analysed and resolved dealer-facing customisation requests across multiple product lines with clear stakeholder communication.',
     ],
     links: [{ label: 'Capgemini', href: 'https://www.capgemini.com' }],
   },
@@ -57,8 +61,7 @@ export const nodes: GraphNode[] = [
     label: 'Reliance Jio',
     kind: 'experience',
     meta: 'Deputy Manager · Navi Mumbai · Feb 2017 – Aug 2018',
-    summary:
-      'Integration & deployment of digital eServices for a major telecommunications platform.',
+    summary: 'Integrated and deployed digital eServices for a major telecommunications platform.',
     detail: [
       'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
     ],
@@ -95,7 +98,7 @@ export const nodes: GraphNode[] = [
     kind: 'project',
     meta: 'Open source · 2026',
     summary:
-      'Privacy-first desktop app to combine Zoom recordings into professional videos — PIP, side-by-side & sequential layouts.',
+      'Privacy-first desktop app that turns raw Zoom recordings into polished videos with local FFmpeg processing.',
     detail: [
       'Desktop app powered by FFmpeg to merge cloud recordings into polished videos.',
       'Picture-in-picture, side-by-side and sequential layouts — all processed locally for privacy.',
@@ -108,7 +111,7 @@ export const nodes: GraphNode[] = [
     kind: 'project',
     meta: 'Personal · In progress',
     summary:
-      'Building an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
+      'Offline-first, GST-compliant ERP concept for electronics-equipment businesses in India.',
     detail: [
       'Full scope: CRM, quotations & sales orders, GST e-invoicing (IRN, e-way bill, GSTR-1/3B), payments, inventory with serial tracking, vendor & purchase orders, and work-order / AMC management.',
       'Architected as a Progressive Web App — offline-first, installable, low-bandwidth, with background sync.',
@@ -141,6 +144,13 @@ export const nodes: GraphNode[] = [
     summary:
       'The thread tying it all together: strip the noise, keep the signal. Whether it’s tokens, code or scope — subtract until only what matters remains.',
   },
+  {
+    id: 'idea-leadership',
+    label: 'Clear technical execution',
+    kind: 'idea',
+    summary:
+      'Leadership, to me, is making the next correct step obvious: crisp trade-offs, useful reviews, healthy defaults, and a team that can move without waiting for permission.',
+  },
 ]
 
 // ── Skills, certifications & languages (rendered as their own sections) ───────
@@ -151,8 +161,17 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    label: 'AI / LLM',
-    items: ['LangChain', 'LangGraph', 'RAG', 'Agents', 'Qdrant', 'ChromaDB', 'Prompt engineering'],
+    label: 'AI systems',
+    items: [
+      'LangChain',
+      'LangGraph',
+      'RAG',
+      'Agents',
+      'Qdrant',
+      'ChromaDB',
+      'Prompt engineering',
+      'Evaluation',
+    ],
   },
   {
     label: 'Languages',
@@ -186,11 +205,21 @@ export const spokenLanguages: string[] = ['English — Professional', 'Hindi', '
 export interface Stat {
   value: string
   label: string
+  detail: string
 }
 export const impactStats: Stat[] = [
-  { value: '12+', label: 'years engineering' },
-  { value: '5', label: 'engineers led & mentored' },
-  { value: '4', label: 'cloud certifications' },
+  { value: '12+', label: 'years engineering', detail: 'BFSI, telecom and enterprise platforms' },
+  {
+    value: '5+',
+    label: 'engineers mentored',
+    detail: 'Interns, new joiners and SD1 / SD2 engineers',
+  },
+  { value: '0', label: 'downtime migrations', detail: 'Classic AWS to Guidewire Cloud Platform' },
+  {
+    value: '4',
+    label: 'cloud certifications',
+    detail: 'AWS and Azure fundamentals across delivery',
+  },
 ]
 
 export interface AiPillar {
@@ -200,14 +229,58 @@ export interface AiPillar {
 export const aiPillars: AiPillar[] = [
   {
     label: 'RAG & vector search',
-    blurb: 'Retrieval pipelines & embeddings over Qdrant / ChromaDB.',
+    blurb: 'Retrieval pipelines, chunking strategies and embeddings over Qdrant / ChromaDB.',
   },
   {
     label: 'Agents & tools',
-    blurb: 'Agents that call tools and chain steps to complete real tasks.',
+    blurb: 'Tool-calling workflows that chain useful steps instead of only producing text.',
   },
-  { label: 'Orchestration', blurb: 'Multi-step LLM workflows with LangChain & LangGraph.' },
-  { label: 'Evals & cost', blurb: 'Measuring output quality; cutting token and latency cost.' },
+  {
+    label: 'Orchestration',
+    blurb: 'Multi-step LLM workflows with LangChain, LangGraph and clear state.',
+  },
+  { label: 'Evals & cost', blurb: 'Quality checks, token discipline and latency-aware design.' },
+]
+
+export interface FocusArea {
+  label: string
+  detail: string
+}
+
+export const focusAreas: FocusArea[] = [
+  {
+    label: 'Guidewire cloud delivery',
+    detail: 'InsuranceSuite features, integration flows, migrations, CI/CD and production defects.',
+  },
+  {
+    label: 'Enterprise AI workflows',
+    detail: 'RAG, agents, evaluation and AI-assisted claims / policy experiences.',
+  },
+  {
+    label: 'Technical leadership',
+    detail:
+      'Mentoring engineers, simplifying scope, reviewing architecture and raising delivery quality.',
+  },
+]
+
+export interface Principle {
+  label: string
+  detail: string
+}
+
+export const operatingPrinciples: Principle[] = [
+  {
+    label: 'Keep the domain visible',
+    detail: 'Model the insurance or business process clearly before adding framework complexity.',
+  },
+  {
+    label: 'Measure before scaling',
+    detail: 'Use evals, logs and feedback loops so AI features can be trusted outside demos.',
+  },
+  {
+    label: 'Prefer calm systems',
+    detail: 'Small APIs, boring automation, readable code and fewer moving parts where possible.',
+  },
 ]
 
 // AI projects/POCs shown in the AI Engineering section.
@@ -222,6 +295,11 @@ export interface AiProject {
   href?: string
 }
 export const aiProjects: AiProject[] = [
-  // Add your real POCs here, e.g.:
-  // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
+  {
+    title: 'Insurance workflow AI features',
+    blurb:
+      'LLM-assisted claims and policy workflows designed inside the Guidewire ecosystem with production constraints in mind.',
+    stack: 'LLMs · Guidewire · Java / Gosu · Evaluation',
+    outcome: 'Applied AI',
+  },
 ]

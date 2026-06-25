@@ -6,8 +6,10 @@ import {
   aiPillars,
   aiProjects,
   certifications,
+  focusAreas,
   impactStats,
   nodes,
+  operatingPrinciples,
   profile,
   skillGroups,
   spokenLanguages,
@@ -18,14 +20,16 @@ import type { GraphNode } from './lib/types'
 const statement: Segment[] = [
   {
     t: 'text',
-    v: 'I’m Khalid Shaikh — a senior software engineer, 12+ years across BFSI & telecom, now building LLM applications: RAG, agents and evaluation. I build ',
+    v: `I’m ${profile.name} — a senior software engineer shaping `,
   },
-  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  { t: 'text', v: '. I ship on the ' },
   { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
+  { t: 'text', v: ' delivery and practical AI systems for insurance teams. I build ' },
+  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
+  { t: 'text', v: ', lead teams through ' },
+  { t: 'term', v: 'clear technical execution', id: 'idea-leadership' },
   {
     t: 'text',
-    v: ' in Java & Gosu, and I like fast systems, clean abstractions, and deleting code.',
+    v: ' and keep enterprise software understandable.',
   },
 ]
 
@@ -56,6 +60,7 @@ const randomFx = () => THEME_FX[(Math.random() * THEME_FX.length) | 0]
 
 // header scroll-spy nav
 const navSections = [
+  { id: 'profile', label: 'profile' },
   { id: 'experience', label: 'experience' },
   { id: 'projects', label: 'projects' },
   { id: 'ai', label: 'ai' },
@@ -64,6 +69,7 @@ const navSections = [
 // all sections, so the nav only lights up when its section is truly current
 // (otherwise 'ai' would stay lit through skills/certs/education)
 const sectionIds = [
+  'profile',
   'experience',
   'projects',
   'ai',
@@ -249,7 +255,7 @@ export default function App() {
           </a>
           {/* top bar (sticky) */}
           <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur-md">
-            <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4 sm:px-8">
               <a href="#top" className="font-mono text-sm font-medium tracking-tight">
                 khalid<span className="text-accent">.</span>
               </a>
@@ -309,7 +315,7 @@ export default function App() {
             {/* mobile section nav (wrapper stays mounted so aria-controls resolves) */}
             <div id="mobile-nav" className="md:hidden">
               <Collapse open={menuOpen}>
-                <nav className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2">
+                <nav className="mx-auto max-w-5xl border-t border-ink/10 px-6 py-2">
                   {navSections.map((s) => (
                     <a
                       key={s.id}
@@ -331,77 +337,169 @@ export default function App() {
           <main
             id="top"
             tabIndex={-1}
-            className="relative z-10 mx-auto max-w-3xl px-6 outline-none sm:px-8"
+            className="relative z-10 mx-auto max-w-5xl px-6 outline-none sm:px-8"
           >
             {/* hero */}
-            <section className="flex min-h-[88vh] flex-col pt-[12vh] sm:pt-[16vh]">
-              <m.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className="mb-7 font-mono text-[13px] uppercase tracking-[0.25em] text-muted"
-              >
-                {profile.title} · {profile.location}
-              </m.p>
-
-              <Statement
-                segments={statement}
-                activeId={termId}
-                onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
-              />
-
-              {/* footnote detail */}
-              <AnimatePresence mode="wait">
-                {term && (
-                  <m.div
-                    key={term.id}
-                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginTop: 28 }}
-                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                    transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
-                    className="overflow-hidden"
+            <section className="flex min-h-[88vh] flex-col pt-[10vh] sm:pt-[14vh]">
+              <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-14">
+                <div>
+                  <m.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-7 font-mono text-[13px] uppercase tracking-[0.25em] text-muted"
                   >
-                    <Footnote node={term} onClose={() => setTermId(null)} />
+                    {profile.title} · {profile.location}
+                  </m.p>
+
+                  <Statement
+                    segments={statement}
+                    activeId={termId}
+                    onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
+                  />
+
+                  <m.p
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.55, delay: 0.34 }}
+                    className="mt-8 max-w-2xl text-[16px] leading-relaxed text-ink/75 sm:text-lg"
+                  >
+                    {profile.blurb}
+                  </m.p>
+
+                  <m.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.55, delay: 0.42 }}
+                    className="mt-8 flex flex-wrap gap-3"
+                  >
+                    <a
+                      href={`mailto:${profile.email}`}
+                      className="rounded-full bg-ink px-4 py-2 font-mono text-[13px] text-paper transition hover:-translate-y-0.5 hover:bg-accent"
+                    >
+                      Start a conversation
+                    </a>
+                    <a
+                      href={profile.cvHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full border border-ink/15 px-4 py-2 font-mono text-[13px] text-ink transition hover:-translate-y-0.5 hover:border-accent hover:text-accent"
+                    >
+                      View resume
+                    </a>
                   </m.div>
-                )}
-              </AnimatePresence>
+
+                  {/* footnote detail */}
+                  <AnimatePresence mode="wait">
+                    {term && (
+                      <m.div
+                        key={term.id}
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: 'auto', marginTop: 28 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <Footnote node={term} onClose={() => setTermId(null)} />
+                      </m.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <m.aside
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.26 }}
+                  className="rounded-3xl border border-ink/10 bg-paper2/45 p-5 shadow-[0_24px_80px_rgb(var(--ink)/0.06)] backdrop-blur-sm"
+                >
+                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+                    Profile signal
+                  </div>
+                  <p className="mt-4 font-display text-2xl font-normal leading-tight text-ink">
+                    {profile.headline}
+                  </p>
+                  <div className="mt-6 space-y-4 border-t border-ink/10 pt-5">
+                    <MiniField label="Current fit" value={profile.availability} />
+                    <MiniField
+                      label="Core stack"
+                      value="Guidewire · Java · Gosu · AWS · LLM apps"
+                    />
+                    <MiniField
+                      label="Working style"
+                      value="Minimal scope, clear ownership, production bias"
+                    />
+                  </div>
+                </m.aside>
+              </div>
 
               {/* scroll cue — sits at the bottom of the hero, flows with content */}
               <m.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1 }}
-                onClick={() => document.getElementById('work')?.scrollIntoView()}
-                aria-label="Scroll to selected work"
+                onClick={() => document.getElementById('profile')?.scrollIntoView()}
+                aria-label="Scroll to profile overview"
                 className="mt-auto flex flex-col items-center gap-1 self-center pt-12 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition hover:text-ink"
               >
-                <span>work</span>
+                <span>profile</span>
                 <span className="cue-arrow text-sm">↓</span>
               </m.button>
             </section>
 
-            {/* impact strip */}
-            <section id="work" className="scroll-mt-20 mt-20 sm:mt-28">
+            {/* profile overview */}
+            <section id="profile" className="scroll-mt-20 mt-16 sm:mt-24">
               <Reveal>
-                <div className="flex flex-col divide-y divide-ink/15 border-y border-ink/15 sm:flex-row sm:divide-x sm:divide-y-0">
+                <SectionHeading n="01" title="Profile" />
+              </Reveal>
+              <Reveal>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   {impactStats.map((s) => (
-                    <div key={s.label} className="flex-1 py-6 sm:px-7 sm:first:pl-0">
-                      <div className="font-display text-4xl font-normal leading-none text-ink sm:text-5xl">
+                    <div
+                      key={s.label}
+                      className="rounded-2xl border border-ink/10 bg-paper2/35 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-accent/35"
+                    >
+                      <div className="font-display text-4xl font-normal leading-none text-ink">
                         {s.value}
                       </div>
                       <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                         {s.label}
                       </div>
+                      <p className="mt-3 text-[13px] leading-relaxed text-ink/65">{s.detail}</p>
                     </div>
                   ))}
                 </div>
               </Reveal>
+
+              <div className="mt-8 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+                <Reveal>
+                  <ProfilePanel eyebrow="Current focus" title="Where I create leverage now">
+                    <div className="space-y-4">
+                      {focusAreas.map((item) => (
+                        <TextRow key={item.label} label={item.label} detail={item.detail} />
+                      ))}
+                    </div>
+                  </ProfilePanel>
+                </Reveal>
+                <Reveal delay={0.05}>
+                  <ProfilePanel eyebrow="Operating system" title="How I like to work">
+                    <div className="space-y-4">
+                      {operatingPrinciples.map((item) => (
+                        <TextRow key={item.label} label={item.label} detail={item.detail} />
+                      ))}
+                    </div>
+                  </ProfilePanel>
+                </Reveal>
+              </div>
             </section>
 
             {/* experience */}
             <section id="experience" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="01" title="Experience" />
+                <SectionHeading n="02" title="Experience" />
+                <p className="mb-8 max-w-2xl text-[15px] leading-relaxed text-ink/80">
+                  A path from banking systems and telecom integrations to cloud insurance platforms,
+                  with increasing ownership over architecture, delivery quality and mentoring.
+                </p>
               </Reveal>
               <Timeline
                 ids={experienceIds}
@@ -414,7 +512,12 @@ export default function App() {
             {/* selected work */}
             <section id="projects" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="02" title="Projects" />
+                <SectionHeading n="03" title="Projects" />
+                <p className="mb-6 max-w-2xl text-[15px] leading-relaxed text-ink/80">
+                  Personal builds where the same instincts show up: keep data local where it
+                  matters, design around Indian business workflows, and make useful software feel
+                  calm.
+                </p>
               </Reveal>
               <CollapsibleList
                 ids={projectIds}
@@ -427,7 +530,7 @@ export default function App() {
             {/* AI engineering */}
             <section id="ai" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="03" title="AI engineering" />
+                <SectionHeading n="04" title="AI engineering" />
                 <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
                   Bringing a decade of production engineering discipline to LLM systems —
                   prototyping, measuring and hardening them for real workloads, not demos.
@@ -500,20 +603,24 @@ export default function App() {
             {/* skills */}
             <section id="skills" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="04" title="Skills" />
+                <SectionHeading n="05" title="Skills" />
+                <p className="mb-6 max-w-2xl text-[15px] leading-relaxed text-ink/80">
+                  A production-first stack: JVM and Guidewire depth, enough frontend to ship full
+                  workflows, and AI tooling chosen for measurable usefulness.
+                </p>
               </Reveal>
-              <div className="space-y-5">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {skillGroups.map((g, i) => (
                   <Reveal key={g.label} delay={i * 0.04}>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr]">
-                      <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted sm:pt-1">
+                    <div className="h-full rounded-2xl border border-ink/10 bg-paper2/25 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-accent/35">
+                      <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted">
                         {g.label}
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="mt-4 flex flex-wrap gap-2">
                         {g.items.map((it) => (
                           <span
                             key={it}
-                            className="rounded-md bg-ink/[0.05] px-2.5 py-1 text-[13px] text-ink/75 transition hover:bg-accent/10 hover:text-accent"
+                            className="rounded-full bg-ink/[0.05] px-2.5 py-1 text-[13px] text-ink/75 transition hover:bg-accent/10 hover:text-accent"
                           >
                             {it}
                           </span>
@@ -523,15 +630,15 @@ export default function App() {
                   </Reveal>
                 ))}
                 <Reveal delay={skillGroups.length * 0.04}>
-                  <div className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr]">
-                    <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted sm:pt-1">
-                      Certified
+                  <div className="h-full rounded-2xl border border-accent/25 bg-accent/5 p-5">
+                    <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-muted">
+                      Certifications
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-wrap gap-2">
                       {certifications.map((c) => (
                         <span
                           key={c}
-                          className="rounded-md bg-ink/[0.05] px-2.5 py-1 text-[13px] text-ink/75"
+                          className="rounded-full bg-paper/60 px-2.5 py-1 text-[13px] text-ink/75"
                         >
                           {c}
                         </span>
@@ -545,7 +652,7 @@ export default function App() {
             {/* education */}
             <section id="education" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="05" title="Education" />
+                <SectionHeading n="06" title="Education" />
                 <div className="space-y-3">
                   {educationIds.map((id) => {
                     const n = byId.get(id)!
@@ -570,9 +677,9 @@ export default function App() {
             {/* contact */}
             <section id="contact" className="scroll-mt-20 mt-28 pb-24 sm:mt-36">
               <Reveal>
-                <SectionHeading n="06" title="Contact" />
+                <SectionHeading n="07" title="Contact" />
                 <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
-                  Building something that needs to do more with less?{' '}
+                  {profile.contactPitch}{' '}
                   <a
                     href={`mailto:${profile.email}`}
                     className="font-medium text-accent underline decoration-2 underline-offset-4 transition hover:opacity-70"
@@ -614,6 +721,44 @@ export default function App() {
         </div>
       </MotionConfig>
     </LazyMotion>
+  )
+}
+
+function MiniField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">{label}</div>
+      <p className="mt-1 text-[13px] leading-relaxed text-ink/75">{value}</p>
+    </div>
+  )
+}
+
+function ProfilePanel({
+  eyebrow,
+  title,
+  children,
+}: {
+  eyebrow: string
+  title: string
+  children: ReactNode
+}) {
+  return (
+    <div className="h-full rounded-3xl border border-ink/10 bg-paper2/30 p-6">
+      <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{eyebrow}</div>
+      <h3 className="mt-3 font-display text-2xl font-normal leading-tight text-ink sm:text-3xl">
+        {title}
+      </h3>
+      <div className="mt-6">{children}</div>
+    </div>
+  )
+}
+
+function TextRow({ label, detail }: { label: string; detail: string }) {
+  return (
+    <div className="grid gap-1 border-t border-ink/10 pt-4 sm:grid-cols-[9rem_1fr] sm:gap-5">
+      <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-ink/75">{label}</div>
+      <p className="text-[14px] leading-relaxed text-muted">{detail}</p>
+    </div>
   )
 }
 

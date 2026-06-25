@@ -22,8 +22,11 @@ export interface GraphNode {
 export interface Profile {
   name: string
   title: string
+  headline: string
   location: string
   blurb: string
+  availability: string
+  contactPitch: string
   email?: string
   social: Link[]
   cvHref: string
