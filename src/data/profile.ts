@@ -7,11 +7,13 @@ export const profile: Profile = {
   name: 'Khalid Shaikh',
   title: 'Senior Software Engineer',
   location: 'Bengaluru, India',
+  timezone: 'Asia/Kolkata',
   blurb:
     'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
     'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform, and over the ' +
     'last year I’ve been building LLM applications — RAG, agents and evaluation. ' +
     'I like leading teams, clean abstractions, and deleting code.',
+  status: 'Open to interesting conversations',
   email: 'mshaikh@guidewire.com',
   cvHref: 'Khalid_Shaikh_CV.pdf',
   social: [
@@ -29,6 +31,7 @@ export const nodes: GraphNode[] = [
     meta: 'Senior Software Engineer · Bengaluru · Oct 2021 – Present',
     summary:
       'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
+    tags: ['Insurance', 'Cloud', 'AI', 'Java/Gosu'],
     detail: [
       'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
       'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
@@ -46,6 +49,7 @@ export const nodes: GraphNode[] = [
     meta: 'Senior Consultant · Navi Mumbai · Aug 2018 – Oct 2021',
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
+    tags: ['Full-stack', 'Java', 'Angular', 'AWS/Azure'],
     detail: [
       'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
       'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
@@ -59,6 +63,7 @@ export const nodes: GraphNode[] = [
     meta: 'Deputy Manager · Navi Mumbai · Feb 2017 – Aug 2018',
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
+    tags: ['Telecom', 'Spring Boot', 'TIBCO', 'SAP'],
     detail: [
       'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
     ],
@@ -70,6 +75,7 @@ export const nodes: GraphNode[] = [
     kind: 'experience',
     meta: 'Technical Engineer · Pune · Jun 2016 – Feb 2017',
     summary: 'Customised multichannel chat & email customer-engagement software.',
+    tags: ['SaaS', 'Security', 'Customer engagement'],
     detail: [
       'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
     ],
@@ -81,6 +87,7 @@ export const nodes: GraphNode[] = [
     kind: 'experience',
     meta: 'Associate Software Developer · Navi Mumbai · Mar 2014 – Jun 2016',
     summary: 'Treasury-management system features for banking clients.',
+    tags: ['BFSI', 'Java', 'Oracle', 'PowerBuilder'],
     detail: [
       'Developed treasury-management system features for banking clients.',
       'Stack: Java, SAP PowerBuilder 10/11, Oracle 10g/11c, PL/SQL.',
@@ -94,6 +101,8 @@ export const nodes: GraphNode[] = [
     label: 'framefusevid',
     kind: 'project',
     meta: 'Open source · 2026',
+    status: 'Open source',
+    tags: ['FFmpeg', 'Desktop', 'TypeScript'],
     summary:
       'Privacy-first desktop app to combine Zoom recordings into professional videos — PIP, side-by-side & sequential layouts.',
     detail: [
@@ -107,6 +116,8 @@ export const nodes: GraphNode[] = [
     label: 'Electronics Business ERP',
     kind: 'project',
     meta: 'Personal · In progress',
+    status: 'In progress',
+    tags: ['PWA', 'Offline-first', 'GST e-invoice'],
     summary:
       'Building an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
     detail: [
@@ -147,12 +158,15 @@ export const nodes: GraphNode[] = [
 export interface SkillGroup {
   label: string
   items: string[]
+  /** highlight as the area you focus on most; rendered with a subtle accent */
+  focus?: boolean
 }
 
 export const skillGroups: SkillGroup[] = [
   {
     label: 'AI / LLM',
     items: ['LangChain', 'LangGraph', 'RAG', 'Agents', 'Qdrant', 'ChromaDB', 'Prompt engineering'],
+    focus: true,
   },
   {
     label: 'Languages',
@@ -162,6 +176,7 @@ export const skillGroups: SkillGroup[] = [
   {
     label: 'Guidewire',
     items: ['PolicyCenter', 'ClaimCenter', 'BillingCenter', 'PCF', 'GPM', 'Integration Framework'],
+    focus: true,
   },
   {
     label: 'Cloud & DevOps',
@@ -222,6 +237,54 @@ export interface AiProject {
   href?: string
 }
 export const aiProjects: AiProject[] = [
-  // Add your real POCs here, e.g.:
-  // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
+  {
+    title: 'Claims & policy LLM features',
+    blurb:
+      'Production LLM features for claims and underwriting workflows inside Guidewire InsuranceSuite — context-aware drafting, summarisation and triage.',
+    stack: 'Java · Gosu · LLM APIs · internal evals',
+    outcome: 'Shipped inside InsuranceSuite',
+  },
 ]
+
+// ── "Now" panel — what I'm currently focused on ──────────────────────────────
+// Keep this short and honest. Rendered above Experience as a fresh-eyes anchor.
+export interface NowItem {
+  label: string
+  /** one-line description */
+  detail: string
+}
+export const nowFocus: NowItem[] = [
+  {
+    label: 'AI inside InsuranceSuite',
+    detail: 'Shipping LLM features for claims & policy workflows on the Guidewire Cloud Platform.',
+  },
+  {
+    label: 'Evals over demos',
+    detail:
+      'Building eval harnesses and cost dashboards so AI features earn their seat in production.',
+  },
+  {
+    label: 'Mentoring',
+    detail: 'Coaching SD1/SD2 engineers and interns on Guidewire patterns and AI fundamentals.',
+  },
+  {
+    label: 'Side-quest',
+    detail: 'An offline-first, GST-compliant ERP for small electronics businesses in India.',
+  },
+]
+
+export const currentToolkit: string[] = [
+  'Java 17',
+  'Gosu',
+  'Python',
+  'LangChain',
+  'LangGraph',
+  'Qdrant',
+  'AWS',
+  'Cursor',
+  'Neovim',
+]
+
+// ── Site metadata ────────────────────────────────────────────────────────────
+// Bumped whenever a meaningful content/copy update lands.
+export const lastUpdated = '2026-06'

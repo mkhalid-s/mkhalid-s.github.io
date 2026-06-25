@@ -17,13 +17,21 @@ export interface GraphNode {
   /** detail bullets shown when the entry is expanded */
   detail?: string[]
   links?: Link[]
+  /** short scan-tags (domain / stack); rendered as small chips */
+  tags?: string[]
+  /** status pill shown next to the title (e.g. "Live", "In progress") */
+  status?: string
 }
 
 export interface Profile {
   name: string
   title: string
   location: string
+  /** time zone the local-time chip uses; falls back to IST if unset */
+  timezone?: string
   blurb: string
+  /** short status badge shown above the hero (kept honest; opt-out with '') */
+  status?: string
   email?: string
   social: Link[]
   cvHref: string
