@@ -1,17 +1,21 @@
-import type { GraphNode, Profile } from '../lib/types'
+import type { GraphNode, NavSection, Profile, Section, Segment } from '../lib/types'
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Single source of truth. Everything the page renders — identity, the hero
+// sentence, section order, nav and content — lives in this file. Editing it
+// reshapes the whole site; App.tsx only decides how each piece is laid out.
 // Content decoded from the 2026 CV — all entries verified.
-// Editing this file reshapes the whole site.
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
   title: 'Senior Software Engineer',
   location: 'Bengaluru, India',
+  status: 'Building LLM features at Guidewire',
   blurb:
-    'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
-    'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform, and over the ' +
-    'last year I’ve been building LLM applications — RAG, agents and evaluation. ' +
-    'I like leading teams, clean abstractions, and deleting code.',
+    'Twelve years shipping production systems across insurance, banking and telecom — ' +
+    'now focused on making LLMs dependable enough to put real work behind: retrieval ' +
+    'you can trust, agents that stay on the rails, and evals that prove it.',
   email: 'mshaikh@guidewire.com',
   cvHref: 'Khalid_Shaikh_CV.pdf',
   social: [
@@ -19,6 +23,42 @@ export const profile: Profile = {
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mkhalidshaikh' },
   ],
 }
+
+// The hero statement. Bold "term" runs map to entries in `nodes` below and
+// expand into a footnote when tapped (also deep-linkable via the URL hash).
+export const heroStatement: Segment[] = [
+  {
+    t: 'text',
+    v: 'I’m Khalid Shaikh — a senior software engineer, 12+ years across BFSI & telecom, now building LLM applications: RAG, agents and evaluation. I build ',
+  },
+  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
+  { t: 'text', v: '. I ship on the ' },
+  { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
+  {
+    t: 'text',
+    v: ' in Java & Gosu, and I like fast systems, clean abstractions, and deleting code.',
+  },
+]
+
+// Which entries appear where, and in what order.
+export const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
+export const projectIds = ['proj-framefuse', 'proj-erp']
+export const educationIds = ['edu-be', 'edu-hsc']
+
+// Page sections in render order. `n`/`title` drive the heading; `nav: true`
+// surfaces the section in the header navigation + scroll-spy.
+export const sections: Section[] = [
+  { id: 'experience', n: '01', title: 'Experience', nav: true },
+  { id: 'projects', n: '02', title: 'Projects', nav: true },
+  { id: 'ai', n: '03', title: 'AI engineering', nav: true },
+  { id: 'skills', n: '04', title: 'Skills', nav: true },
+  { id: 'education', n: '05', title: 'Education', nav: false },
+  { id: 'contact', n: '06', title: 'Contact', nav: true },
+]
+
+export const navSections: NavSection[] = sections
+  .filter((s) => s.nav)
+  .map(({ id, title }) => ({ id, label: title.toLowerCase() }))
 
 export const nodes: GraphNode[] = [
   // ── Experience ─────────────────────────────────────────────────────────────

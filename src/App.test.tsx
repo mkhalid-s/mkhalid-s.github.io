@@ -20,6 +20,13 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /dark mode|light mode/i })).toBeInTheDocument()
   })
 
+  it('shows the live status and primary actions in the hero', () => {
+    render(<App />)
+    expect(screen.getByText(/Building LLM features at Guidewire/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /get in touch/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /back to top/i })).toBeInTheDocument()
+  })
+
   it('opens a footnote from a deep-link hash', () => {
     window.location.hash = '#exp-guidewire'
     render(<App />)

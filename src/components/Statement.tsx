@@ -1,6 +1,7 @@
 import { m } from 'framer-motion'
+import type { Segment } from '../lib/types'
 
-export type Segment = { t: 'text'; v: string } | { t: 'term'; v: string; id: string }
+export type { Segment }
 
 interface Props {
   segments: Segment[]

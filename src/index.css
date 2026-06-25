@@ -261,6 +261,36 @@ button:focus-visible {
     'calt' 1;
 }
 
+/* live-status dot: a small accent dot with a soft pulsing halo */
+.status-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgb(var(--accent));
+  flex: none;
+}
+.status-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(var(--accent));
+  animation: statusPulse 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+@keyframes statusPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
 /* scroll-cue arrow gentle bounce */
 @keyframes cueBounce {
   0%,

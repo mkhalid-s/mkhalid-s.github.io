@@ -1,40 +1,33 @@
 import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m } from 'framer-motion'
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import Reveal from './components/Reveal'
-import Statement, { type Segment } from './components/Statement'
+import Statement from './components/Statement'
 import {
   aiPillars,
   aiProjects,
   certifications,
+  educationIds,
+  experienceIds,
+  heroStatement,
   impactStats,
+  navSections,
   nodes,
   profile,
+  projectIds,
+  sections,
   skillGroups,
   spokenLanguages,
 } from './data/profile'
 import type { GraphNode } from './lib/types'
 
-// The hero statement. Bold terms map to entries in profile.ts and expand below.
-const statement: Segment[] = [
-  {
-    t: 'text',
-    v: 'I’m Khalid Shaikh — a senior software engineer, 12+ years across BFSI & telecom, now building LLM applications: RAG, agents and evaluation. I build ',
-  },
-  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  { t: 'text', v: '. I ship on the ' },
-  { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
-  {
-    t: 'text',
-    v: ' in Java & Gosu, and I like fast systems, clean abstractions, and deleting code.',
-  },
-]
-
-const projectIds = ['proj-framefuse', 'proj-erp']
-const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
-const educationIds = ['edu-be', 'edu-hsc']
+// section heading lookup (numbers + titles live in profile.ts → sections)
+const sec = Object.fromEntries(sections.map((s) => [s.id, s])) as Record<
+  string,
+  (typeof sections)[number]
+>
 
 // term ids that can appear in the URL hash for deep-linking
-const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
+const termIds = new Set(heroStatement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
 const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
 
 // theme-switch transition effects, selectable via ?fx=NAME (persists to localStorage)
@@ -54,24 +47,9 @@ const THEME_FX = [
 ] as const
 const randomFx = () => THEME_FX[(Math.random() * THEME_FX.length) | 0]
 
-// header scroll-spy nav
-const navSections = [
-  { id: 'experience', label: 'experience' },
-  { id: 'projects', label: 'projects' },
-  { id: 'ai', label: 'ai' },
-  { id: 'contact', label: 'contact' },
-]
-// all sections, so the nav only lights up when its section is truly current
-// (otherwise 'ai' would stay lit through skills/certs/education)
-const sectionIds = [
-  'experience',
-  'projects',
-  'ai',
-  'skills',
-  'certifications',
-  'education',
-  'contact',
-]
+// every section id, so the nav only lights up when its section is truly current
+// (otherwise 'ai' would stay lit through skills/education)
+const sectionIds = sections.map((s) => s.id)
 
 // returns the id of the last section whose top has scrolled past the header line
 function useActiveSection(ids: string[]) {
@@ -100,6 +78,31 @@ function useActiveSection(ids: string[]) {
     }
   }, [ids])
   return active
+}
+
+// 0 → 1 read-progress through the document, for the top progress bar
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0)
+  useEffect(() => {
+    let raf = 0
+    const compute = () => {
+      raf = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(compute)
+    }
+    compute()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+  return progress
 }
 
 export default function App() {
@@ -236,6 +239,7 @@ export default function App() {
 
   const term = termId ? (byId.get(termId) ?? null) : null
   const activeSection = useActiveSection(sectionIds)
+  const progress = useScrollProgress()
 
   return (
     <LazyMotion features={domAnimation}>
@@ -247,6 +251,12 @@ export default function App() {
           >
             Skip to content
           </a>
+          {/* read-progress bar — pinned above the header */}
+          <div
+            aria-hidden="true"
+            className="fixed inset-x-0 top-0 z-40 h-[2px] origin-left bg-accent/90"
+            style={{ transform: `scaleX(${progress})` }}
+          />
           {/* top bar (sticky) */}
           <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur-md">
             <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
@@ -334,18 +344,26 @@ export default function App() {
             className="relative z-10 mx-auto max-w-3xl px-6 outline-none sm:px-8"
           >
             {/* hero */}
-            <section className="flex min-h-[88vh] flex-col pt-[12vh] sm:pt-[16vh]">
-              <m.p
+            <section className="flex min-h-[88vh] flex-col pt-[11vh] sm:pt-[14vh]">
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="mb-7 font-mono text-[13px] uppercase tracking-[0.25em] text-muted"
+                className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-2"
               >
-                {profile.title} · {profile.location}
-              </m.p>
+                <p className="font-mono text-[13px] uppercase tracking-[0.25em] text-muted">
+                  {profile.title} · {profile.location}
+                </p>
+                {profile.status && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-paper2/60 py-1 pl-2.5 pr-3 font-mono text-[11px] text-ink/70 backdrop-blur-sm">
+                    <span aria-hidden="true" className="status-dot" />
+                    {profile.status}
+                  </span>
+                )}
+              </m.div>
 
               <Statement
-                segments={statement}
+                segments={heroStatement}
                 activeId={termId}
                 onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
               />
@@ -365,6 +383,49 @@ export default function App() {
                   </m.div>
                 )}
               </AnimatePresence>
+
+              {/* supporting line + primary actions */}
+              <m.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.45 }}
+                className="mt-8 max-w-xl text-[15px] leading-relaxed text-ink/70 sm:text-base"
+              >
+                {profile.blurb}
+              </m.p>
+
+              <m.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.55 }}
+                className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-3"
+              >
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="rounded-full bg-ink px-5 py-2.5 font-mono text-[13px] text-paper transition hover:opacity-85"
+                >
+                  Get in touch →
+                </a>
+                <a
+                  href={profile.cvHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-ink/15 px-5 py-2.5 font-mono text-[13px] text-ink/80 transition hover:border-ink/40 hover:text-ink"
+                >
+                  Résumé ↗
+                </a>
+                {profile.social.map((s) => (
+                  <a
+                    key={s.href}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-1 font-mono text-[13px] text-muted underline-offset-4 transition hover:text-ink hover:underline"
+                  >
+                    {s.label} ↗
+                  </a>
+                ))}
+              </m.div>
 
               {/* scroll cue — sits at the bottom of the hero, flows with content */}
               <m.button
@@ -401,7 +462,7 @@ export default function App() {
             {/* experience */}
             <section id="experience" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="01" title="Experience" />
+                <SectionHeading n={sec.experience.n} title={sec.experience.title} />
               </Reveal>
               <Timeline
                 ids={experienceIds}
@@ -414,7 +475,7 @@ export default function App() {
             {/* selected work */}
             <section id="projects" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="02" title="Projects" />
+                <SectionHeading n={sec.projects.n} title={sec.projects.title} />
               </Reveal>
               <CollapsibleList
                 ids={projectIds}
@@ -427,7 +488,7 @@ export default function App() {
             {/* AI engineering */}
             <section id="ai" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="03" title="AI engineering" />
+                <SectionHeading n={sec.ai.n} title={sec.ai.title} />
                 <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
                   Bringing a decade of production engineering discipline to LLM systems —
                   prototyping, measuring and hardening them for real workloads, not demos.
@@ -440,8 +501,13 @@ export default function App() {
               <div className="grid gap-3 sm:grid-cols-2">
                 {aiPillars.map((p, i) => (
                   <Reveal key={p.label} delay={i * 0.04}>
-                    <div className="rounded-xl border border-ink/10 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent/40">
-                      <div className="font-display text-lg font-normal text-ink">{p.label}</div>
+                    <div className="group h-full rounded-xl border border-ink/10 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent/40">
+                      <div className="flex items-baseline gap-2.5">
+                        <span aria-hidden="true" className="font-mono text-[11px] text-accent/50">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div className="font-display text-lg font-normal text-ink">{p.label}</div>
+                      </div>
                       <p className="mt-1 text-[14px] leading-relaxed text-muted">{p.blurb}</p>
                     </div>
                   </Reveal>
@@ -500,7 +566,7 @@ export default function App() {
             {/* skills */}
             <section id="skills" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="04" title="Skills" />
+                <SectionHeading n={sec.skills.n} title={sec.skills.title} />
               </Reveal>
               <div className="space-y-5">
                 {skillGroups.map((g, i) => (
@@ -545,7 +611,7 @@ export default function App() {
             {/* education */}
             <section id="education" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="05" title="Education" />
+                <SectionHeading n={sec.education.n} title={sec.education.title} />
                 <div className="space-y-3">
                   {educationIds.map((id) => {
                     const n = byId.get(id)!
@@ -570,7 +636,7 @@ export default function App() {
             {/* contact */}
             <section id="contact" className="scroll-mt-20 mt-28 pb-24 sm:mt-36">
               <Reveal>
-                <SectionHeading n="06" title="Contact" />
+                <SectionHeading n={sec.contact.n} title={sec.contact.title} />
                 <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
                   Building something that needs to do more with less?{' '}
                   <a
@@ -607,8 +673,14 @@ export default function App() {
               </Reveal>
             </section>
 
-            <footer className="border-t border-ink/10 py-6 font-mono text-[11px] text-muted">
-              © {new Date().getFullYear()} Khalid Shaikh · built to be small.
+            <footer className="flex items-center justify-between gap-4 border-t border-ink/10 py-6 font-mono text-[11px] text-muted">
+              <span>© {new Date().getFullYear()} Khalid Shaikh · built to be small.</span>
+              <a
+                href="#top"
+                className="shrink-0 underline-offset-4 transition hover:text-ink hover:underline"
+              >
+                Back to top ↑
+              </a>
             </footer>
           </main>
         </div>
