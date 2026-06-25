@@ -368,3 +368,73 @@ button:focus-visible {
     transition: none !important;
   }
 }
+
+/* small breathing pulse on the hero status dot, off when reduced-motion */
+@keyframes statusPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+.status-dot {
+  animation: statusPulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-dot {
+    animation: none;
+  }
+}
+
+/* Print: a clean, single-column, full-page-friendly view of the resume */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10.5pt;
+  }
+  .grain::before,
+  .cue-arrow,
+  header,
+  #mobile-nav,
+  button[aria-label='Sections menu'],
+  button[aria-label*='light mode'],
+  button[aria-label*='dark mode'],
+  .theme-toggle,
+  .term--hint {
+    display: none !important;
+  }
+  /* hide the scroll-cue and the floating help/scroll widgets */
+  [aria-label='Scroll to what I’m building now'] {
+    display: none !important;
+  }
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-top: 1.25rem !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+  /* unfold every collapsible row */
+  [aria-expanded='false'] + p,
+  [aria-expanded] {
+    pointer-events: none;
+  }
+  .term {
+    background: none !important;
+    color: #000 !important;
+    font-style: italic;
+    font-weight: 600;
+  }
+}
