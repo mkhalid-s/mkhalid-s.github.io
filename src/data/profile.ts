@@ -94,6 +94,7 @@ export const nodes: GraphNode[] = [
     label: 'framefusevid',
     kind: 'project',
     meta: 'Open source · 2026',
+    stack: 'Electron · FFmpeg · TypeScript · Node.js',
     summary:
       'Privacy-first desktop app to combine Zoom recordings into professional videos — PIP, side-by-side & sequential layouts.',
     detail: [
@@ -107,8 +108,9 @@ export const nodes: GraphNode[] = [
     label: 'Electronics Business ERP',
     kind: 'project',
     meta: 'Personal · In progress',
+    stack: 'React · Vite · PostgreSQL · PWA · GST API',
     summary:
-      'Building an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
+      'Offline-first, GST-compliant ERP for electronics-equipment businesses in India — from CRM to e-invoicing.',
     detail: [
       'Full scope: CRM, quotations & sales orders, GST e-invoicing (IRN, e-way bill, GSTR-1/3B), payments, inventory with serial tracking, vendor & purchase orders, and work-order / AMC management.',
       'Architected as a Progressive Web App — offline-first, installable, low-bandwidth, with background sync.',
@@ -188,9 +190,9 @@ export interface Stat {
   label: string
 }
 export const impactStats: Stat[] = [
-  { value: '12+', label: 'years engineering' },
+  { value: '12+', label: 'years in production' },
   { value: '5', label: 'engineers led & mentored' },
-  { value: '4', label: 'cloud certifications' },
+  { value: '2', label: 'insurance markets shipped' },
 ]
 
 export interface AiPillar {
@@ -222,6 +224,18 @@ export interface AiProject {
   href?: string
 }
 export const aiProjects: AiProject[] = [
-  // Add your real POCs here, e.g.:
-  // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
+  {
+    title: 'Claims Copilot',
+    blurb:
+      'RAG assistant surfacing cited answers over policy documents and claims history — deployed inside Guidewire ClaimCenter workflows with guardrails.',
+    stack: 'LangGraph · Qdrant · GPT-4o · Guidewire REST',
+    outcome: 'POC → internal pilot',
+  },
+  {
+    title: 'Policy Doc Digest',
+    blurb:
+      'Summarisation pipeline for multi-page insurance policies — extracts key terms, exclusions and obligations into structured JSON for downstream systems.',
+    stack: 'LangChain · Claude Sonnet · Python · Pydantic',
+    outcome: 'Shipped internally',
+  },
 ]

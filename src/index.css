@@ -261,6 +261,12 @@ button:focus-visible {
     'calt' 1;
 }
 
+/* scroll progress bar — width is driven by an inline style; no CSS needed for
+   the animation itself, but we ensure the element has no inherited transition */
+.scroll-progress {
+  transition: none;
+}
+
 /* scroll-cue arrow gentle bounce */
 @keyframes cueBounce {
   0%,
