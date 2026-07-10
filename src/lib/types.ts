@@ -24,7 +24,6 @@ export interface Profile {
   title: string
   location: string
   blurb: string
-  email?: string
   social: Link[]
   cvHref: string
 }

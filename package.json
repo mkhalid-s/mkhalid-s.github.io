@@ -1,9 +1,9 @@
 {
-  "name": "khalid-latent-space",
+  "name": "khalid-profile",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Khalid Shaikh — an interactive latent-space portfolio.",
+  "description": "Khalid Shaikh — insurance platforms, applied AI, and open-source engineering.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
