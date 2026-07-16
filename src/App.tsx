@@ -359,7 +359,7 @@ export default function App() {
                 transition={{ duration: 0.6 }}
                 className="mb-7 font-mono text-[13px] uppercase tracking-[0.25em] text-muted"
               >
-                {profile.title} · {profile.location}
+                {profile.name} · {profile.title} · {profile.location}
               </m.p>
 
               <Statement
