@@ -1,19 +1,17 @@
-import type { GraphNode, Profile } from '../lib/types'
+import type { GraphNode, Link, Profile } from '../lib/types'
 
-// Content decoded from the 2026 CV — all entries verified.
+// Content verified against the 2026 CV and public project repositories.
 // Editing this file reshapes the whole site.
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
   title: 'Senior Software Engineer',
-  tagline: 'I build tools that do more with less.',
   location: 'Bengaluru, India',
   blurb:
-    'Senior software engineer with 12+ years across BFSI & telecom. I specialise in ' +
-    'the Guidewire InsuranceSuite on AWS and the Guidewire Cloud Platform, and over the ' +
-    'last year I’ve been building LLM applications — RAG, agents and evaluation. ' +
-    'I like leading teams, clean abstractions, and deleting code.',
-  email: 'mshaikh@guidewire.com',
+    'I’m a senior software engineer with 12+ years across BFSI and telecom. I lead ' +
+    'Guidewire cloud delivery in Java and Gosu, and bring production engineering ' +
+    'discipline to RAG, agent, and evaluation workflows. I also build local-first, ' +
+    'open-source developer tools.',
   cvHref: 'Khalid_Shaikh_CV.pdf',
   social: [
     { label: 'GitHub', href: 'https://github.com/mkhalid-s' },
@@ -27,8 +25,6 @@ export const nodes: GraphNode[] = [
     id: 'exp-guidewire',
     label: 'Guidewire Software',
     kind: 'experience',
-    cluster: 'jvm',
-    weight: 1.6,
     meta: 'Senior Software Engineer · Bengaluru · Oct 2021 – Present',
     summary:
       'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
@@ -40,17 +36,12 @@ export const nodes: GraphNode[] = [
       'Built TeamCity CI/CD pipelines; configured Integration Gateway for London Market message processing; resolved critical cross-release defects.',
       'Stack: Java, Gosu, PCF, InsuranceSuite, SOAP/REST, Stash, Docker, Bash, DataDog.',
     ],
-    tags: ['java', 'gosu', 'insurancesuite', 'aws', 'ci-cd', 'ai', 'cloud'],
     links: [{ label: 'Guidewire', href: 'https://www.guidewire.com' }],
-    keywords:
-      'guidewire cloud platform gcp insurance policycenter claimcenter billingcenter australia london workers compensation integration gateway teamcity ci cd java gosu insurancesuite ai llm leadership senior',
   },
   {
     id: 'exp-capgemini',
     label: 'Capgemini India',
     kind: 'experience',
-    cluster: 'web',
-    weight: 1.2,
     meta: 'Senior Consultant · Navi Mumbai · Aug 2018 – Oct 2021',
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
@@ -58,110 +49,109 @@ export const nodes: GraphNode[] = [
       'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
       'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
     ],
-    tags: ['java', 'angular', 'spring-boot', 'aws', 'azure', 'full-stack'],
     links: [{ label: 'Capgemini', href: 'https://www.capgemini.com' }],
-    keywords:
-      'capgemini senior consultant full stack knowledge base ptc arbortext agricultural construction equipment java angular spring boot oracle aws azure dealer customisation',
   },
   {
     id: 'exp-jio',
     label: 'Reliance Jio',
     kind: 'experience',
-    cluster: 'web',
-    weight: 1.0,
     meta: 'Deputy Manager · Navi Mumbai · Feb 2017 – Aug 2018',
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
     detail: [
       'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
     ],
-    tags: ['java', 'spring-boot', 'tibco', 'sap', 'telecom', 'mobile'],
     links: [{ label: 'Jio', href: 'https://www.jio.com' }],
-    keywords:
-      'reliance jio deputy manager telecommunications digital eservices chat mobile application java spring boot tibco sap middleware integration deployment',
   },
   {
     id: 'exp-egain',
     label: 'eGain Communications',
     kind: 'experience',
-    cluster: 'web',
-    weight: 0.9,
     meta: 'Technical Engineer · Pune · Jun 2016 – Feb 2017',
     summary: 'Customised multichannel chat & email customer-engagement software.',
     detail: [
       'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
     ],
-    tags: ['java', 'web', 'security', 'customer-engagement'],
     links: [{ label: 'eGain', href: 'https://www.egain.com' }],
-    keywords:
-      'egain communications technical engineer multichannel chat email customer engagement security vulnerabilities cbr self service pune',
   },
   {
     id: 'exp-3i',
     label: '3i Infotech',
     kind: 'experience',
-    cluster: 'jvm',
-    weight: 0.85,
     meta: 'Associate Software Developer · Navi Mumbai · Mar 2014 – Jun 2016',
     summary: 'Treasury-management system features for banking clients.',
     detail: [
       'Developed treasury-management system features for banking clients.',
       'Stack: Java, SAP PowerBuilder 10/11, Oracle 10g/11c, PL/SQL.',
     ],
-    tags: ['java', 'banking', 'oracle', 'pl-sql', 'finance'],
     links: [{ label: '3i Infotech', href: 'https://www.3i-infotech.com' }],
-    keywords:
-      '3i infotech associate software developer treasury management banking finance java sap powerbuilder oracle pl sql bfsi',
   },
 
   // ── Projects ───────────────────────────────────────────────────────────────
   {
-    id: 'proj-framefuse',
-    label: 'framefusevid',
+    id: 'proj-apx',
+    label: 'APX',
     kind: 'project',
-    cluster: 'media',
-    weight: 1.2,
+    meta: 'Open source · v0.4.0',
+    summary:
+      'Local macOS gateway for switching, chaining and measuring AI context proxies without reconfiguring Claude Code.',
+    detail: [
+      'Routes a stable local endpoint through Headroom, pxpipe, Squeezr or direct mode, with live chain switching and health checks.',
+      'Unified local dashboard tracks request volume, p95 latency, token and cache usage, estimated cost and tool calls.',
+      'Ships SHA-verified releases, atomic version switching and rollback, launchd supervision, and privacy-safe metadata-only capture by default.',
+    ],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/mkhalid-s/ai-proxy-stack' },
+      {
+        label: 'v0.4.0 release',
+        href: 'https://github.com/mkhalid-s/ai-proxy-stack/releases/tag/v0.4.0',
+      },
+    ],
+  },
+  {
+    id: 'proj-framefuse',
+    label: 'FrameFuseVid',
+    kind: 'project',
     meta: 'Open source · 2026',
     summary:
       'Privacy-first desktop app to combine Zoom recordings into professional videos — PIP, side-by-side & sequential layouts.',
     detail: [
-      'Desktop app powered by FFmpeg to merge cloud recordings into polished videos.',
-      'Picture-in-picture, side-by-side and sequential layouts — all processed locally for privacy.',
+      'Cross-platform Electron and React app powered by FFmpeg, with native builds for macOS, Windows and Linux.',
+      'Auto-detects Zoom recording files and supports picture-in-picture, side-by-side, sequential and audio-merge layouts.',
+      'Processes every file locally with zero telemetry; supports live previews and VTT/SRT caption burning.',
     ],
-    tags: ['ffmpeg', 'desktop', 'video', 'privacy'],
-    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/framefusevid' }],
-    keywords:
-      'framefusevid privacy desktop app zoom cloud recordings video ffmpeg picture in picture side by side sequential layouts local media',
+    links: [
+      { label: 'Live site', href: 'https://mkhalid-s.github.io/framefusevid/' },
+      { label: 'GitHub', href: 'https://github.com/mkhalid-s/framefusevid' },
+    ],
   },
   {
-    id: 'proj-erp',
-    label: 'Electronics Business ERP',
+    id: 'proj-auth-scrape',
+    label: 'auth-scrape',
     kind: 'project',
-    cluster: 'web',
-    weight: 0.9,
-    meta: 'Personal · In progress',
+    meta: 'Open source · 2026',
     summary:
-      'Building an offline-first, GST-compliant ERP for electronics-equipment businesses in India.',
+      'Browser-session crawler that turns authorized SSO-protected documentation into LLM-ready Markdown.',
     detail: [
-      'Full scope: CRM, quotations & sales orders, GST e-invoicing (IRN, e-way bill, GSTR-1/3B), payments, inventory with serial tracking, vendor & purchase orders, and work-order / AMC management.',
-      'Architected as a Progressive Web App — offline-first, installable, low-bandwidth, with background sync.',
-      'Includes full requirements analysis, architecture, technology-stack comparison and a phased MVP roadmap.',
+      'Reuses authenticated browser cookies through Playwright for documentation portals, Confluence, Notion, SharePoint and private wikis.',
+      'Supports constrained crawl profiles, focused keyword scoring, resumable state, secret redaction and explicit authorization gates.',
+      'Backed by roughly 80 unit tests across seven modules, with no browser required for the fast test suite.',
     ],
-    tags: ['erp', 'pwa', 'gst', 'offline-first', 'india'],
-    keywords:
-      'electronics business erp enterprise resource planning india gst e-invoice irn e-way bill gstr crm inventory invoicing amc work order pwa offline first progressive web app',
+    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/auth-scrape' }],
   },
-
-  // ── Skill (referenced by the hero statement) ───────────────────────────────
   {
-    id: 'sk-java',
-    label: 'Java',
-    kind: 'skill',
-    cluster: 'jvm',
-    weight: 1.3,
-    summary: 'Primary language for 12+ years — enterprise scale, plus Gosu on Guidewire.',
-    tags: ['java', 'gosu', 'jvm'],
-    keywords: 'java gosu jvm enterprise backend spring',
+    id: 'proj-sir-saathi',
+    label: 'SIR Saathi',
+    kind: 'project',
+    meta: 'Civic-tech prototype · 2026',
+    summary:
+      'Privacy-first PWA that helps people understand India’s Special Intensive Revision process and find a safe next action.',
+    detail: [
+      'Combines an Astro and Preact PWA, FastAPI service, PostgreSQL schema and local-only electoral-roll ingestion pipeline.',
+      'Public indexed search fails closed; raw rolls stay local, EPIC identifiers are hashed, and responses are scoped and redacted.',
+      'Includes 18 test modules, sensitive-data checks, source-provenance validation and a passing CI workflow.',
+    ],
+    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/sir-saathi' }],
   },
 
   // ── Education ──────────────────────────────────────────────────────────────
@@ -169,24 +159,16 @@ export const nodes: GraphNode[] = [
     id: 'edu-be',
     label: 'B.E. Computer Science',
     kind: 'education',
-    cluster: 'foundations',
-    weight: 0.9,
     meta: 'University of Mumbai · 2009 – 2013 · Distinction',
     summary:
       'Bachelor of Engineering, Computer Science & Engineering — graduated with Distinction.',
-    tags: ['education'],
-    keywords: 'bachelor engineering computer science university mumbai distinction',
   },
   {
     id: 'edu-hsc',
     label: 'HSC — Science',
     kind: 'education',
-    cluster: 'foundations',
-    weight: 0.6,
     meta: 'MH Saboo Siddik Technical Jr. College · 2007 – 2009',
     summary: 'Higher Secondary Certificate, Science (Computer Science).',
-    tags: ['education'],
-    keywords: 'hsc higher secondary science computer saboo siddik mumbai',
   },
 
   // ── Idea ───────────────────────────────────────────────────────────────────
@@ -194,13 +176,16 @@ export const nodes: GraphNode[] = [
     id: 'idea-less',
     label: 'Do more with less',
     kind: 'idea',
-    cluster: 'llm',
-    weight: 1.0,
     summary:
       'The thread tying it all together: strip the noise, keep the signal. Whether it’s tokens, code or scope — subtract until only what matters remains.',
-    tags: ['llm', 'tokens', 'philosophy'],
-    keywords:
-      'do more with less efficiency minimalism signal noise compression tokens philosophy simplicity',
+  },
+  {
+    id: 'idea-ai',
+    label: 'Applied AI',
+    kind: 'idea',
+    meta: 'RAG · Agents · Evaluation',
+    summary:
+      'LLM features treated as software systems: grounded retrieval, constrained tools, repeatable evaluation, and explicit quality, latency and cost trade-offs.',
   },
 ]
 
@@ -213,25 +198,29 @@ export interface SkillGroup {
 export const skillGroups: SkillGroup[] = [
   {
     label: 'AI / LLM',
-    items: ['LangChain', 'LangGraph', 'RAG', 'Agents', 'Qdrant', 'ChromaDB', 'Prompt engineering'],
+    items: ['RAG', 'Agents', 'Evaluation', 'MCP', 'LangChain', 'LangGraph', 'Qdrant', 'ChromaDB'],
   },
   {
     label: 'Languages',
     items: ['Java', 'Gosu', 'Python', 'TypeScript', 'JavaScript', 'SQL / PL-SQL'],
   },
-  { label: 'Frameworks', items: ['Spring Boot', 'J2EE', 'React', 'Next.js', 'Angular 6/8/11'] },
+  {
+    label: 'Backend & web',
+    items: ['Spring Boot', 'FastAPI', 'React', 'Vue', 'Angular', 'Electron', 'Astro / Preact'],
+  },
   {
     label: 'Guidewire',
     items: ['PolicyCenter', 'ClaimCenter', 'BillingCenter', 'PCF', 'GPM', 'Integration Framework'],
   },
   {
-    label: 'Cloud & DevOps',
-    items: ['AWS', 'Azure', 'Docker', 'TeamCity', 'Jenkins', 'GitHub Actions', 'DataDog'],
+    label: 'Cloud & delivery',
+    items: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'TeamCity', 'Jenkins', 'GitHub Actions'],
   },
   {
-    label: 'Data & Integration',
-    items: ['PostgreSQL', 'Oracle 12c', 'Berkeley DB', 'IBM-MQ', 'REST', 'SOAP', 'TIBCO'],
+    label: 'Data & observability',
+    items: ['PostgreSQL', 'Oracle', 'Redis', 'SQLite', 'OpenTelemetry', 'Prometheus', 'DataDog'],
   },
+  { label: 'Integration', items: ['REST', 'SOAP', 'IBM MQ', 'TIBCO', 'Integration Gateway'] },
 ]
 
 export const certifications: string[] = [
@@ -249,9 +238,9 @@ export interface Stat {
   label: string
 }
 export const impactStats: Stat[] = [
-  { value: '12+', label: 'years engineering' },
+  { value: '12+', label: 'years in production engineering' },
   { value: '5', label: 'engineers led & mentored' },
-  { value: '4', label: 'cloud certifications' },
+  { value: 'Zero', label: 'downtime during cloud migrations' },
 ]
 
 export interface AiPillar {
@@ -260,18 +249,24 @@ export interface AiPillar {
 }
 export const aiPillars: AiPillar[] = [
   {
-    label: 'RAG & vector search',
-    blurb: 'Retrieval pipelines & embeddings over Qdrant / ChromaDB.',
+    label: 'Retrieval & grounding',
+    blurb: 'RAG pipelines and vector search over Qdrant and ChromaDB.',
   },
   {
-    label: 'Agents & tools',
-    blurb: 'Agents that call tools and chain steps to complete real tasks.',
+    label: 'Agent workflows',
+    blurb: 'Tool-using agents and multi-step workflows with LangChain and LangGraph.',
   },
-  { label: 'Orchestration', blurb: 'Multi-step LLM workflows with LangChain & LangGraph.' },
-  { label: 'Evals & cost', blurb: 'Measuring output quality; cutting token and latency cost.' },
+  {
+    label: 'Evaluation',
+    blurb: 'Output quality measured alongside latency, token use and cost.',
+  },
+  {
+    label: 'Production fit',
+    blurb: 'Clear boundaries, observable failure modes and pragmatic fallbacks.',
+  },
 ]
 
-// AI projects/POCs shown in the AI Engineering section.
+// AI projects/POCs shown in the Applied AI section.
 // `nodeId` references an entry in `nodes` (e.g. the shipped flagship);
 // inline entries are standalone POCs — add yours here.
 export interface AiProject {
@@ -283,6 +278,56 @@ export interface AiProject {
   href?: string
 }
 export const aiProjects: AiProject[] = [
-  // Add your real POCs here, e.g.:
-  // { title: 'Claims Copilot', blurb: 'RAG assistant over policy docs', stack: 'LangGraph · Qdrant · Claude', outcome: 'POC → pilot', href: '' },
+  {
+    title: 'OSS Bug Hunter',
+    blurb:
+      'Experimental multi-language agentic bug-hunting engine where LLMs propose reproducers and fixes while deterministic harnesses validate every gate.',
+    stack: 'Python · FastAPI · React · MCP · Docker / Podman · SSE',
+    outcome: '5 languages · 18 MCP tools · 322 tests',
+    href: 'https://github.com/mkhalid-s/oss-bug-hunter',
+  },
+  {
+    title: 'QueryfyAI',
+    blurb:
+      'Natural-language analytics assistant that retrieves schema context, generates and validates SQL, executes read-only queries, and returns explanations and charts.',
+    stack: 'FastAPI · Vue · ReAct agents · ChromaDB / Qdrant · OpenTelemetry',
+    outcome: '19 databases · 15+ LLM providers · 53 test files',
+    href: 'https://github.com/mkhalid-s/queryfy-ai',
+  },
+  {
+    title: 'Personal Assistant OS',
+    blurb:
+      'Local-first assistant control plane with provenance-aware retrieval, durable plans, approval-gated external actions, execution receipts, and privacy filters.',
+    stack: 'Python · SQLite · hybrid retrieval · agent backends · local-first',
+    outcome: '25 test modules · passing CI',
+    href: 'https://github.com/mkhalid-s/personal-assistant-os',
+  },
+]
+
+export interface OpenSourceContribution {
+  project: string
+  title: string
+  blurb: string
+  outcome: string
+  links: Link[]
+}
+
+export const openSourceContributions: OpenSourceContribution[] = [
+  {
+    project: 'Headroom',
+    title: 'Upstream authentication and enterprise installation support',
+    blurb:
+      'Contributed a client-credentials OAuth2 proxy extension with fail-closed behavior, token caching and single-flight refresh, plus corporate TLS-inspection installation guidance.',
+    outcome: '2 merged PRs · 37 tests · 98% extension coverage',
+    links: [
+      {
+        label: 'OAuth2 extension · PR #784',
+        href: 'https://github.com/headroomlabs-ai/headroom/pull/784',
+      },
+      {
+        label: 'TLS guidance · PR #775',
+        href: 'https://github.com/headroomlabs-ai/headroom/pull/775',
+      },
+    ],
+  },
 ]
