@@ -1,8 +1,9 @@
 # Khalid Shaikh
 
-My personal site — deliberately small. One screen, one statement, and the key
-words are interactive: tap them for a footnote. Built around the idea I keep
-coming back to: **do more with less.**
+My personal profile — a focused overview of my experience across insurance
+platforms, cloud delivery, applied AI and open source. The hero stays deliberately
+small, with interactive terms that reveal the detail behind the positioning.
+Built around the idea I keep coming back to: **do more with less.**
 
 🔗 **Live:** https://mkhalid-s.github.io
 
@@ -17,5 +18,5 @@ npm run dev      # local dev
 npm run build    # production build → dist/
 ```
 
-All content lives in [`src/data/profile.ts`](src/data/profile.ts); the hero
-sentence is in [`src/App.tsx`](src/App.tsx).
+Profile content lives in [`src/data/profile.ts`](src/data/profile.ts); the hero
+statement and page sections are composed in [`src/App.tsx`](src/App.tsx).
