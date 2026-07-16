@@ -8,33 +8,50 @@ import {
   certifications,
   impactStats,
   nodes,
+  openSourceContributions,
   profile,
   skillGroups,
   spokenLanguages,
 } from './data/profile'
 import type { GraphNode } from './lib/types'
 
-// The hero statement. Bold terms map to entries in profile.ts and expand below.
+// The hero statement. Interactive terms map to entries in profile.ts.
 const statement: Segment[] = [
-  {
-    t: 'text',
-    v: 'I’m Khalid Shaikh — a senior software engineer, 12+ years across BFSI & telecom, now building LLM applications: RAG, agents and evaluation. I build ',
-  },
-  { t: 'term', v: 'tools that do more with less', id: 'idea-less' },
-  { t: 'text', v: '. I ship on the ' },
-  { t: 'term', v: 'Guidewire cloud platform', id: 'exp-guidewire' },
-  { t: 'text', v: ' in ' },
-  { t: 'term', v: 'Java', id: 'sk-java' },
-  { t: 'text', v: ' & Gosu, and I like fast systems, clean abstractions, and deleting code.' },
+  { t: 'text', v: 'I build dependable systems across ' },
+  { t: 'term', v: 'insurance platforms', id: 'exp-guidewire' },
+  { t: 'text', v: ' and ' },
+  { t: 'term', v: 'applied AI', id: 'idea-ai' },
+  { t: 'text', v: ' — designed to ' },
+  { t: 'term', v: 'do more with less', id: 'idea-less' },
+  { t: 'text', v: '.' },
 ]
 
-const projectIds = ['proj-framefuse', 'proj-erp']
+const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
 const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
 const educationIds = ['edu-be', 'edu-hsc']
+const githubLink = profile.social.find((link) => link.label.toLowerCase() === 'github')
+const linkedinLink = profile.social.find((link) => link.label.toLowerCase() === 'linkedin')
 
 // term ids that can appear in the URL hash for deep-linking
 const termIds = new Set(statement.flatMap((s) => (s.t === 'term' ? [s.id] : [])))
 const hashId = () => decodeURIComponent((location.hash || '').replace(/^#/, ''))
+
+// theme-switch transition effects, selectable via ?fx=NAME (persists to localStorage)
+// theme-switch transition effects. With no ?fx= override, a random one is used
+// on each toggle (so different visitors/interactions see different effects).
+const THEME_FX = [
+  'crossfade', // calm full-page dissolve
+  'circle', // hard circular reveal from the toggle
+  'feather', // soft-edged circular reveal from the toggle
+  'iris', // new theme zooms up from centre
+  'diagonal', // angled wipe across the screen
+  'up', // wipe bottom → top
+  'down', // wipe top → bottom
+  'right', // wipe left → right
+  'split', // opens from the centre line outward
+  'blinds', // venetian-blind bars sweep open
+] as const
+const randomFx = () => THEME_FX[(Math.random() * THEME_FX.length) | 0]
 
 // header scroll-spy nav
 const navSections = [
@@ -45,15 +62,7 @@ const navSections = [
 ]
 // all sections, so the nav only lights up when its section is truly current
 // (otherwise 'ai' would stay lit through skills/certs/education)
-const sectionIds = [
-  'experience',
-  'projects',
-  'ai',
-  'skills',
-  'certifications',
-  'education',
-  'contact',
-]
+const sectionIds = ['experience', 'projects', 'ai', 'skills', 'education', 'contact']
 
 // returns the id of the last section whose top has scrolled past the header line
 function useActiveSection(ids: string[]) {
@@ -87,26 +96,50 @@ function useActiveSection(ids: string[]) {
 export default function App() {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [])
   const [termId, setTermId] = useState<string | null>(null)
-  const [openExp, setOpenExp] = useState<string | null>(null)
-  const [openProj, setOpenProj] = useState<string | null>(null)
+  // current role opens by default so its strongest bullets are visible without a tap
+  const [openExp, setOpenExp] = useState<string | null>('exp-guidewire')
+  // lead with the most recently shipped open-source project as evidence
+  const [openProj, setOpenProj] = useState<string | null>('proj-apx')
   const [menuOpen, setMenuOpen] = useState(false)
+  const explicitFx = useRef<string | null>(null) // set when ?fx= / saved fx pins one
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' &&
     document.documentElement.getAttribute('data-theme') === 'dark'
       ? 'dark'
       : 'light',
   )
-  const toggleTheme = () =>
-    setTheme((t) => {
-      const next = t === 'light' ? 'dark' : 'light'
-      document.documentElement.setAttribute('data-theme', next)
-      try {
-        localStorage.setItem('theme', next)
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
+  const applyTheme = (next: 'light' | 'dark') => {
+    document.documentElement.setAttribute('data-theme', next)
+    try {
+      localStorage.setItem('theme', next)
+    } catch {
+      /* ignore */
+    }
+    setTheme(next)
+  }
+  const toggleTheme = (origin?: HTMLElement) => {
+    const next = theme === 'light' ? 'dark' : 'light'
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => void }
+    if (!doc.startViewTransition || reduce) {
+      applyTheme(next)
+      return
+    }
+    // pick the effect for this interaction (pinned one, or random)
+    document.documentElement.dataset.fx = explicitFx.current ?? randomFx()
+    // reveal effects radiate from the toggle button
+    if (origin) {
+      const r = origin.getBoundingClientRect()
+      const x = r.left + r.width / 2
+      const y = r.top + r.height / 2
+      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+      const root = document.documentElement
+      root.style.setProperty('--vt-x', `${x}px`)
+      root.style.setProperty('--vt-y', `${y}px`)
+      root.style.setProperty('--vt-r', `${radius}px`)
+    }
+    doc.startViewTransition(() => applyTheme(next))
+  }
 
   // deep-linkable terms: open/close a footnote from the URL hash (and on back/forward)
   useEffect(() => {
@@ -117,6 +150,18 @@ export default function App() {
     sync()
     window.addEventListener('hashchange', sync)
     return () => window.removeEventListener('hashchange', sync)
+  }, [])
+
+  // React mounts after the browser's initial anchor pass, so restore section deep links.
+  useEffect(() => {
+    const scrollToSection = () => {
+      const h = hashId()
+      if (!h || termIds.has(h)) return
+      requestAnimationFrame(() => document.getElementById(h)?.scrollIntoView())
+    }
+    scrollToSection()
+    window.addEventListener('hashchange', scrollToSection)
+    return () => window.removeEventListener('hashchange', scrollToSection)
   }, [])
 
   // keep the URL in sync with the open term (replaceState = no history spam)
@@ -158,6 +203,41 @@ export default function App() {
     prevMenu.current = menuOpen
   }, [menuOpen])
 
+  // pin a specific effect only if ?fx=NAME (sticky) or a saved one exists; else random
+  useEffect(() => {
+    try {
+      const all = THEME_FX as readonly string[]
+      const param = new URLSearchParams(window.location.search).get('fx')
+      if (param && all.includes(param)) {
+        explicitFx.current = param
+        localStorage.setItem('fx', param)
+      } else {
+        const saved = localStorage.getItem('fx')
+        if (saved && all.includes(saved)) explicitFx.current = saved
+      }
+    } catch {
+      /* ignore */
+    }
+    if (explicitFx.current) document.documentElement.dataset.fx = explicitFx.current
+  }, [])
+
+  // follow OS theme changes live, unless the user has chosen a theme manually
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = (e: MediaQueryListEvent) => {
+      try {
+        if (localStorage.getItem('theme')) return
+      } catch {
+        /* ignore */
+      }
+      const next = e.matches ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', next)
+      setTheme(next)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
   const term = termId ? (byId.get(termId) ?? null) : null
   const activeSection = useActiveSection(sectionIds)
 
@@ -174,10 +254,17 @@ export default function App() {
           {/* top bar (sticky) */}
           <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur-md">
             <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4 sm:px-8">
-              <a href="#top" className="font-mono text-sm font-medium tracking-tight">
+              <a
+                href="#top"
+                aria-label="Khalid Shaikh, home"
+                className="font-mono text-sm font-medium tracking-tight"
+              >
                 khalid<span className="text-accent">.</span>
               </a>
-              <nav className="flex items-center gap-5 font-mono text-[13px] text-ink/65">
+              <nav
+                aria-label="Primary navigation"
+                className="flex items-center gap-3 font-mono text-[13px] text-ink/65 sm:gap-5"
+              >
                 <div className="hidden items-center gap-5 md:flex">
                   {navSections.map((s) => (
                     <a
@@ -203,37 +290,44 @@ export default function App() {
                 >
                   cv ↗
                 </a>
-                <a
-                  href={profile.social[0].href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:text-ink"
-                >
-                  github ↗
-                </a>
+                {githubLink && (
+                  <a
+                    href={githubLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hidden transition hover:text-ink sm:inline"
+                  >
+                    github ↗
+                  </a>
+                )}
                 <button
-                  onClick={toggleTheme}
+                  type="button"
+                  onClick={(e) => toggleTheme(e.currentTarget)}
                   aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-                  className="grid h-7 w-7 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
+                  className="theme-toggle grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40"
                 >
-                  {theme === 'dark' ? '☀' : '☾'}
+                  <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
                 </button>
                 <button
+                  type="button"
                   ref={menuBtnRef}
                   onClick={() => setMenuOpen((o) => !o)}
                   aria-expanded={menuOpen}
                   aria-controls="mobile-nav"
                   aria-label="Sections menu"
-                  className="grid h-8 w-8 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40 md:hidden"
+                  className="grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-[13px] transition hover:border-ink/40 md:hidden"
                 >
-                  {menuOpen ? '✕' : '☰'}
+                  <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span>
                 </button>
               </nav>
             </div>
             {/* mobile section nav (wrapper stays mounted so aria-controls resolves) */}
             <div id="mobile-nav" className="md:hidden">
               <Collapse open={menuOpen}>
-                <nav className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2">
+                <nav
+                  aria-label="Section navigation"
+                  className="mx-auto max-w-3xl border-t border-ink/10 px-6 py-2"
+                >
                   {navSections.map((s) => (
                     <a
                       key={s.id}
@@ -258,7 +352,7 @@ export default function App() {
             className="relative z-10 mx-auto max-w-3xl px-6 outline-none sm:px-8"
           >
             {/* hero */}
-            <section className="flex min-h-[88vh] flex-col pt-[12vh] sm:pt-[16vh]">
+            <section className="flex min-h-[calc(100svh-4rem)] flex-col justify-center py-16 sm:py-24">
               <m.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -273,6 +367,47 @@ export default function App() {
                 activeId={termId}
                 onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
               />
+
+              <m.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.28 }}
+                className="mt-7 max-w-2xl text-base leading-relaxed text-ink/75 sm:text-lg"
+              >
+                {profile.blurb}
+              </m.p>
+
+              <m.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.38 }}
+                className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[12px]"
+              >
+                <a
+                  href="#projects"
+                  className="rounded-full bg-ink px-5 py-2.5 text-paper transition hover:bg-accent"
+                >
+                  View selected work <span aria-hidden="true">↓</span>
+                </a>
+                <a
+                  href={profile.cvHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-ink/20 px-5 py-2.5 transition hover:border-accent hover:text-accent"
+                >
+                  Résumé <span aria-hidden="true">↗</span>
+                </a>
+                {linkedinLink && (
+                  <a
+                    href={linkedinLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-2 py-2.5 text-muted transition hover:text-ink"
+                  >
+                    Say hello <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </m.div>
 
               {/* footnote detail */}
               <AnimatePresence mode="wait">
@@ -289,23 +424,13 @@ export default function App() {
                   </m.div>
                 )}
               </AnimatePresence>
-
-              {/* scroll cue — sits at the bottom of the hero, flows with content */}
-              <m.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1 }}
-                onClick={() => document.getElementById('work')?.scrollIntoView()}
-                aria-label="Scroll to selected work"
-                className="mt-auto flex flex-col items-center gap-1 self-center pt-12 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition hover:text-ink"
-              >
-                <span>work</span>
-                <span className="cue-arrow text-sm">↓</span>
-              </m.button>
             </section>
 
             {/* impact strip */}
-            <section id="work" className="scroll-mt-20 mt-20 sm:mt-28">
+            <section id="work" aria-labelledby="impact-heading" className="scroll-mt-20 mt-12">
+              <h2 id="impact-heading" className="sr-only">
+                Career highlights
+              </h2>
               <Reveal>
                 <div className="flex flex-col divide-y divide-ink/15 border-y border-ink/15 sm:flex-row sm:divide-x sm:divide-y-0">
                   {impactStats.map((s) => (
@@ -346,15 +471,67 @@ export default function App() {
                 openId={openProj}
                 onToggle={(id) => setOpenProj((cur) => (cur === id ? null : id))}
               />
+
+              {openSourceContributions.length > 0 && (
+                <section
+                  id="open-source"
+                  aria-labelledby="open-source-heading"
+                  className="scroll-mt-24 mt-10"
+                >
+                  <Reveal>
+                    <h3
+                      id="open-source-heading"
+                      className="mb-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted"
+                    >
+                      Upstream open source
+                    </h3>
+                  </Reveal>
+                  <div className="divide-y divide-ink/15 border-y border-ink/15">
+                    {openSourceContributions.map((contribution, i) => (
+                      <Reveal key={contribution.project + contribution.title} delay={i * 0.04}>
+                        <article className="py-6">
+                          <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                            <h4 className="font-display text-2xl font-normal text-ink sm:text-3xl">
+                              {contribution.project}
+                            </h4>
+                            <span className="font-mono text-[12px] text-muted sm:shrink-0">
+                              {contribution.outcome}
+                            </span>
+                          </div>
+                          <p className="mt-1 font-mono text-[12px] text-muted">
+                            {contribution.title}
+                          </p>
+                          <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink/80">
+                            {contribution.blurb}
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                            {contribution.links.map((link) => (
+                              <a
+                                key={link.href}
+                                href={link.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                              >
+                                {link.label} <span aria-hidden="true">↗</span>
+                              </a>
+                            ))}
+                          </div>
+                        </article>
+                      </Reveal>
+                    ))}
+                  </div>
+                </section>
+              )}
             </section>
 
-            {/* AI engineering */}
+            {/* applied AI */}
             <section id="ai" className="scroll-mt-20 mt-24 sm:mt-32">
               <Reveal>
-                <SectionHeading n="03" title="AI engineering" />
+                <SectionHeading n="03" title="Applied AI" />
                 <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-ink/80">
-                  Bringing a decade of production engineering discipline to LLM systems —
-                  prototyping, measuring and hardening them for real workloads, not demos.
+                  I approach LLM features as software systems: grounded retrieval, constrained
+                  tools, repeatable evaluation, and explicit quality, latency and cost trade-offs.
                 </p>
                 <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
                   Focus areas
@@ -372,55 +549,65 @@ export default function App() {
                 ))}
               </div>
 
-              <div
-                className={
-                  aiProjects.length ? 'mt-8 divide-y divide-ink/15 border-y border-ink/15' : ''
-                }
-              >
-                {aiProjects.map((ap, i) => {
-                  const n = ap.nodeId ? byId.get(ap.nodeId) : undefined
-                  const title = n?.label ?? ap.title ?? ''
-                  const blurb = n?.summary ?? ap.blurb ?? ''
-                  const meta = n?.meta?.split(' · ').slice(-1)[0] ?? ap.outcome ?? ''
-                  const href = n?.links?.[0]?.href ?? ap.href
-                  return (
-                    <Reveal key={title + i} delay={i * 0.04}>
-                      <div className="py-5">
-                        <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-display text-2xl font-normal text-ink sm:text-3xl">
-                            {title}
-                          </span>
-                          {meta && (
-                            <span className="shrink-0 font-mono text-[12px] text-muted">
-                              {meta}
-                            </span>
-                          )}
-                        </div>
-                        {blurb && (
-                          <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-ink/80">
-                            {blurb}
-                          </p>
-                        )}
-                        {(ap.stack || n) && (
-                          <p className="mt-2 font-mono text-[12px] text-muted">
-                            {ap.stack ?? (n?.tags ?? []).slice(0, 6).join(' · ')}
-                          </p>
-                        )}
-                        {href && (
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="mt-3 inline-block font-mono text-[13px] text-accent underline-offset-4 hover:underline"
-                          >
-                            View ↗
-                          </a>
-                        )}
-                      </div>
-                    </Reveal>
-                  )
-                })}
-              </div>
+              {aiProjects.length > 0 && (
+                <section
+                  id="ai-case-studies"
+                  aria-labelledby="ai-case-studies-heading"
+                  className="scroll-mt-24 mt-10"
+                >
+                  <Reveal>
+                    <h3
+                      id="ai-case-studies-heading"
+                      className="mb-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted"
+                    >
+                      Public case studies
+                    </h3>
+                  </Reveal>
+                  <div className="divide-y divide-ink/15 border-y border-ink/15">
+                    {aiProjects.map((ap, i) => {
+                      const n = ap.nodeId ? byId.get(ap.nodeId) : undefined
+                      const title = n?.label ?? ap.title ?? ''
+                      const blurb = n?.summary ?? ap.blurb ?? ''
+                      const meta = n?.meta?.split(' · ').slice(-1)[0] ?? ap.outcome ?? ''
+                      const href = n?.links?.[0]?.href ?? ap.href
+                      return (
+                        <Reveal key={title + i} delay={i * 0.04}>
+                          <article className="py-6">
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                              <h4 className="font-display text-2xl font-normal text-ink sm:text-3xl">
+                                {title}
+                              </h4>
+                              {meta && (
+                                <span className="font-mono text-[12px] text-muted sm:shrink-0">
+                                  {meta}
+                                </span>
+                              )}
+                            </div>
+                            {blurb && (
+                              <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink/80">
+                                {blurb}
+                              </p>
+                            )}
+                            {ap.stack && (
+                              <p className="mt-2 font-mono text-[12px] text-muted">{ap.stack}</p>
+                            )}
+                            {href && (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-3 inline-block font-mono text-[13px] text-accent underline-offset-4 hover:underline"
+                              >
+                                View project <span aria-hidden="true">↗</span>
+                              </a>
+                            )}
+                          </article>
+                        </Reveal>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
             </section>
 
             {/* skills */}
@@ -498,13 +685,17 @@ export default function App() {
               <Reveal>
                 <SectionHeading n="06" title="Contact" />
                 <p className="max-w-xl font-display text-2xl font-normal leading-snug text-ink sm:text-3xl">
-                  Building something that needs to do more with less?{' '}
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className="font-medium text-accent underline decoration-2 underline-offset-4 transition hover:opacity-70"
-                  >
-                    Let’s talk.
-                  </a>
+                  Have a platform problem, an open-source idea, or a role where this mix would help?{' '}
+                  {linkedinLink && (
+                    <a
+                      href={linkedinLink.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-medium text-accent underline decoration-2 underline-offset-4 transition hover:opacity-70"
+                    >
+                      Let’s connect.
+                    </a>
+                  )}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-mono text-[14px] text-muted">
                   <a
@@ -526,15 +717,12 @@ export default function App() {
                       {s.label} ↗
                     </a>
                   ))}
-                  <a href={`mailto:${profile.email}`} className="transition hover:text-ink">
-                    Email ↗
-                  </a>
                 </div>
               </Reveal>
             </section>
 
             <footer className="border-t border-ink/10 py-6 font-mono text-[11px] text-muted">
-              © {new Date().getFullYear()} Khalid Shaikh · built to be small.
+              © {new Date().getFullYear()} Khalid Shaikh · built to be small, useful and human.
             </footer>
           </main>
         </div>
@@ -572,21 +760,23 @@ function ExpandMarker({ open }: { open: boolean }) {
 }
 
 // height/opacity collapse wrapper
-function Collapse({ open, children }: { open: boolean; children: ReactNode }) {
+function Collapse({ open, children, id }: { open: boolean; children: ReactNode; id?: string }) {
   return (
-    <AnimatePresence initial={false}>
-      {open && (
-        <m.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
-          className="overflow-hidden"
-        >
-          {children}
-        </m.div>
-      )}
-    </AnimatePresence>
+    <div id={id}>
+      <AnimatePresence initial={false}>
+        {open && (
+          <m.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
+            className="overflow-hidden"
+          >
+            {children}
+          </m.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -620,11 +810,14 @@ function CollapsibleList({
         const n = byId.get(id)
         if (!n) return null
         const open = openId === id
+        const hasMore = !!(n.detail?.length || n.links?.length)
         return (
           <Reveal key={id} delay={i * 0.04}>
             <button
-              onClick={() => onToggle(id)}
-              aria-expanded={open}
+              type="button"
+              onClick={() => hasMore && onToggle(id)}
+              aria-expanded={hasMore ? open : undefined}
+              aria-controls={hasMore ? `project-details-${id}` : undefined}
               className="group flex w-full items-baseline justify-between gap-4 py-5 text-left"
             >
               <span className="font-display text-2xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-3xl">
@@ -634,13 +827,14 @@ function CollapsibleList({
                 <span className="font-mono text-[12px] text-muted">
                   {n.meta?.split(' · ').slice(-1)[0] ?? n.kind}
                 </span>
-                <ExpandMarker open={open} />
+                {hasMore && <ExpandMarker open={open} />}
               </span>
             </button>
-            <Collapse open={open}>
+            <p className="-mt-2 max-w-xl pb-5 text-[15px] leading-relaxed text-ink/80">
+              {n.summary}
+            </p>
+            <Collapse id={`project-details-${id}`} open={open && hasMore}>
               <div className="border-l border-accent/30 pb-6 pl-4">
-                {n.meta && <p className="mb-2 font-mono text-[12px] text-muted">{n.meta}</p>}
-                <p className="max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
                 {n.detail && <DetailList items={n.detail} />}
                 {n.links && (
                   <div className="mt-4 flex gap-4">
@@ -699,8 +893,10 @@ function Timeline({
                 {period}
               </div>
               <button
+                type="button"
                 onClick={() => onToggle(id)}
                 aria-expanded={open}
+                aria-controls={`experience-details-${id}`}
                 className="group mt-1 flex w-full items-baseline justify-between gap-3 text-left"
               >
                 <span className="font-display text-xl font-normal text-ink transition duration-300 group-hover:translate-x-1 group-hover:text-accent sm:text-2xl">
@@ -710,7 +906,7 @@ function Timeline({
               </button>
               {roleLoc && <div className="font-mono text-[12px] text-muted">{roleLoc}</div>}
               <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-ink/80">{n.summary}</p>
-              <Collapse open={open && !!n.detail}>
+              <Collapse id={`experience-details-${id}`} open={open && !!n.detail}>
                 {n.detail && <DetailList items={n.detail} />}
               </Collapse>
             </Reveal>
@@ -730,6 +926,7 @@ function Footnote({ node, onClose }: { node: GraphNode; onClose: () => void }) {
       className="relative rounded-xl border border-ink/10 bg-paper2/60 p-5 backdrop-blur-sm sm:p-6"
     >
       <button
+        type="button"
         onClick={onClose}
         className="absolute right-4 top-4 font-mono text-[12px] text-muted transition hover:text-ink"
         aria-label="Close details"

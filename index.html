@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#12110e" media="(prefers-color-scheme: dark)" />
-    <title>Khalid Shaikh — Senior Software Engineer | Guidewire &amp; LLM apps</title>
+    <title>Khalid Shaikh — Software Engineer | Insurance Platforms &amp; Applied AI</title>
     <meta
       name="description"
-      content="Khalid Shaikh — senior software engineer with 12+ years across BFSI & telecom. Building LLM applications on a deep Guidewire/JVM foundation."
+      content="Senior software engineer with 12+ years across insurance, cloud and telecom. Building Guidewire platforms, applied AI systems and open-source developer tools."
     />
     <meta name="author" content="Khalid Shaikh" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta property="og:title" content="Khalid Shaikh — Software Engineer" />
+    <meta property="og:title" content="Khalid Shaikh — Insurance Platforms &amp; Applied AI" />
     <meta
       property="og:description"
-      content="Senior software engineer (12+ yrs, BFSI & telecom) building LLM applications — RAG, agents, evaluation."
+      content="Dependable insurance platforms, applied AI systems and open-source developer tools, backed by 12+ years of production engineering."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mkhalid-s.github.io/" />
@@ -27,20 +27,52 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Khalid Shaikh — Senior Software Engineer, Bengaluru. I build tools that do more with less."
+      content="Khalid Shaikh — dependable systems across insurance platforms and applied AI."
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Khalid Shaikh — Software Engineer" />
-    <meta name="twitter:description" content="I build tools that do more with less." />
+    <meta name="twitter:title" content="Khalid Shaikh — Insurance Platforms &amp; Applied AI" />
+    <meta
+      name="twitter:description"
+      content="Insurance platforms, applied AI and open-source developer tools—designed to do more with less."
+    />
     <meta name="twitter:image" content="https://mkhalid-s.github.io/og.png" />
-    <meta name="twitter:image:alt" content="Khalid Shaikh — Senior Software Engineer, Bengaluru." />
-    <!-- set theme before paint to avoid a flash -->
+    <meta
+      name="twitter:image:alt"
+      content="Khalid Shaikh — dependable systems across insurance platforms and applied AI."
+    />
+    <!-- set theme + accent before paint to avoid a flash -->
     <script>
       ;(function () {
+        var r = document.documentElement
         try {
           var s = localStorage.getItem('theme')
           var d = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-          if (d) document.documentElement.setAttribute('data-theme', 'dark')
+          if (d) r.setAttribute('data-theme', 'dark')
+        } catch (e) {}
+        // random accent (stable per session; ?accent=NAME overrides). [light, dark] rgb.
+        try {
+          var ACC = {
+            blue: ['37 64 255', '122 142 255'],
+            violet: ['109 40 217', '167 139 250'],
+            emerald: ['15 122 82', '52 211 153'],
+            rust: ['180 71 12', '245 158 11'],
+            magenta: ['190 24 93', '244 114 182'],
+            teal: ['14 116 144', '34 211 238'],
+          }
+          var keys = Object.keys(ACC)
+          var p = new URLSearchParams(location.search).get('accent')
+          var key = p && ACC[p] ? p : null
+          if (!key) {
+            try {
+              key = sessionStorage.getItem('accent')
+            } catch (e) {}
+          }
+          if (!key || !ACC[key]) key = keys[(Math.random() * keys.length) | 0]
+          try {
+            sessionStorage.setItem('accent', key)
+          } catch (e) {}
+          r.style.setProperty('--accent-l', ACC[key][0])
+          r.style.setProperty('--accent-d', ACC[key][1])
         } catch (e) {}
       })()
     </script>
@@ -67,6 +99,10 @@
           "LLM applications",
           "RAG",
           "AI agents",
+          "LLM evaluation",
+          "Model Context Protocol",
+          "FastAPI",
+          "Open-source developer tools",
           "AWS"
         ],
         "sameAs": ["https://github.com/mkhalid-s", "https://www.linkedin.com/in/mkhalidshaikh"]
@@ -76,15 +112,28 @@
   <body>
     <div id="root"></div>
     <noscript>
-      <h1>Khalid Shaikh — Senior Software Engineer, Bengaluru</h1>
+      <h1>Khalid Shaikh — Insurance Platforms &amp; Applied AI</h1>
       <p>
-        Senior software engineer with 12+ years across BFSI &amp; telecom. Specialises in the
-        Guidewire InsuranceSuite on the Guidewire Cloud Platform (AWS), and builds LLM applications
-        — RAG, agents and evaluation. Java &amp; Gosu.
+        Senior software engineer with 12+ years across BFSI and telecom. Leads Guidewire cloud
+        delivery in Java and Gosu, and brings production engineering discipline to RAG, agent and
+        evaluation workflows.
       </p>
       <ul>
         <li>Experience: Guidewire Software, Capgemini, Reliance Jio, eGain, 3i Infotech</li>
-        <li>Skills: Java, Gosu, Python, TypeScript, LangChain, LangGraph, RAG, AWS, Azure</li>
+        <li>
+          Open source:
+          <a href="https://github.com/mkhalid-s/ai-proxy-stack">APX</a>,
+          <a href="https://mkhalid-s.github.io/framefusevid/">FrameFuseVid</a>,
+          <a href="https://github.com/mkhalid-s/auth-scrape">auth-scrape</a>, and
+          <a href="https://github.com/mkhalid-s/sir-saathi">SIR Saathi</a>
+        </li>
+        <li>
+          Applied AI:
+          <a href="https://github.com/mkhalid-s/oss-bug-hunter">OSS Bug Hunter</a>,
+          <a href="https://github.com/mkhalid-s/queryfy-ai">QueryfyAI</a>, and
+          <a href="https://github.com/mkhalid-s/personal-assistant-os">Personal Assistant OS</a>
+        </li>
+        <li>Skills: Java, Gosu, Python, TypeScript, RAG, agents, evaluation, MCP, FastAPI, AWS</li>
         <li><a href="https://github.com/mkhalid-s">GitHub</a></li>
         <li><a href="https://www.linkedin.com/in/mkhalidshaikh">LinkedIn</a></li>
       </ul>
