@@ -5,3 +5,4 @@ dist
 .vscode
 npm-debug.log*
 .claude
+RESUME.md

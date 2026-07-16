@@ -14,10 +14,8 @@ if (!('IntersectionObserver' in window)) {
     rootMargin = ''
     thresholds = []
   }
-  // @ts-expect-error minimal mock for tests
-  window.IntersectionObserver = IO
-  // @ts-expect-error minimal mock for tests
-  global.IntersectionObserver = IO
+  const g = globalThis as unknown as { IntersectionObserver: unknown }
+  g.IntersectionObserver = IO
 }
 
 // jsdom lacks matchMedia; framer-motion / theme logic may probe it.
@@ -32,4 +30,8 @@ if (!window.matchMedia) {
     removeListener: vi.fn(),
     dispatchEvent: vi.fn(),
   }))
+}
+
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = vi.fn()
 }
