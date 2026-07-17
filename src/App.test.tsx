@@ -5,7 +5,7 @@ import App from './App'
 describe('App', () => {
   it('renders the name, statement and key sections', () => {
     render(<App />)
-    expect(screen.getByText(/Khalid Shaikh · Senior Software Engineer/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Khalid Shaikh.' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /insurance platforms/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^Projects$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^Experience$/i })).toBeInTheDocument()
