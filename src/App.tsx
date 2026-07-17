@@ -521,11 +521,7 @@ export default function App() {
                 onToggle={(id) => setOpenProj((cur) => (cur === id ? null : id))}
               />
               {openSourceContributions.length > 0 && (
-                <section
-                  id="open-source"
-                  aria-labelledby="open-source-heading"
-                  className="mt-10"
-                >
+                <section id="open-source" aria-labelledby="open-source-heading" className="mt-10">
                   <h3
                     id="open-source-heading"
                     className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted"
