@@ -373,13 +373,13 @@ export default function App() {
             className="relative z-10 mx-auto max-w-3xl px-6 outline-none sm:px-8"
           >
             {/* ── Hero ─────────────────────────────────────────────── */}
-            <section className="flex min-h-[88vh] flex-col pt-[8vh] sm:pt-[10vh]">
+            <section className="flex min-h-[92vh] flex-col pt-[10vh] sm:pt-[13vh]">
               {/* eyebrow */}
               <m.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="mb-4 font-mono text-[11px] uppercase tracking-[0.28em] text-muted sm:text-[12px]"
+                className="mb-5 font-mono text-[11px] uppercase tracking-[0.28em] text-muted sm:text-[12px]"
               >
                 {profile.title} · {profile.location}
               </m.p>
@@ -389,7 +389,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-                className="mb-6 font-display text-[2.75rem] font-normal leading-[1.0] tracking-[-0.03em] text-ink sm:text-[4rem] md:text-[4.75rem] lg:text-[5.25rem]"
+                className="mb-8 font-display text-[3.4rem] font-normal leading-[1.0] tracking-[-0.03em] text-ink sm:text-[5rem] md:text-[6rem] lg:text-[7rem]"
               >
                 {profile.name}.
               </m.h1>
@@ -397,54 +397,11 @@ export default function App() {
               {/* statement paragraph — interactive terms expand footnotes below */}
               <Statement
                 as="p"
-                className="max-w-xl font-display text-[1.4rem] font-normal leading-[1.45] tracking-[-0.01em] text-ink/85 sm:text-[1.65rem] sm:leading-[1.4] md:text-[1.85rem] md:leading-[1.35]"
+                className="max-w-xl font-display text-[1.55rem] font-normal leading-[1.45] tracking-[-0.01em] text-ink/85 sm:text-[1.9rem] sm:leading-[1.4] md:text-[2.2rem] md:leading-[1.35]"
                 segments={statement}
                 activeId={termId}
                 onToggle={(id) => setTermId((cur) => (cur === id ? null : id))}
               />
-
-              {/* supporting blurb */}
-              <m.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.28 }}
-                className="mt-6 max-w-xl text-base leading-relaxed text-ink/75 sm:text-lg"
-              >
-                {profile.blurb}
-              </m.p>
-
-              {/* primary actions */}
-              <m.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.38 }}
-                className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[12px]"
-              >
-                <a
-                  href="#projects"
-                  className="rounded-full bg-ink px-5 py-2.5 text-paper transition hover:bg-accent"
-                >
-                  View selected work <span aria-hidden="true">↓</span>
-                </a>
-                <a
-                  href={profile.cvHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-ink/20 px-5 py-2.5 transition hover:border-accent hover:text-accent"
-                >
-                  Résumé <span aria-hidden="true">↗</span>
-                </a>
-                {linkedinLink && (
-                  <a
-                    href={linkedinLink.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-2 py-2.5 text-muted transition hover:text-ink"
-                  >
-                    Say hello <span aria-hidden="true">↗</span>
-                  </a>
-                )}
-              </m.div>
 
               {/* footnote detail */}
               <AnimatePresence mode="wait">
