@@ -49,6 +49,7 @@ describe('App', () => {
     fireEvent.click(toggle)
     expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument()
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.querySelector('#theme-color')).toHaveAttribute('content', '#17181b')
   })
 
   it('opens and closes the mobile navigation menu', () => {
@@ -68,6 +69,15 @@ describe('App', () => {
     fireEvent.click(screen.getAllByRole('link', { name: 'Work' })[0])
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' })
     expect(window.location.hash).toBe('#work')
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('restores a section deep link after the application mounts', () => {
+    const scrollIntoView = vi.mocked(Element.prototype.scrollIntoView)
+    scrollIntoView.mockClear()
+    window.history.replaceState(null, '', '#experience')
+    render(<App />)
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' })
     window.history.replaceState(null, '', '/')
   })
 

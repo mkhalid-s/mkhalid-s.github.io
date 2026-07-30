@@ -107,9 +107,18 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const mobileMenuRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
+    let themeColor = document.querySelector<HTMLMetaElement>('#theme-color')
+    if (!themeColor) {
+      themeColor = document.createElement('meta')
+      themeColor.id = 'theme-color'
+      themeColor.name = 'theme-color'
+      document.head.append(themeColor)
+    }
+    themeColor.content = theme === 'dark' ? '#17181b' : '#f7f6f2'
     try {
       localStorage.setItem('theme', theme)
     } catch {
@@ -119,14 +128,16 @@ export default function App() {
 
   const toggleTheme = () => setTheme((current) => (current === 'light' ? 'dark' : 'light'))
   const closeMenu = () => setMenuOpen(false)
+  const scrollToHash = (hash: string, behavior: ScrollBehavior = 'smooth') => {
+    const section = document.getElementById(hash.replace(/^#/, ''))
+    section?.scrollIntoView({ behavior, block: 'start' })
+  }
   const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
-    const id = href.slice(1)
-    const section = document.getElementById(id)
-    if (!section) return
+    if (!document.getElementById(href.slice(1))) return
     event.preventDefault()
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    scrollToHash(href)
     history.pushState(null, '', href)
-    setActiveSection(id)
+    setActiveSection(href.slice(1))
     closeMenu()
   }
 
@@ -140,6 +151,26 @@ export default function App() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    requestAnimationFrame(() =>
+      mobileMenuRef.current?.querySelector<HTMLAnchorElement>('a')?.focus(),
+    )
+  }, [menuOpen])
+
+  useEffect(() => {
+    const restoreHashPosition = () => {
+      if (location.hash) scrollToHash(location.hash, 'auto')
+    }
+    restoreHashPosition()
+    window.addEventListener('popstate', restoreHashPosition)
+    window.addEventListener('hashchange', restoreHashPosition)
+    return () => {
+      window.removeEventListener('popstate', restoreHashPosition)
+      window.removeEventListener('hashchange', restoreHashPosition)
+    }
+  }, [])
 
   useEffect(() => {
     const updateActiveSection = () => {
@@ -220,6 +251,7 @@ export default function App() {
         {menuOpen && (
           <nav
             id="mobile-menu"
+            ref={mobileMenuRef}
             aria-label="Mobile navigation"
             className="border-t border-ink/10 px-5 py-4 md:hidden"
           >
@@ -263,7 +295,11 @@ export default function App() {
                 twelve years of production engineering behind them.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
-                <a href="#work" className="button button--primary">
+                <a
+                  href="#work"
+                  onClick={(event) => scrollToSection(event, '#work')}
+                  className="button button--primary"
+                >
                   View selected work <span aria-hidden="true">↓</span>
                 </a>
                 <a
@@ -283,6 +319,7 @@ export default function App() {
               </p>
               <a
                 href="#contact"
+                onClick={(event) => scrollToSection(event, '#contact')}
                 className="mt-7 inline-flex font-mono text-xs font-medium text-accent underline decoration-accent/40 underline-offset-4"
               >
                 Start a conversation <span aria-hidden="true">↘</span>
@@ -340,7 +377,7 @@ export default function App() {
         </section>
 
         <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="section-inner px-5 sm:px-8">
             <SectionIntro eyebrow="Experience" title="Calm delivery under real constraints.">
               From insurance platforms to telecom integrations, I turn complex systems into
               dependable releases.
@@ -428,7 +465,7 @@ export default function App() {
         </section>
 
         <section className="section-shell section-shell--tint">
-          <div className="mx-auto grid max-w-6xl gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr]">
+          <div className="section-inner grid gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr]">
             <div>
               <p className="eyebrow">Capabilities</p>
               <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-[-0.035em]">
