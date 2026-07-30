@@ -1,87 +1,105 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import App from './App'
 
 describe('App', () => {
-  it('renders the name, statement and key sections', () => {
+  it('leads with a clear value proposition and primary calls to action', () => {
     render(<App />)
-    expect(screen.getAllByText(/Khalid Shaikh/i).length).toBeGreaterThan(0)
-    expect(screen.getByRole('button', { name: /insurance platforms/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /^Projects$/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /^Experience$/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 2, name: /^Applied AI$/i })).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /github/i }).length).toBeGreaterThan(0)
-  })
-
-  it('has an accessible theme toggle', () => {
-    render(<App />)
-    expect(screen.getByRole('button', { name: /dark mode|light mode/i })).toBeInTheDocument()
-  })
-
-  it('opens a footnote from a deep-link hash', () => {
-    window.location.hash = '#exp-guidewire'
-    render(<App />)
-    // the hero term should be in its expanded (active) state
-    expect(screen.getByRole('button', { name: 'insurance platforms' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
+    expect(
+      screen.getByRole('heading', { level: 1, name: /Dependable systems\.\s*Thoughtful AI\./i }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /View selected work/i })).toHaveAttribute(
+      'href',
+      '#work',
     )
-    window.location.hash = ''
+    expect(screen.getAllByRole('link', { name: /Download résumé/i })[0]).toHaveAttribute(
+      'href',
+      'Khalid_Shaikh_CV.pdf',
+    )
+    expect(screen.getByText(/Khalid Shaikh · Senior software engineer/i)).toBeInTheDocument()
   })
 
-  it('restores section deep links after React mounts', async () => {
-    const scrollIntoView = vi.mocked(Element.prototype.scrollIntoView)
-    scrollIntoView.mockClear()
-    window.location.hash = '#ai'
+  it('renders selected work ahead of the experience timeline', () => {
     render(<App />)
-    await waitFor(() => expect(scrollIntoView).toHaveBeenCalled())
-    window.location.hash = ''
-  })
-
-  it('shows evidence for the featured open-source project by default', () => {
-    render(<App />)
-    expect(screen.getByRole('button', { name: /APX/i })).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('heading', { name: 'APX' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'FrameFuseVid' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Guidewire Software' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /v0\.4\.0 release/i })).toHaveAttribute(
       'href',
       'https://github.com/mkhalid-s/ai-proxy-stack/releases/tag/v0.4.0',
     )
   })
 
-  it('shows current public projects and verified upstream contributions', () => {
+  it('surfaces employer and upstream open-source links', () => {
     render(<App />)
-    expect(screen.getByRole('button', { name: /auth-scrape/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /SIR Saathi/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Guidewire' })).toHaveAttribute(
+      'href',
+      'https://www.guidewire.com',
+    )
     expect(screen.getByRole('heading', { name: 'Headroom' })).toBeInTheDocument()
-    expect(
-      screen.getByText(/2 merged PRs · 37 tests · 98% extension coverage/i),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /OAuth2 extension · PR #784/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /OAuth2 extension/i })).toHaveAttribute(
       'href',
       'https://github.com/headroomlabs-ai/headroom/pull/784',
     )
   })
 
-  it('opens the applied AI explanation from the hero', () => {
+  it('has an accessible, persistent theme toggle', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'applied AI' }))
-    expect(screen.getByRole('region', { name: /Applied AI — details/i })).toBeInTheDocument()
+    const toggle = screen.getByRole('button', { name: /switch to dark mode/i })
+    fireEvent.click(toggle)
+    expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument()
+    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.querySelector('#theme-color')).toHaveAttribute('content', '#17181b')
   })
 
-  it('backs the AI positioning with public, measurable case studies', () => {
+  it('opens and closes the mobile navigation menu', () => {
+    render(<App />)
+    const toggle = screen.getByRole('button', { name: /toggle menu/i })
+    fireEvent.click(toggle)
+    expect(screen.getByRole('navigation', { name: /mobile navigation/i })).toBeInTheDocument()
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    const workLinks = screen.getAllByRole('link', { name: 'Work' })
+    fireEvent.click(workLinks[workLinks.length - 1])
+    expect(screen.queryByRole('navigation', { name: /mobile navigation/i })).not.toBeInTheDocument()
+  })
+
+  it('scrolls to a desktop navigation section and updates the URL hash', () => {
+    const scrollIntoView = vi.mocked(Element.prototype.scrollIntoView)
+    render(<App />)
+    fireEvent.click(screen.getAllByRole('link', { name: 'Work' })[0])
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' })
+    expect(window.location.hash).toBe('#work')
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('restores a section deep link after the application mounts', () => {
+    const scrollIntoView = vi.mocked(Element.prototype.scrollIntoView)
+    scrollIntoView.mockClear()
+    window.history.replaceState(null, '', '#experience')
+    render(<App />)
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' })
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('closes the mobile navigation with Escape and returns focus to its trigger', () => {
+    render(<App />)
+    const toggle = screen.getByRole('button', { name: /toggle menu/i })
+    fireEvent.click(toggle)
+    fireEvent.keyDown(window, { key: 'Escape' })
+    expect(screen.queryByRole('navigation', { name: /mobile navigation/i })).not.toBeInTheDocument()
+    expect(toggle).toHaveFocus()
+  })
+
+  it('backs the AI positioning with public case studies', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'OSS Bug Hunter' })).toBeInTheDocument()
     expect(screen.getByText(/5 languages · 18 MCP tools · 322 tests/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'QueryfyAI' })).toBeInTheDocument()
-    expect(
-      screen.getByText(/19 databases · 15\+ LLM providers · 53 test files/i),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Personal Assistant OS' })).toBeInTheDocument()
-    expect(screen.getByText(/25 test modules · passing CI/i)).toBeInTheDocument()
   })
 
   it('routes contact through LinkedIn without publishing an email address', () => {
     const { container } = render(<App />)
-    expect(screen.getByRole('link', { name: /Let’s connect/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Connect on LinkedIn/i })).toHaveAttribute(
       'href',
       'https://www.linkedin.com/in/mkhalidshaikh',
     )

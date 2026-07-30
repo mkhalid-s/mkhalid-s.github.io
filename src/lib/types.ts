@@ -17,6 +17,8 @@ export interface GraphNode {
   /** detail bullets shown when the entry is expanded */
   detail?: string[]
   links?: Link[]
+  /** tech stack tags, e.g. "React · TypeScript · Vite" */
+  stack?: string
 }
 
 export interface Profile {
@@ -24,6 +26,7 @@ export interface Profile {
   title: string
   location: string
   blurb: string
+  email?: string
   social: Link[]
   cvHref: string
 }

@@ -1,25 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../tailwind.config.js';
 
 :root {
-  --paper: 244 241 234;
-  --paper2: 236 231 220;
-  --ink: 23 20 16;
-  --muted: 111 102 87;
-  /* accent is a random palette pick (set pre-paint in index.html); per-theme value */
-  --accent: var(--accent-l, 37 64 255);
-  --term-fill: 0.28; /* highlight-swipe opacity behind interactive words */
+  --paper: 247 246 242;
+  --paper2: 238 236 229;
+  --ink: 27 29 33;
+  --muted: 92 95 96;
+  --accent: 51 68 143;
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --paper: 18 17 14;
-  --paper2: 31 28 23;
-  --ink: 236 231 219;
-  --muted: 150 141 124;
-  --accent: var(--accent-d, 122 142 255);
-  --term-fill: 0.2; /* lighter accent reads hotter on near-black — soften it */
+  --paper: 23 24 27;
+  --paper2: 31 32 36;
+  --ink: 241 240 235;
+  --muted: 177 177 172;
+  --accent: 150 165 244;
   color-scheme: dark;
 }
 
@@ -29,230 +25,28 @@ html {
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
-
 body {
   background: rgb(var(--paper));
   color: rgb(var(--ink));
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition:
-    background 0.4s ease,
-    color 0.4s ease;
 }
-
 ::selection {
   background: rgb(var(--accent));
   color: rgb(var(--paper));
 }
-
-/* Theme switch (View Transitions API). The effect is chosen via html[data-fx]
-   (see THEME_FX / ?fx= in App.tsx); origin vars (--vt-x/y/r) are set by the toggle
-   handler for the reveal effects, and the ☾/☀ icon spins/crossfades on top.
-   No data-fx (or an unknown one) falls back to a calm crossfade. */
-@property --vt-r2 {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-::view-transition-old(root) {
-  animation: fx-fade-out 0.4s ease both;
-}
-::view-transition-new(root) {
-  animation: fx-fade-in 0.4s ease both;
-}
-:root[data-fx='circle']::view-transition-old(root),
-:root[data-fx='feather']::view-transition-old(root),
-:root[data-fx='diagonal']::view-transition-old(root),
-:root[data-fx='up']::view-transition-old(root),
-:root[data-fx='down']::view-transition-old(root),
-:root[data-fx='right']::view-transition-old(root),
-:root[data-fx='split']::view-transition-old(root),
-:root[data-fx='iris']::view-transition-old(root),
-:root[data-fx='blinds']::view-transition-old(root) {
-  animation: none;
-}
-:root[data-fx='circle']::view-transition-new(root) {
-  animation: fx-circle 0.5s ease both;
-}
-:root[data-fx='feather']::view-transition-new(root) {
-  animation: fx-feather 0.55s ease both;
-  -webkit-mask: radial-gradient(
-    circle at var(--vt-x, 50%) var(--vt-y, 0),
-    #000 calc(var(--vt-r2) - 90px),
-    transparent var(--vt-r2)
-  );
-  mask: radial-gradient(
-    circle at var(--vt-x, 50%) var(--vt-y, 0),
-    #000 calc(var(--vt-r2) - 90px),
-    transparent var(--vt-r2)
-  );
-}
-:root[data-fx='diagonal']::view-transition-new(root) {
-  animation: fx-diagonal 0.5s ease both;
-}
-@keyframes fx-fade-out {
-  to {
-    opacity: 0;
-  }
-}
-@keyframes fx-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes fx-circle {
-  from {
-    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
-  }
-  to {
-    clip-path: circle(var(--vt-r, 150%) at var(--vt-x, 50%) var(--vt-y, 0));
-  }
-}
-@keyframes fx-feather {
-  from {
-    --vt-r2: 0px;
-  }
-  to {
-    --vt-r2: var(--vt-r, 1500px);
-  }
-}
-@keyframes fx-diagonal {
-  from {
-    clip-path: polygon(0 0, 0 0, -40% 100%, -40% 100%);
-  }
-  to {
-    clip-path: polygon(0 0, 140% 0, 100% 100%, -40% 100%);
-  }
-}
-
-/* directional wipes */
-:root[data-fx='up']::view-transition-new(root) {
-  animation: fx-up 0.5s ease both;
-}
-:root[data-fx='down']::view-transition-new(root) {
-  animation: fx-down 0.5s ease both;
-}
-:root[data-fx='right']::view-transition-new(root) {
-  animation: fx-right 0.5s ease both;
-}
-:root[data-fx='split']::view-transition-new(root) {
-  animation: fx-split 0.5s ease both;
-}
-:root[data-fx='iris']::view-transition-new(root) {
-  animation: fx-iris 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  transform-origin: center;
-}
-:root[data-fx='blinds']::view-transition-new(root) {
-  animation: fx-blinds 0.6s ease both;
-  -webkit-mask: repeating-linear-gradient(
-    to bottom,
-    #000 0 var(--vt-b),
-    transparent var(--vt-b) 8%
-  );
-  mask: repeating-linear-gradient(to bottom, #000 0 var(--vt-b), transparent var(--vt-b) 8%);
-}
-@property --vt-b {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-@keyframes fx-up {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-@keyframes fx-down {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-@keyframes fx-right {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-@keyframes fx-split {
-  from {
-    clip-path: inset(50% 0 50% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-@keyframes fx-iris {
-  from {
-    transform: scale(0.1);
-    opacity: 0.35;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-@keyframes fx-blinds {
-  from {
-    --vt-b: 0%;
-  }
-  to {
-    --vt-b: 8%;
-  }
-}
-.theme-toggle {
-  view-transition-name: theme-toggle;
-}
-::view-transition-old(theme-toggle) {
-  animation: theme-icon-out 0.4s ease both;
-}
-::view-transition-new(theme-toggle) {
-  animation: theme-icon-in 0.4s ease both;
-}
-@keyframes theme-icon-out {
-  from {
-    opacity: 1;
-    transform: rotate(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: rotate(-120deg) scale(0.3);
-  }
-}
-@keyframes theme-icon-in {
-  from {
-    opacity: 0;
-    transform: rotate(120deg) scale(0.3);
-  }
-  to {
-    opacity: 1;
-    transform: rotate(0) scale(1);
-  }
-}
 a {
   color: inherit;
 }
-
-/* consistent focus ring across links & buttons (terms set their own) */
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid rgb(var(--accent));
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline-offset: 3px;
 }
-
-/* Fraunces: let opsz follow the font size (display cut large, text cut small)
-   and turn on its ligatures/contextual alternates for a crafted serif. */
 .font-display {
   font-optical-sizing: auto;
   font-feature-settings:
@@ -260,97 +54,211 @@ button:focus-visible {
     'dlig' 1,
     'calt' 1;
 }
-
-/* faint paper grain */
-.grain::before {
-  content: '';
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgb(var(--ink) / 0.1);
+  background: rgb(var(--paper) / 0.92);
+  backdrop-filter: blur(12px);
+}
+.skip-link {
   position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 30;
+  left: 1rem;
+  top: 1rem;
+  transform: translateY(-200%);
+  border-radius: 0.4rem;
+  background: rgb(var(--accent));
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: rgb(var(--paper));
 }
-[data-theme='dark'] .grain::before {
-  opacity: 0.06;
+.skip-link:focus {
+  transform: translateY(0);
 }
-
-/* animated marker-swipe under interactive words.
-   display:inline (not the button default inline-block) so terms wrap like text
-   and never orphan a following "." onto a new line; the background-image
-   underline survives line wraps via box-decoration-break. */
-.term {
-  display: inline;
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
-  padding: 0.12em 0.08em; /* larger tap target (≈ touch-friendly) */
-  margin: 0 -0.08em;
-  font: inherit;
-  color: inherit;
-  /* two layers: [0] the fill swipe (grows on hover/active) + [1] an always-on
-     underline (≥3:1 contrast) so the word LOOKS interactive before any hover. */
-  background-image:
-    linear-gradient(rgb(var(--accent) / var(--term-fill)), rgb(var(--accent) / var(--term-fill))),
-    linear-gradient(rgb(var(--accent) / 0.85), rgb(var(--accent) / 0.85));
-  background-repeat: no-repeat, no-repeat;
-  background-position:
-    0 82%,
-    0 90%;
-  background-size:
-    0% 0.42em,
-    100% 2px;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+.nav-link {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgb(var(--muted));
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: rgb(var(--ink));
+}
+.mobile-nav-link {
+  border-bottom: 1px solid rgb(var(--ink) / 0.08);
+  padding: 0.8rem 0;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+.button {
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.35rem;
+  padding: 0.75rem 1rem;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
   transition:
-    background-size 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
-    color 0.2s ease;
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
-.term:hover,
-.term[data-active='true'] {
-  background-size:
-    100% 0.42em,
-    100% 2px;
+.button:hover {
+  transform: translateY(-1px);
 }
-.term[data-active='true'] {
+.button--primary {
+  background: rgb(var(--ink));
+  color: rgb(var(--paper));
+}
+.button--primary:hover {
+  background: rgb(var(--accent));
+}
+.button--secondary {
+  border: 1px solid rgb(var(--ink) / 0.18);
+  color: rgb(var(--ink));
+}
+.button--secondary:hover,
+.button--quiet:hover {
+  border-color: rgb(var(--accent));
   color: rgb(var(--accent));
 }
-.term:focus-visible {
-  outline: 2px solid rgb(var(--accent));
-  outline-offset: 3px;
-  border-radius: 3px;
+.button--quiet {
+  padding: 0.45rem 0.7rem;
+  color: rgb(var(--muted));
 }
-
-/* one-time "teach" sweep on the first term so the interaction is discoverable */
-@keyframes termHint {
-  0%,
-  100% {
-    background-size:
-      0% 0.42em,
-      100% 2px;
+.icon-button {
+  display: grid;
+  height: 2.15rem;
+  width: 2.15rem;
+  place-items: center;
+  border: 1px solid rgb(var(--ink) / 0.14);
+  border-radius: 50%;
+  background: transparent;
+  color: rgb(var(--ink));
+  font-size: 1rem;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.icon-button:hover {
+  border-color: rgb(var(--accent));
+  color: rgb(var(--accent));
+}
+.hero-shell {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--paper)) 0%,
+    rgb(var(--paper)) 70%,
+    rgb(var(--accent) / 0.055) 100%
+  );
+}
+.section-shell {
+  margin: 0 auto;
+  max-width: 76rem;
+  padding: 7rem 1.25rem;
+}
+.section-shell--tint {
+  max-width: none;
+  background: rgb(var(--paper2) / 0.62);
+}
+.section-inner {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 76rem;
+}
+.eyebrow {
+  margin: 0;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: rgb(var(--muted));
+}
+.project-card {
+  border: 1px solid rgb(var(--ink) / 0.12);
+  border-radius: 0.85rem;
+  padding: 1.6rem;
+  background: rgb(var(--paper));
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.project-card:hover {
+  transform: translateY(-3px);
+  border-color: rgb(var(--accent) / 0.55);
+  box-shadow: 0 14px 35px rgb(16 22 50 / 0.07);
+}
+[data-theme='dark'] .project-card:hover {
+  box-shadow:
+    0 0 0 1px rgb(var(--accent) / 0.2),
+    0 14px 35px rgb(0 0 0 / 0.18);
+}
+.project-card--featured {
+  background: linear-gradient(145deg, rgb(var(--accent) / 0.11), rgb(var(--paper)) 50%);
+}
+.project-art {
+  display: block;
+  width: 100%;
+  max-height: 13rem;
+  margin-top: 1.6rem;
+  border: 1px solid rgb(var(--ink) / 0.1);
+  border-radius: 0.45rem;
+  object-fit: cover;
+  object-position: center;
+}
+.project-index {
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: rgb(var(--accent) / 0.52);
+}
+.experience-list {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid rgb(var(--ink) / 0.1);
+}
+.experience-item {
+  position: relative;
+  padding: 2rem 0 2rem 1.5rem;
+  border-bottom: 1px solid rgb(var(--ink) / 0.1);
+}
+.experience-item::before {
+  position: absolute;
+  left: 0;
+  top: 2.45rem;
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+  content: '';
+}
+@media (min-width: 640px) {
+  .section-shell {
+    padding: 8rem 2rem;
   }
-  45%,
-  55% {
-    background-size:
-      100% 0.42em,
-      100% 2px;
+  .project-card {
+    min-height: 25rem;
+    padding: 2rem;
+  }
+  .project-art {
+    max-height: 14rem;
   }
 }
-.term--hint {
-  animation: termHint 2.4s ease 1.2s 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .term--hint {
-    animation: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  * {
-    animation: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
   }
 }
