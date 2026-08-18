@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Khalid Shaikh — insurance platforms, applied AI, and open-source engineering.",
+  "description": "Khalid Shaikh — insurance platforms, cloud migrations, and open-source tools.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

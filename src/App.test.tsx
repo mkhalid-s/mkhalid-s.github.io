@@ -3,36 +3,47 @@ import { describe, expect, it, vi } from 'vitest'
 import App from './App'
 
 describe('App', () => {
-  it('leads with a clear value proposition and primary calls to action', () => {
+  it('leads with a short positioning line and a single work link', () => {
     render(<App />)
     expect(
-      screen.getByRole('heading', { level: 1, name: /Dependable systems\.\s*Thoughtful AI\./i }),
+      screen.getByRole('heading', { level: 1, name: /I build platforms and developer tools\./i }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /View selected work/i })).toHaveAttribute(
-      'href',
-      '#work',
-    )
-    expect(screen.getAllByRole('link', { name: /Download résumé/i })[0]).toHaveAttribute(
-      'href',
-      'Khalid_Shaikh_CV.pdf',
-    )
-    expect(screen.getByText(/Khalid Shaikh · Senior software engineer/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /See work/i })).toHaveAttribute('href', '#work')
+    expect(screen.queryByRole('link', { name: /résumé/i })).not.toBeInTheDocument()
+    expect(screen.getByText(/Khalid Shaikh · Software Engineer/i)).toBeInTheDocument()
+    expect(screen.queryByText(/Bengaluru/i)).not.toBeInTheDocument()
   })
 
-  it('renders selected work ahead of the experience timeline', () => {
+  it('renders selected work and does not pin a release tag', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'APX' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'FrameFuseVid' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /v0\.4\.0 release/i })).not.toBeInTheDocument()
+  })
+
+  it('keeps a factual experience timeline with durations and stacks, not cities or calendar dates', () => {
+    const { container } = render(<App />)
     expect(screen.getByRole('heading', { name: 'Guidewire Software' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /v0\.4\.0 release/i })).toHaveAttribute(
-      'href',
-      'https://github.com/mkhalid-s/ai-proxy-stack/releases/tag/v0.4.0',
-    )
+    expect(screen.getByRole('heading', { name: 'Capgemini India' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Reliance Jio' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'eGain Communications' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '3i Infotech' })).toBeInTheDocument()
+    expect(screen.getByText('~5 years')).toBeInTheDocument()
+    expect(screen.getByText('~3 years')).toBeInTheDocument()
+    expect(screen.getByText('~1.5 years')).toBeInTheDocument()
+    expect(screen.getByText('<1 year')).toBeInTheDocument()
+    expect(screen.getByText('~2 years')).toBeInTheDocument()
+    expect(screen.getByText(/Java · Gosu · PCF · InsuranceSuite/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/12\+ years across insurance, consulting, telecom, and banking/i),
+    ).toBeInTheDocument()
+    expect(container.textContent).not.toMatch(/Bengaluru|Navi Mumbai|Pune/)
+    expect(container.textContent).not.toMatch(/Oct 2021|Aug 2018|Feb 2017|Jun 2016|Mar 2014/)
   })
 
   it('surfaces employer and upstream open-source links', () => {
     render(<App />)
-    expect(screen.getByRole('link', { name: 'Guidewire' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Guidewire Software' })).toHaveAttribute(
       'href',
       'https://www.guidewire.com',
     )
@@ -90,19 +101,22 @@ describe('App', () => {
     expect(toggle).toHaveFocus()
   })
 
-  it('backs the AI positioning with public case studies', () => {
+  it('lists applied-AI experiments under work', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'OSS Bug Hunter' })).toBeInTheDocument()
     expect(screen.getByText(/5 languages · 18 MCP tools · 322 tests/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'QueryfyAI' })).toBeInTheDocument()
   })
 
-  it('routes contact through LinkedIn without publishing an email address', () => {
+  it('routes contact through footer social links without publishing an email or résumé', () => {
     const { container } = render(<App />)
-    expect(screen.getByRole('link', { name: /Connect on LinkedIn/i })).toHaveAttribute(
-      'href',
-      'https://www.linkedin.com/in/mkhalidshaikh',
-    )
+    expect(
+      screen
+        .getByRole('contentinfo')
+        .querySelector('a[href="https://www.linkedin.com/in/mkhalidshaikh"]'),
+    ).toBeTruthy()
     expect(container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument()
+    expect(container.querySelector('a[href*="Khalid_Shaikh_CV"]')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Let’s work together/i)).not.toBeInTheDocument()
   })
 })

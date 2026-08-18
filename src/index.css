@@ -93,43 +93,6 @@ button:focus-visible {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 0.78rem;
 }
-.button {
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.35rem;
-  padding: 0.75rem 1rem;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
-  font-weight: 600;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
-}
-.button:hover {
-  transform: translateY(-1px);
-}
-.button--primary {
-  background: rgb(var(--ink));
-  color: rgb(var(--paper));
-}
-.button--primary:hover {
-  background: rgb(var(--accent));
-}
-.button--secondary {
-  border: 1px solid rgb(var(--ink) / 0.18);
-  color: rgb(var(--ink));
-}
-.button--secondary:hover,
-.button--quiet:hover {
-  border-color: rgb(var(--accent));
-  color: rgb(var(--accent));
-}
-.button--quiet {
-  padding: 0.45rem 0.7rem;
-  color: rgb(var(--muted));
-}
 .icon-button {
   display: grid;
   height: 2.15rem;
@@ -152,14 +115,19 @@ button:focus-visible {
   background: linear-gradient(
     135deg,
     rgb(var(--paper)) 0%,
-    rgb(var(--paper)) 70%,
-    rgb(var(--accent) / 0.055) 100%
+    rgb(var(--paper)) 78%,
+    rgb(var(--accent) / 0.04) 100%
   );
+}
+.hero-title {
+  font-size: clamp(2.4rem, 6vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
 .section-shell {
   margin: 0 auto;
-  max-width: 76rem;
-  padding: 7rem 1.25rem;
+  max-width: 64rem;
+  padding: 4.5rem 1.25rem;
 }
 .section-shell--tint {
   max-width: none;
@@ -168,7 +136,7 @@ button:focus-visible {
 .section-inner {
   margin-left: auto;
   margin-right: auto;
-  max-width: 76rem;
+  max-width: 64rem;
 }
 .eyebrow {
   margin: 0;
@@ -183,41 +151,12 @@ button:focus-visible {
 .project-card {
   border: 1px solid rgb(var(--ink) / 0.12);
   border-radius: 0.85rem;
-  padding: 1.6rem;
+  padding: 1.5rem;
   background: rgb(var(--paper));
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: border-color 0.2s ease;
 }
 .project-card:hover {
-  transform: translateY(-3px);
   border-color: rgb(var(--accent) / 0.55);
-  box-shadow: 0 14px 35px rgb(16 22 50 / 0.07);
-}
-[data-theme='dark'] .project-card:hover {
-  box-shadow:
-    0 0 0 1px rgb(var(--accent) / 0.2),
-    0 14px 35px rgb(0 0 0 / 0.18);
-}
-.project-card--featured {
-  background: linear-gradient(145deg, rgb(var(--accent) / 0.11), rgb(var(--paper)) 50%);
-}
-.project-art {
-  display: block;
-  width: 100%;
-  max-height: 13rem;
-  margin-top: 1.6rem;
-  border: 1px solid rgb(var(--ink) / 0.1);
-  border-radius: 0.45rem;
-  object-fit: cover;
-  object-position: center;
-}
-.project-index {
-  font-family: 'Fraunces Variable', Georgia, serif;
-  font-size: 1.6rem;
-  line-height: 1;
-  color: rgb(var(--accent) / 0.52);
 }
 .experience-list {
   margin: 0;
@@ -227,13 +166,13 @@ button:focus-visible {
 }
 .experience-item {
   position: relative;
-  padding: 2rem 0 2rem 1.5rem;
+  padding: 1.5rem 0 1.5rem 1.5rem;
   border-bottom: 1px solid rgb(var(--ink) / 0.1);
 }
 .experience-item::before {
   position: absolute;
   left: 0;
-  top: 2.45rem;
+  top: 2.1rem;
   height: 0.5rem;
   width: 0.5rem;
   border-radius: 50%;
@@ -242,14 +181,10 @@ button:focus-visible {
 }
 @media (min-width: 640px) {
   .section-shell {
-    padding: 8rem 2rem;
+    padding: 5.5rem 2rem;
   }
   .project-card {
-    min-height: 25rem;
-    padding: 2rem;
-  }
-  .project-art {
-    max-height: 14rem;
+    padding: 1.75rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

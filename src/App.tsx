@@ -1,26 +1,19 @@
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  aiPillars,
   aiProjects,
-  certifications,
-  impactStats,
+  careerIntro,
+  experience,
   nodes,
   openSourceContributions,
   profile,
-  skillGroups,
-  spokenLanguages,
 } from './data/profile'
-import type { GraphNode, Link } from './lib/types'
+import type { ExperienceRole, GraphNode, Link } from './lib/types'
 
 const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
-const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
-const educationIds = ['edu-be', 'edu-hsc']
 
 const navigation = [
   { href: '#work', label: 'Work' },
   { href: '#experience', label: 'Experience' },
-  { href: '#expertise', label: 'Expertise' },
-  { href: '#contact', label: 'Contact' },
 ]
 
 function ExternalLink({ link, className = '' }: { link: Link; className?: string }) {
@@ -46,9 +39,9 @@ function SectionIntro({
   children?: React.ReactNode
 }) {
   return (
-    <div className="mb-10 max-w-2xl">
+    <div className="mb-8 max-w-2xl">
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-4xl font-medium leading-[1.05] tracking-[-0.035em] text-ink sm:text-5xl">
+      <h2 className="mt-3 font-display text-[2.15rem] font-medium leading-[1.08] tracking-[-0.03em] text-ink sm:text-4xl">
         {title}
       </h2>
       {children && <div className="mt-4 max-w-xl text-base leading-7 text-muted">{children}</div>}
@@ -56,46 +49,60 @@ function SectionIntro({
   )
 }
 
-function ProjectCard({ node, featured = false }: { node: GraphNode; featured?: boolean }) {
-  const stack = node.detail?.find((item) => item.startsWith('Stack:'))?.replace('Stack: ', '')
+function ProjectCard({ node }: { node: GraphNode }) {
   return (
-    <article className={`project-card ${featured ? 'project-card--featured' : ''}`}>
-      <div className="flex items-start justify-between gap-4">
-        <p className="eyebrow !text-accent">{node.meta}</p>
-        <span aria-hidden="true" className="project-index">
-          0
-          {featured
-            ? '1'
-            : node.label === 'FrameFuseVid'
-              ? '2'
-              : node.label === 'auth-scrape'
-                ? '3'
-                : '4'}
-        </span>
-      </div>
-      {featured && (
-        <img
-          src="/images/apx-routing-art.webp"
-          alt="Abstract routing diagram representing the APX local AI proxy gateway"
-          className="project-art"
-          width={1200}
-          height={800}
-          loading="lazy"
-        />
-      )}
-      <h3 className="mt-8 font-display text-3xl font-medium leading-none tracking-[-0.03em] text-ink sm:text-4xl">
+    <article className="project-card">
+      {node.meta && <p className="eyebrow !text-accent">{node.meta}</p>}
+      <h3 className="mt-5 font-display text-[1.85rem] font-medium leading-none tracking-[-0.03em] text-ink sm:text-3xl">
         {node.label}
       </h3>
       <p className="mt-4 max-w-lg text-[15px] leading-7 text-ink/75">{node.summary}</p>
-      {stack && <p className="mt-5 font-mono text-xs leading-5 text-muted">{stack}</p>}
       {node.links && (
-        <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs font-medium">
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs font-medium">
           {node.links.map((link) => (
             <ExternalLink key={link.href} link={link} />
           ))}
         </div>
       )}
     </article>
+  )
+}
+
+function ExperienceItem({ role }: { role: ExperienceRole }) {
+  return (
+    <li className="experience-item">
+      <article>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1">
+          <h3 className="font-display text-2xl font-medium tracking-[-0.03em] sm:text-[1.85rem]">
+            {role.href ? (
+              <a href={role.href} target="_blank" rel="noreferrer" className="hover:text-accent">
+                {role.employer}
+              </a>
+            ) : (
+              role.employer
+            )}
+          </h3>
+          <p className="font-mono text-xs text-muted">{role.duration}</p>
+        </div>
+        <p className="mt-1 font-mono text-xs text-accent">{role.role}</p>
+        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-ink/75">{role.summary}</p>
+        {role.stack.length > 0 && (
+          <p className="mt-4 font-mono text-xs leading-5 text-muted">{role.stack.join(' · ')}</p>
+        )}
+        {role.highlights.length > 0 && (
+          <ul className="mt-4 max-w-2xl space-y-2">
+            {role.highlights.map((highlight) => (
+              <li
+                key={highlight}
+                className="border-l border-accent/35 pl-3 text-sm leading-6 text-muted"
+              >
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+    </li>
   )
 }
 
@@ -192,7 +199,7 @@ export default function App() {
       </a>
 
       <header className="site-header">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-8">
           <a
             href="#top"
             className="font-mono text-sm font-semibold tracking-tight"
@@ -219,14 +226,6 @@ export default function App() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <a
-              href={profile.cvHref}
-              target="_blank"
-              rel="noreferrer"
-              className="button button--quiet hidden sm:inline-flex"
-            >
-              Résumé <span aria-hidden="true">↗</span>
-            </a>
             <button
               type="button"
               onClick={toggleTheme}
@@ -255,7 +254,7 @@ export default function App() {
             aria-label="Mobile navigation"
             className="border-t border-ink/10 px-5 py-4 md:hidden"
           >
-            <div className="mx-auto flex max-w-6xl flex-col gap-1">
+            <div className="mx-auto flex max-w-5xl flex-col gap-1">
               {navigation.map((item) => (
                 <a
                   key={item.href}
@@ -266,15 +265,6 @@ export default function App() {
                   {item.label}
                 </a>
               ))}
-              <a
-                href={profile.cvHref}
-                onClick={closeMenu}
-                target="_blank"
-                rel="noreferrer"
-                className="mobile-nav-link"
-              >
-                Résumé ↗
-              </a>
             </div>
           </nav>
         )}
@@ -282,84 +272,43 @@ export default function App() {
 
       <main id="main-content" tabIndex={-1}>
         <section id="top" className="hero-shell">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 pb-16 pt-20 sm:px-8 md:grid-cols-[1.35fr_.65fr] md:items-end md:pb-24 md:pt-28">
-            <div>
-              <p className="eyebrow">Khalid Shaikh · Senior software engineer · Bengaluru, India</p>
-              <h1 className="mt-5 max-w-4xl font-display text-[3.6rem] font-medium leading-[0.93] tracking-[-0.055em] text-ink sm:text-7xl lg:text-[6.5rem]">
-                Dependable systems.
-                <br />
-                Thoughtful AI.
-              </h1>
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-ink/75 sm:text-xl">
-                I build insurance platforms, cloud migrations and local-first developer tools with
-                twelve years of production engineering behind them.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <a
-                  href="#work"
-                  onClick={(event) => scrollToSection(event, '#work')}
-                  className="button button--primary"
-                >
-                  View selected work <span aria-hidden="true">↓</span>
-                </a>
-                <a
-                  href={profile.cvHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--secondary"
-                >
-                  Download résumé <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-            <aside className="border-l border-ink/15 pl-5 md:pb-1 md:pl-7">
-              <p className="eyebrow">Currently</p>
-              <p className="mt-3 font-display text-2xl leading-tight tracking-[-0.025em] text-ink">
-                Leading Guidewire Cloud delivery and exploring practical AI systems.
-              </p>
-              <a
-                href="#contact"
-                onClick={(event) => scrollToSection(event, '#contact')}
-                className="mt-7 inline-flex font-mono text-xs font-medium text-accent underline decoration-accent/40 underline-offset-4"
-              >
-                Start a conversation <span aria-hidden="true">↘</span>
-              </a>
-            </aside>
-          </div>
-          <div className="border-y border-ink/10">
-            <div className="mx-auto grid max-w-6xl divide-y divide-ink/10 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8">
-              {impactStats.map((stat) => (
-                <div key={stat.label} className="py-6 sm:px-7 sm:first:pl-0">
-                  <p className="font-display text-4xl font-medium leading-none tracking-[-0.04em] text-ink">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="mx-auto max-w-5xl px-5 pb-16 pt-16 sm:px-8 md:pb-20 md:pt-24">
+            <p className="eyebrow">
+              {profile.name} · {profile.title}
+            </p>
+            <h1 className="hero-title mt-5 max-w-3xl font-display font-medium text-ink">
+              I build platforms and developer tools.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">
+              Insurance platforms, cloud migrations, and local-first open-source tools.
+            </p>
+            <a
+              href="#work"
+              onClick={(event) => scrollToSection(event, '#work')}
+              className="mt-8 inline-flex font-mono text-xs font-medium text-accent underline decoration-accent/40 underline-offset-4"
+            >
+              See work <span aria-hidden="true">↓</span>
+            </a>
           </div>
         </section>
 
         <section id="work" className="section-shell scroll-mt-20">
-          <SectionIntro eyebrow="Selected work" title="Built for the real world.">
-            Open-source tools and practical products where reliability, privacy and clarity are
-            features—not afterthoughts.
+          <SectionIntro eyebrow="Work" title="Open-source tools and side projects.">
+            Selected repositories and upstream contributions.
           </SectionIntro>
           <div className="grid gap-4 lg:grid-cols-2">
-            {projectIds.map((id, index) => {
+            {projectIds.map((id) => {
               const node = byId.get(id)
-              return node && <ProjectCard key={id} node={node} featured={index === 0} />
+              return node && <ProjectCard key={id} node={node} />
             })}
           </div>
           {openSourceContributions.length > 0 && (
-            <div className="mt-10 border-t border-ink/10 pt-8">
+            <div className="mt-12 border-t border-ink/10 pt-8">
               <p className="eyebrow">Upstream contribution</p>
               {openSourceContributions.map((item) => (
-                <article key={item.project} className="mt-4 grid gap-4 md:grid-cols-[.8fr_1.2fr]">
+                <article key={item.project} className="mt-5 grid gap-4 md:grid-cols-[.8fr_1.2fr]">
                   <div>
-                    <h3 className="font-display text-3xl tracking-[-0.03em]">{item.project}</h3>
+                    <h3 className="font-display text-2xl tracking-[-0.03em]">{item.project}</h3>
                     <p className="mt-1 font-mono text-xs text-accent">{item.outcome}</p>
                   </div>
                   <div>
@@ -374,76 +323,13 @@ export default function App() {
               ))}
             </div>
           )}
-        </section>
-
-        <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
-          <div className="section-inner px-5 sm:px-8">
-            <SectionIntro eyebrow="Experience" title="Calm delivery under real constraints.">
-              From insurance platforms to telecom integrations, I turn complex systems into
-              dependable releases.
-            </SectionIntro>
-            <ol className="experience-list">
-              {experienceIds.map((id) => {
-                const node = byId.get(id)
-                if (!node) return null
-                const parts = node.meta?.split(' · ') ?? []
-                const period = parts.pop()
-                return (
-                  <li key={id} className="experience-item">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2">
-                      <h3 className="font-display text-3xl font-medium tracking-[-0.03em]">
-                        {node.label}
-                      </h3>
-                      <p className="font-mono text-xs text-muted">{period}</p>
-                    </div>
-                    <p className="mt-1 font-mono text-xs text-accent">{parts.join(' · ')}</p>
-                    <p className="mt-4 max-w-2xl text-[15px] leading-7 text-ink/75">
-                      {node.summary}
-                    </p>
-                    <div className="mt-4 grid max-w-3xl gap-2 sm:grid-cols-2">
-                      {node.detail?.slice(0, 2).map((detail) => (
-                        <p
-                          key={detail}
-                          className="border-l border-accent/35 pl-3 text-sm leading-6 text-muted"
-                        >
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
-                    {node.links && (
-                      <div className="mt-4 font-mono text-xs">
-                        {node.links.map((link) => (
-                          <ExternalLink key={link.href} link={link} />
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                )
-              })}
-            </ol>
-          </div>
-        </section>
-
-        <section id="expertise" className="section-shell scroll-mt-20">
-          <SectionIntro eyebrow="Applied AI" title="Software discipline for AI systems.">
-            Grounded retrieval, constrained tools and measurable outcomes—applied without the
-            theatre.
-          </SectionIntro>
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2">
-            {aiPillars.map((pillar) => (
-              <article key={pillar.label} className="bg-paper p-6 sm:p-7">
-                <p className="font-display text-2xl tracking-[-0.025em]">{pillar.label}</p>
-                <p className="mt-3 text-sm leading-6 text-muted">{pillar.blurb}</p>
-              </article>
-            ))}
-          </div>
-          <div className="mt-16">
-            <p className="eyebrow">Experiments & shipped work</p>
-            <div className="mt-5 divide-y divide-ink/10 border-y border-ink/10">
+          <div className="mt-12 border-t border-ink/10 pt-8">
+            <p className="eyebrow">Experiments</p>
+            <div className="mt-2 divide-y divide-ink/10">
               {aiProjects.map((project) => (
-                <article key={project.title} className="grid gap-4 py-7 md:grid-cols-[.8fr_1.2fr]">
+                <article key={project.title} className="grid gap-3 py-6 md:grid-cols-[.8fr_1.2fr]">
                   <div>
-                    <h3 className="font-display text-2xl tracking-[-0.025em]">{project.title}</h3>
+                    <h3 className="font-display text-xl tracking-[-0.025em]">{project.title}</h3>
                     <p className="mt-2 font-mono text-xs text-accent">{project.outcome}</p>
                   </div>
                   <div>
@@ -451,12 +337,10 @@ export default function App() {
                     <p className="mt-3 font-mono text-[11px] leading-5 text-muted">
                       {project.stack}
                     </p>
-                    {project.href && (
-                      <ExternalLink
-                        className="mt-4 font-mono text-xs"
-                        link={{ label: 'View project', href: project.href }}
-                      />
-                    )}
+                    <ExternalLink
+                      className="mt-4 font-mono text-xs"
+                      link={{ label: 'View project', href: project.href }}
+                    />
                   </div>
                 </article>
               ))}
@@ -464,95 +348,29 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section-shell section-shell--tint">
-          <div className="section-inner grid gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr]">
-            <div>
-              <p className="eyebrow">Capabilities</p>
-              <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-[-0.035em]">
-                A broad foundation, used with care.
-              </h2>
-              <p className="mt-5 max-w-md leading-7 text-muted">
-                Tools are useful when they make delivery clearer, safer and easier to evolve.
-              </p>
-            </div>
-            <div className="space-y-5">
-              {skillGroups.map((group) => (
-                <div
-                  key={group.label}
-                  className="grid gap-3 border-t border-ink/10 pt-4 sm:grid-cols-[10rem_1fr]"
-                >
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                    {group.label}
-                  </p>
-                  <p className="text-sm leading-6 text-ink/75">{group.items.join(' · ')}</p>
-                </div>
+        <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
+          <div className="section-inner px-5 sm:px-8">
+            <SectionIntro eyebrow="Experience" title="Roles and stacks.">
+              {careerIntro}
+            </SectionIntro>
+            <ol className="experience-list">
+              {experience.map((role) => (
+                <ExperienceItem key={role.id} role={role} />
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="contact" className="section-shell scroll-mt-20">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 md:grid-cols-[1.2fr_.8fr] md:items-end">
-            <div>
-              <p className="eyebrow">Let’s work together</p>
-              <h2 className="mt-4 max-w-3xl font-display text-5xl font-medium leading-[.98] tracking-[-0.05em] sm:text-6xl">
-                A difficult platform problem deserves a thoughtful solution.
-              </h2>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
-                For platform engineering, applied AI, or an open-source collaboration, let’s
-                connect.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="https://www.linkedin.com/in/mkhalidshaikh"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--primary"
-                >
-                  Connect on LinkedIn <span aria-hidden="true">↗</span>
-                </a>
-                <a
-                  href={profile.cvHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--secondary"
-                >
-                  Download résumé <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-            <aside className="border-l border-ink/15 pl-6">
-              <p className="eyebrow">Elsewhere</p>
-              <div className="mt-4 flex flex-col items-start gap-3 font-mono text-sm">
-                {profile.social.map((link) => (
-                  <ExternalLink key={link.href} link={link} />
-                ))}
-              </div>
-              <div className="mt-10 border-t border-ink/10 pt-5">
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                  Credentials
-                </p>
-                <p className="mt-3 text-sm leading-6 text-ink/75">{certifications.join(' · ')}</p>
-                <p className="mt-3 text-sm text-muted">Languages: {spokenLanguages.join(' · ')}</p>
-                {educationIds.map((id) => {
-                  const node = byId.get(id)
-                  return (
-                    node && (
-                      <p key={id} className="mt-2 text-sm text-muted">
-                        {node.label} · {node.meta}
-                      </p>
-                    )
-                  )
-                })}
-              </div>
-            </aside>
+            </ol>
           </div>
         </section>
       </main>
       <footer className="border-t border-ink/10">
-        <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 px-5 py-6 font-mono text-[11px] text-muted sm:px-8">
-          <span>© {new Date().getFullYear()} Khalid Shaikh</span>
-          <span>Built with clarity, not clutter.</span>
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-6 font-mono text-[11px] text-muted sm:px-8">
+          <span>
+            © {new Date().getFullYear()} {profile.name}
+          </span>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {profile.social.map((link) => (
+              <ExternalLink key={link.href} link={link} />
+            ))}
+          </div>
         </div>
       </footer>
     </div>
