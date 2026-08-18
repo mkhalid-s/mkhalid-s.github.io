@@ -2,6 +2,7 @@ import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   aiPillars,
   aiProjects,
+  careerSummary,
   certifications,
   impactStats,
   nodes,
@@ -13,7 +14,6 @@ import {
 import type { GraphNode, Link } from './lib/types'
 
 const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
-const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
 const educationIds = ['edu-be', 'edu-hsc']
 
 const navigation = [
@@ -379,48 +379,9 @@ export default function App() {
         <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
           <div className="section-inner px-5 sm:px-8">
             <SectionIntro eyebrow="Experience" title="Calm delivery under real constraints.">
-              From insurance platforms to telecom integrations, I turn complex systems into
-              dependable releases.
+              {careerSummary.headline}
             </SectionIntro>
-            <ol className="experience-list">
-              {experienceIds.map((id) => {
-                const node = byId.get(id)
-                if (!node) return null
-                const parts = node.meta?.split(' · ') ?? []
-                const period = parts.pop()
-                return (
-                  <li key={id} className="experience-item">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2">
-                      <h3 className="font-display text-3xl font-medium tracking-[-0.03em]">
-                        {node.label}
-                      </h3>
-                      <p className="font-mono text-xs text-muted">{period}</p>
-                    </div>
-                    <p className="mt-1 font-mono text-xs text-accent">{parts.join(' · ')}</p>
-                    <p className="mt-4 max-w-2xl text-[15px] leading-7 text-ink/75">
-                      {node.summary}
-                    </p>
-                    <div className="mt-4 grid max-w-3xl gap-2 sm:grid-cols-2">
-                      {node.detail?.slice(0, 2).map((detail) => (
-                        <p
-                          key={detail}
-                          className="border-l border-accent/35 pl-3 text-sm leading-6 text-muted"
-                        >
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
-                    {node.links && (
-                      <div className="mt-4 font-mono text-xs">
-                        {node.links.map((link) => (
-                          <ExternalLink key={link.href} link={link} />
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                )
-              })}
-            </ol>
+            <p className="max-w-2xl text-[15px] leading-7 text-ink/75">{careerSummary.body}</p>
           </div>
         </section>
 

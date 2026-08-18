@@ -19,74 +19,16 @@ export const profile: Profile = {
   ],
 }
 
-export const nodes: GraphNode[] = [
-  // ── Experience ─────────────────────────────────────────────────────────────
-  {
-    id: 'exp-guidewire',
-    label: 'Guidewire Software',
-    kind: 'experience',
-    meta: 'Senior Software Engineer · Bengaluru · Oct 2021 – Present',
-    summary:
-      'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
-    detail: [
-      'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
-      'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
-      'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
-      'Built AI-powered features for claims & policy workflows using LLMs, inside the Guidewire ecosystem.',
-      'Built TeamCity CI/CD pipelines; configured Integration Gateway for London Market message processing; resolved critical cross-release defects.',
-      'Stack: Java, Gosu, PCF, InsuranceSuite, SOAP/REST, Stash, Docker, Bash, DataDog.',
-    ],
-    links: [{ label: 'Guidewire', href: 'https://www.guidewire.com' }],
-  },
-  {
-    id: 'exp-capgemini',
-    label: 'Capgemini India',
-    kind: 'experience',
-    meta: 'Senior Consultant · Navi Mumbai · Aug 2018 – Oct 2021',
-    summary:
-      'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
-    detail: [
-      'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
-      'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
-    ],
-    links: [{ label: 'Capgemini', href: 'https://www.capgemini.com' }],
-  },
-  {
-    id: 'exp-jio',
-    label: 'Reliance Jio',
-    kind: 'experience',
-    meta: 'Deputy Manager · Navi Mumbai · Feb 2017 – Aug 2018',
-    summary:
-      'Integration & deployment of digital eServices for a major telecommunications platform.',
-    detail: [
-      'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
-    ],
-    links: [{ label: 'Jio', href: 'https://www.jio.com' }],
-  },
-  {
-    id: 'exp-egain',
-    label: 'eGain Communications',
-    kind: 'experience',
-    meta: 'Technical Engineer · Pune · Jun 2016 – Feb 2017',
-    summary: 'Customised multichannel chat & email customer-engagement software.',
-    detail: [
-      'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
-    ],
-    links: [{ label: 'eGain', href: 'https://www.egain.com' }],
-  },
-  {
-    id: 'exp-3i',
-    label: '3i Infotech',
-    kind: 'experience',
-    meta: 'Associate Software Developer · Navi Mumbai · Mar 2014 – Jun 2016',
-    summary: 'Treasury-management system features for banking clients.',
-    detail: [
-      'Developed treasury-management system features for banking clients.',
-      'Stack: Java, SAP PowerBuilder 10/11, Oracle 10g/11c, PL/SQL.',
-    ],
-    links: [{ label: '3i Infotech', href: 'https://www.3i-infotech.com' }],
-  },
+// Generic public-facing career summary — no employer names, dates, or locations.
+export const careerSummary = {
+  headline:
+    'Senior engineer in enterprise insurance platforms; previously consulting and telecom.',
+  body:
+    'A decade-plus shipping production systems in regulated industries—cloud migration, ' +
+    'integration-heavy platforms, and the tooling that keeps teams moving.',
+}
 
+export const nodes: GraphNode[] = [
   // ── Projects ───────────────────────────────────────────────────────────────
   {
     id: 'proj-apx',

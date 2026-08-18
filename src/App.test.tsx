@@ -19,23 +19,23 @@ describe('App', () => {
     expect(screen.getByText(/Khalid Shaikh · Senior software engineer/i)).toBeInTheDocument()
   })
 
-  it('renders selected work ahead of the experience timeline', () => {
+  it('renders selected work and a generic experience summary', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'APX' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'FrameFuseVid' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Guidewire Software' })).toBeInTheDocument()
+    expect(
+      screen.getByText(/Senior engineer in enterprise insurance platforms/i),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Guidewire Software' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /v0\.4\.0 release/i })).toHaveAttribute(
       'href',
       'https://github.com/mkhalid-s/ai-proxy-stack/releases/tag/v0.4.0',
     )
   })
 
-  it('surfaces employer and upstream open-source links', () => {
+  it('surfaces upstream open-source links without employer names', () => {
     render(<App />)
-    expect(screen.getByRole('link', { name: 'Guidewire' })).toHaveAttribute(
-      'href',
-      'https://www.guidewire.com',
-    )
+    expect(screen.queryByRole('link', { name: 'Guidewire' })).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Headroom' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /OAuth2 extension/i })).toHaveAttribute(
       'href',
