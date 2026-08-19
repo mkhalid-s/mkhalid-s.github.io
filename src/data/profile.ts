@@ -66,6 +66,7 @@ export const experience: ExperienceRole[] = [
       'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
     ],
     href: 'https://www.guidewire.com',
+    shortLabel: 'Guidewire',
   },
   {
     id: 'exp-capgemini',
@@ -80,6 +81,7 @@ export const experience: ExperienceRole[] = [
       'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
     ],
     href: 'https://www.capgemini.com',
+    shortLabel: 'Capgemini',
   },
   {
     id: 'exp-jio',
@@ -94,6 +96,7 @@ export const experience: ExperienceRole[] = [
       'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
     ],
     href: 'https://www.jio.com',
+    shortLabel: 'Jio',
   },
   {
     id: 'exp-egain',
@@ -107,6 +110,7 @@ export const experience: ExperienceRole[] = [
       'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
     ],
     href: 'https://www.egain.com',
+    shortLabel: 'eGain',
   },
   {
     id: 'exp-3i',
@@ -118,6 +122,7 @@ export const experience: ExperienceRole[] = [
     stack: ['Java', 'SAP PowerBuilder 10/11', 'Oracle 10g/11c', 'PL/SQL'],
     highlights: [],
     href: 'https://www.3i-infotech.com',
+    shortLabel: '3i',
   },
 ]
 

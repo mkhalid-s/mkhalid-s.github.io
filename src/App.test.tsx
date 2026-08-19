@@ -34,12 +34,12 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Reliance Jio' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'eGain Communications' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: '3i Infotech' })).toBeInTheDocument()
-    expect(screen.getByText('~5 years')).toBeInTheDocument()
-    expect(screen.getByText('~3 years')).toBeInTheDocument()
-    expect(screen.getByText('~1.5 years')).toBeInTheDocument()
-    expect(screen.getByText('<1 year')).toBeInTheDocument()
-    expect(screen.getByText('~2 years')).toBeInTheDocument()
-    expect(screen.getByText('Gosu')).toBeInTheDocument()
+    expect(screen.getAllByText('~5 years').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('~3 years').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('~1.5 years').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('<1 year').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('~2 years').length).toBeGreaterThan(0)
+    expect(screen.getByRole('navigation', { name: /relative tenure/i })).toBeInTheDocument()
     expect(screen.getByText('InsuranceSuite')).toBeInTheDocument()
     expect(
       screen.getAllByText(/12\+ years across insurance, consulting, telecom, and banking/i).length,
@@ -108,11 +108,32 @@ describe('App', () => {
     expect(toggle).toHaveFocus()
   })
 
-  it('lists applied-AI experiments under work', () => {
+  it('lists applied-AI experiments in their own section', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'OSS Bug Hunter' })).toBeInTheDocument()
     expect(screen.getByText(/5 languages · 18 MCP tools · 322 tests/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'QueryfyAI' })).toBeInTheDocument()
+  })
+
+  it('highlights a stack chip everywhere when it is selected', () => {
+    render(<App />)
+    const javaChips = screen.getAllByRole('button', { name: 'Java' })
+    expect(javaChips.length).toBeGreaterThan(1)
+    fireEvent.click(javaChips[0])
+    javaChips.forEach((chip) => expect(chip).toHaveAttribute('aria-pressed', 'true'))
+    fireEvent.click(javaChips[0])
+    javaChips.forEach((chip) => expect(chip).toHaveAttribute('aria-pressed', 'false'))
+  })
+
+  it('jumps to work when the 1 key is pressed', () => {
+    const scrollIntoView = vi.mocked(Element.prototype.scrollIntoView)
+    window.history.replaceState(null, '', '/')
+    render(<App />)
+    scrollIntoView.mockClear()
+    fireEvent.keyDown(window, { key: '1' })
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' })
+    expect(window.location.hash).toBe('#work')
+    window.history.replaceState(null, '', '/')
   })
 
   it('routes contact through footer social links without publishing an email or résumé', () => {

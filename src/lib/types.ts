@@ -28,6 +28,7 @@ export interface ExperienceRole {
   stack: string[]
   highlights: string[]
   href?: string
+  shortLabel: string
 }
 
 export interface PracticeArea {

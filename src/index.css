@@ -65,6 +65,7 @@ button:focus-visible {
 }
 
 .site-shell {
+  position: relative;
   min-height: 100%;
   background-color: rgb(var(--paper));
   background-image:
@@ -72,6 +73,55 @@ button:focus-visible {
     linear-gradient(90deg, rgb(var(--grid) / 0.045) 1px, transparent 1px);
   background-size: 28px 28px;
   color: rgb(var(--ink));
+}
+.site-shell::after {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  content: '';
+}
+
+.read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: rgb(var(--accent));
+}
+
+.index-rail {
+  display: none;
+}
+
+.crop {
+  position: relative;
+}
+.crop::before,
+.crop::after {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 1px solid rgb(var(--accent) / 0.7);
+  content: '';
+  pointer-events: none;
+}
+.crop::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.crop::after {
+  right: -1px;
+  bottom: -1px;
+  border-top: 0;
+  border-left: 0;
 }
 
 .site-header {
@@ -340,11 +390,22 @@ button:focus-visible {
   margin: 1.1rem 0 0.4rem;
   overflow: visible;
 }
-.gateway-mark rect,
+.gateway-mark rect {
+  fill: none;
+  stroke: rgb(var(--accent));
+  stroke-width: 1.25;
+}
 .gateway-mark path {
   fill: none;
   stroke: rgb(var(--accent));
   stroke-width: 1.25;
+  stroke-dasharray: 5 7;
+  animation: signal 1.6s linear infinite;
+}
+@keyframes signal {
+  to {
+    stroke-dashoffset: -24;
+  }
 }
 .gateway-label {
   fill: rgb(var(--muted));
@@ -362,12 +423,23 @@ button:focus-visible {
   list-style: none;
 }
 .stack-chips li {
+  margin: 0;
+}
+.stack-chips button {
   border: 1px solid rgb(var(--ink) / 0.14);
   background: rgb(var(--paper2) / 0.45);
   padding: 0.22rem 0.5rem;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 0.64rem;
   letter-spacing: 0.02em;
+  color: inherit;
+  cursor: pointer;
+}
+.stack-chips button:hover,
+.stack-chips button.is-on {
+  border-color: rgb(var(--accent));
+  background: rgb(var(--accent) / 0.16);
+  color: rgb(var(--ink));
 }
 
 .upstream {
@@ -532,10 +604,44 @@ button:focus-visible {
   font-size: 0.68rem;
   color: rgb(var(--muted));
 }
-.site-footer__links {
+.career-span {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.15rem;
+  gap: 3px;
+  margin: 0 0 1.75rem;
+  min-height: 4.1rem;
+}
+.career-span__seg {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.55rem 0.55rem 0.45rem;
+  background: rgb(var(--accent) / 0.12);
+  color: rgb(var(--ink));
+  text-decoration: none;
+}
+.career-span__seg:hover,
+.career-span__seg:focus-visible {
+  background: rgb(var(--accent) / 0.22);
+}
+.career-span__seg span {
+  overflow: hidden;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.career-span__seg small {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.62rem;
+  color: rgb(var(--accent));
+}
+
+.site-footer__hint {
+  flex-basis: 100%;
+  margin: 0;
+  color: rgb(var(--muted));
 }
 
 @media (min-width: 768px) {
@@ -566,6 +672,32 @@ button:focus-visible {
   .upstream__item {
     grid-template-columns: 0.8fr 1.2fr;
   }
+  .index-rail {
+    position: fixed;
+    top: 50%;
+    left: 0.75rem;
+    z-index: 15;
+    display: flex;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .index-rail a {
+    display: grid;
+    gap: 0.15rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(var(--muted));
+    text-decoration: none;
+  }
+  .index-rail a span {
+    color: rgb(var(--accent));
+  }
+  .index-rail a.is-active {
+    color: rgb(var(--ink));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -576,5 +708,9 @@ button:focus-visible {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+  }
+  .gateway-mark path {
+    animation: none;
+    stroke-dasharray: none;
   }
 }
