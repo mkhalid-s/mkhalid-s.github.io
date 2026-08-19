@@ -3,6 +3,7 @@ import type {
   ExperienceRole,
   GraphNode,
   OpenSourceContribution,
+  PracticeArea,
   Profile,
 } from '../lib/types'
 
@@ -21,12 +22,32 @@ export const profile: Profile = {
 
 export const careerIntro = '12+ years across insurance, consulting, telecom, and banking.'
 
+export const practice: PracticeArea[] = [
+  {
+    label: 'Insurance platforms',
+    note: 'PolicyCenter, ClaimCenter, BillingCenter, and Guidewire Cloud delivery.',
+  },
+  {
+    label: 'Cloud migration',
+    note: 'Classic AWS infrastructure to the Guidewire Cloud Platform (GCP).',
+  },
+  {
+    label: 'Local-first tools',
+    note: 'APX, FrameFuseVid, and a privacy-first personal assistant control plane.',
+  },
+  {
+    label: 'Applied AI',
+    note: 'LLM features treated as software: agents, RAG, evaluation, and MCP.',
+  },
+]
+
 export const experience: ExperienceRole[] = [
   {
     id: 'exp-guidewire',
     employer: 'Guidewire Software',
     role: 'Senior Software Engineer',
     duration: '~5 years',
+    durationYears: 5,
     summary:
       'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
     stack: [
@@ -51,6 +72,7 @@ export const experience: ExperienceRole[] = [
     employer: 'Capgemini India',
     role: 'Senior Consultant',
     duration: '~3 years',
+    durationYears: 3,
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
     stack: ['Java', 'Angular 6/8/11', 'Spring Boot', 'Oracle 12c', 'AWS', 'Azure'],
@@ -64,6 +86,7 @@ export const experience: ExperienceRole[] = [
     employer: 'Reliance Jio',
     role: 'Deputy Manager',
     duration: '~1.5 years',
+    durationYears: 1.5,
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
     stack: ['Java', 'Spring Boot', 'TIBCO', 'SAP'],
@@ -77,6 +100,7 @@ export const experience: ExperienceRole[] = [
     employer: 'eGain Communications',
     role: 'Technical Engineer',
     duration: '<1 year',
+    durationYears: 0.7,
     summary: 'Customised multichannel chat & email customer-engagement software.',
     stack: [],
     highlights: [
@@ -89,6 +113,7 @@ export const experience: ExperienceRole[] = [
     employer: '3i Infotech',
     role: 'Associate Software Developer',
     duration: '~2 years',
+    durationYears: 2,
     summary: 'Treasury-management system features for banking clients.',
     stack: ['Java', 'SAP PowerBuilder 10/11', 'Oracle 10g/11c', 'PL/SQL'],
     highlights: [],
@@ -110,6 +135,7 @@ export const nodes: GraphNode[] = [
       'Ships SHA-verified releases, atomic version switching and rollback, launchd supervision, and privacy-safe metadata-only capture by default.',
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/ai-proxy-stack' }],
+    stack: ['macOS', 'local gateway', 'Headroom', 'Claude Code'],
   },
   {
     id: 'proj-framefuse',
@@ -127,6 +153,7 @@ export const nodes: GraphNode[] = [
       { label: 'Live site', href: 'https://mkhalid-s.github.io/framefusevid/' },
       { label: 'GitHub', href: 'https://github.com/mkhalid-s/framefusevid' },
     ],
+    stack: ['Electron', 'React', 'FFmpeg'],
   },
   {
     id: 'proj-auth-scrape',
@@ -141,6 +168,7 @@ export const nodes: GraphNode[] = [
       'Backed by roughly 80 unit tests across seven modules, with no browser required for the fast test suite.',
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/auth-scrape' }],
+    stack: ['Playwright', 'Markdown', 'SSO'],
   },
   {
     id: 'proj-sir-saathi',
@@ -155,6 +183,7 @@ export const nodes: GraphNode[] = [
       'Includes 18 test modules, sensitive-data checks, source-provenance validation and a passing CI workflow.',
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/sir-saathi' }],
+    stack: ['Astro', 'Preact', 'FastAPI', 'PostgreSQL'],
   },
 ]
 
@@ -163,7 +192,7 @@ export const aiProjects: AiProject[] = [
     title: 'OSS Bug Hunter',
     blurb:
       'Experimental multi-language agentic bug-hunting engine where LLMs propose reproducers and fixes while deterministic harnesses validate every gate.',
-    stack: 'Python · FastAPI · React · MCP · Docker / Podman · SSE',
+    stack: ['Python', 'FastAPI', 'React', 'MCP', 'Docker / Podman', 'SSE'],
     outcome: '5 languages · 18 MCP tools · 322 tests',
     href: 'https://github.com/mkhalid-s/oss-bug-hunter',
   },
@@ -171,7 +200,7 @@ export const aiProjects: AiProject[] = [
     title: 'QueryfyAI',
     blurb:
       'Natural-language analytics assistant that retrieves schema context, generates and validates SQL, executes read-only queries, and returns explanations and charts.',
-    stack: 'FastAPI · Vue · ReAct agents · ChromaDB / Qdrant · OpenTelemetry',
+    stack: ['FastAPI', 'Vue', 'ReAct agents', 'ChromaDB / Qdrant', 'OpenTelemetry'],
     outcome: '19 databases · 15+ LLM providers · 53 test files',
     href: 'https://github.com/mkhalid-s/queryfy-ai',
   },
@@ -179,7 +208,7 @@ export const aiProjects: AiProject[] = [
     title: 'Personal Assistant OS',
     blurb:
       'Local-first assistant control plane with provenance-aware retrieval, durable plans, approval-gated external actions, execution receipts, and privacy filters.',
-    stack: 'Python · SQLite · hybrid retrieval · agent backends · local-first',
+    stack: ['Python', 'SQLite', 'hybrid retrieval', 'agent backends', 'local-first'],
     outcome: '25 test modules · passing CI',
     href: 'https://github.com/mkhalid-s/personal-assistant-os',
   },

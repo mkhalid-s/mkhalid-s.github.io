@@ -12,6 +12,7 @@ export interface GraphNode {
   meta?: string
   summary: string
   detail?: string[]
+  stack?: string[]
   links?: Link[]
 }
 
@@ -21,10 +22,17 @@ export interface ExperienceRole {
   role: string
   /** Approximate tenure derived from employment dates; exact months are not published. */
   duration: string
+  /** Numeric years for the tenure meter; not shown as calendar dates. */
+  durationYears: number
   summary: string
   stack: string[]
   highlights: string[]
   href?: string
+}
+
+export interface PracticeArea {
+  label: string
+  note: string
 }
 
 export interface Profile {
@@ -36,7 +44,7 @@ export interface Profile {
 export interface AiProject {
   title: string
   blurb: string
-  stack: string
+  stack: string[]
   outcome: string
   href: string
 }

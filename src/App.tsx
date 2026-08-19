@@ -5,14 +5,17 @@ import {
   experience,
   nodes,
   openSourceContributions,
+  practice,
   profile,
 } from './data/profile'
 import type { ExperienceRole, GraphNode, Link } from './lib/types'
 
 const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
+const longestTenure = Math.max(...experience.map((role) => role.durationYears))
 
 const navigation = [
   { href: '#work', label: 'Work' },
+  { href: '#experiments', label: 'Experiments' },
   { href: '#experience', label: 'Experience' },
 ]
 
@@ -29,36 +32,72 @@ function ExternalLink({ link, className = '' }: { link: Link; className?: string
   )
 }
 
-function SectionIntro({
-  eyebrow,
-  title,
-  children,
-}: {
-  eyebrow: string
-  title: string
-  children?: React.ReactNode
-}) {
+function StackChips({ items }: { items: string[] }) {
+  if (items.length === 0) return null
   return (
-    <div className="mb-8 max-w-2xl">
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-[2.15rem] font-medium leading-[1.08] tracking-[-0.03em] text-ink sm:text-4xl">
-        {title}
-      </h2>
-      {children && <div className="mt-4 max-w-xl text-base leading-7 text-muted">{children}</div>}
-    </div>
+    <ul className="stack-chips">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
   )
 }
 
-function ProjectCard({ node }: { node: GraphNode }) {
+function GatewayMark() {
   return (
-    <article className="project-card">
-      {node.meta && <p className="eyebrow !text-accent">{node.meta}</p>}
-      <h3 className="mt-5 font-display text-[1.85rem] font-medium leading-none tracking-[-0.03em] text-ink sm:text-3xl">
-        {node.label}
-      </h3>
-      <p className="mt-4 max-w-lg text-[15px] leading-7 text-ink/75">{node.summary}</p>
+    <svg className="gateway-mark" viewBox="0 0 360 140" role="img" aria-hidden="true">
+      <text x="18" y="28" className="gateway-label">
+        Claude Code
+      </text>
+      <text x="148" y="28" className="gateway-label">
+        APX
+      </text>
+      <text x="268" y="22" className="gateway-label">
+        Headroom
+      </text>
+      <text x="268" y="58" className="gateway-label">
+        pxpipe
+      </text>
+      <text x="268" y="94" className="gateway-label">
+        Squeezr
+      </text>
+      <text x="268" y="130" className="gateway-label">
+        direct
+      </text>
+      <rect x="12" y="38" width="88" height="44" rx="4" />
+      <rect x="136" y="30" width="88" height="80" rx="4" />
+      <rect x="256" y="8" width="92" height="20" rx="3" />
+      <rect x="256" y="44" width="92" height="20" rx="3" />
+      <rect x="256" y="80" width="92" height="20" rx="3" />
+      <rect x="256" y="116" width="92" height="20" rx="3" />
+      <path d="M100 60 H136" />
+      <path d="M224 50 H256" />
+      <path d="M224 70 H248 V54 H256" />
+      <path d="M224 70 H248 V90 H256" />
+      <path d="M224 90 H248 V126 H256" />
+    </svg>
+  )
+}
+
+function ProjectCard({ node, featured = false }: { node: GraphNode; featured?: boolean }) {
+  return (
+    <article className={featured ? 'project-card project-card--featured' : 'project-card'}>
+      <div className="project-card__meta">
+        <p className="eyebrow !text-accent">{node.meta}</p>
+      </div>
+      {featured && <GatewayMark />}
+      <h3 className="project-card__title">{node.label}</h3>
+      <p className="project-card__summary">{node.summary}</p>
+      {node.detail && (
+        <ul className="project-card__details">
+          {node.detail.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
+      {node.stack && <StackChips items={node.stack} />}
       {node.links && (
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs font-medium">
+        <div className="project-card__links">
           {node.links.map((link) => (
             <ExternalLink key={link.href} link={link} />
           ))}
@@ -69,35 +108,32 @@ function ProjectCard({ node }: { node: GraphNode }) {
 }
 
 function ExperienceItem({ role }: { role: ExperienceRole }) {
+  const width = `${Math.max((role.durationYears / longestTenure) * 100, 12)}%`
   return (
     <li className="experience-item">
       <article>
-        <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1">
-          <h3 className="font-display text-2xl font-medium tracking-[-0.03em] sm:text-[1.85rem]">
+        <div className="experience-item__top">
+          <h3 className="experience-item__employer">
             {role.href ? (
-              <a href={role.href} target="_blank" rel="noreferrer" className="hover:text-accent">
+              <a href={role.href} target="_blank" rel="noreferrer">
                 {role.employer}
               </a>
             ) : (
               role.employer
             )}
           </h3>
-          <p className="font-mono text-xs text-muted">{role.duration}</p>
+          <p className="experience-item__duration">{role.duration}</p>
         </div>
-        <p className="mt-1 font-mono text-xs text-accent">{role.role}</p>
-        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-ink/75">{role.summary}</p>
-        {role.stack.length > 0 && (
-          <p className="mt-4 font-mono text-xs leading-5 text-muted">{role.stack.join(' · ')}</p>
-        )}
+        <p className="experience-item__role">{role.role}</p>
+        <div className="tenure-meter" aria-hidden="true">
+          <span style={{ width }} />
+        </div>
+        <p className="experience-item__summary">{role.summary}</p>
+        <StackChips items={role.stack} />
         {role.highlights.length > 0 && (
-          <ul className="mt-4 max-w-2xl space-y-2">
+          <ul className="experience-item__highlights">
             {role.highlights.map((highlight) => (
-              <li
-                key={highlight}
-                className="border-l border-accent/35 pl-3 text-sm leading-6 text-muted"
-              >
-                {highlight}
-              </li>
+              <li key={highlight}>{highlight}</li>
             ))}
           </ul>
         )}
@@ -125,7 +161,7 @@ export default function App() {
       themeColor.name = 'theme-color'
       document.head.append(themeColor)
     }
-    themeColor.content = theme === 'dark' ? '#17181b' : '#f7f6f2'
+    themeColor.content = theme === 'dark' ? '#12100e' : '#f4efe6'
     try {
       localStorage.setItem('theme', theme)
     } catch {
@@ -193,29 +229,23 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-full bg-paper text-ink">
+    <div className="site-shell">
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
 
       <header className="site-header">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-8">
-          <a
-            href="#top"
-            className="font-mono text-sm font-semibold tracking-tight"
-            aria-label="Khalid Shaikh — home"
-          >
+        <div className="site-header__inner">
+          <a href="#top" className="brand" aria-label="Khalid Shaikh — home">
             KS<span className="text-accent">.</span>
+            <span className="brand__meta">ledger</span>
           </a>
-          <nav aria-label="Primary navigation" className="hidden items-center gap-7 md:flex">
+          <nav aria-label="Primary navigation" className="hidden items-center gap-6 md:flex">
             {navigation.map((item) => (
               <a
                 key={item.href}
                 className={
-                  'nav-link' +
-                  (activeSection === item.href.slice(1)
-                    ? ' text-ink underline decoration-accent decoration-2 underline-offset-[6px]'
-                    : '')
+                  'nav-link' + (activeSection === item.href.slice(1) ? ' nav-link--active' : '')
                 }
                 href={item.href}
                 onClick={(event) => scrollToSection(event, item.href)}
@@ -252,68 +282,91 @@ export default function App() {
             id="mobile-menu"
             ref={mobileMenuRef}
             aria-label="Mobile navigation"
-            className="border-t border-ink/10 px-5 py-4 md:hidden"
+            className="mobile-menu"
           >
-            <div className="mx-auto flex max-w-5xl flex-col gap-1">
-              {navigation.map((item) => (
-                <a
-                  key={item.href}
-                  className="mobile-nav-link"
-                  onClick={(event) => scrollToSection(event, item.href)}
-                  href={item.href}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
+            {navigation.map((item) => (
+              <a
+                key={item.href}
+                className="mobile-nav-link"
+                onClick={(event) => scrollToSection(event, item.href)}
+                href={item.href}
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
         )}
       </header>
 
       <main id="main-content" tabIndex={-1}>
         <section id="top" className="hero-shell">
-          <div className="mx-auto max-w-5xl px-5 pb-16 pt-16 sm:px-8 md:pb-20 md:pt-24">
-            <p className="eyebrow">
-              {profile.name} · {profile.title}
-            </p>
-            <h1 className="hero-title mt-5 max-w-3xl font-display font-medium text-ink">
-              I build platforms and developer tools.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">
-              Insurance platforms, cloud migrations, and local-first open-source tools.
-            </p>
-            <a
-              href="#work"
-              onClick={(event) => scrollToSection(event, '#work')}
-              className="mt-8 inline-flex font-mono text-xs font-medium text-accent underline decoration-accent/40 underline-offset-4"
-            >
-              See work <span aria-hidden="true">↓</span>
-            </a>
+          <div className="hero-grid">
+            <div>
+              <p className="eyebrow">
+                {profile.name} · {profile.title}
+              </p>
+              <h1 className="hero-title">
+                Insurance platforms.
+                <br />
+                Local-first tools.
+              </h1>
+              <p className="hero-copy">
+                I ship Guidewire Cloud and InsuranceSuite systems, then build the local developer
+                tools I wish production teams already had.
+              </p>
+              <a
+                href="#work"
+                onClick={(event) => scrollToSection(event, '#work')}
+                className="hero-link"
+              >
+                See work <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+            <aside className="dossier" aria-label="Engineering focus">
+              <p className="dossier__label">Focus</p>
+              <dl className="dossier__list">
+                <div>
+                  <dt>Tenure</dt>
+                  <dd>{careerIntro}</dd>
+                </div>
+                <div>
+                  <dt>Now</dt>
+                  <dd>Guidewire Cloud Platform and AI-powered InsuranceSuite features.</dd>
+                </div>
+                {practice.map((area) => (
+                  <div key={area.label}>
+                    <dt>{area.label}</dt>
+                    <dd>{area.note}</dd>
+                  </div>
+                ))}
+              </dl>
+            </aside>
           </div>
         </section>
 
         <section id="work" className="section-shell scroll-mt-20">
-          <SectionIntro eyebrow="Work" title="Open-source tools and side projects.">
-            Selected repositories and upstream contributions.
-          </SectionIntro>
-          <div className="grid gap-4 lg:grid-cols-2">
-            {projectIds.map((id) => {
+          <div className="section-heading">
+            <p className="eyebrow">01 / Work</p>
+            <h2>Open-source systems with production habits.</h2>
+          </div>
+          <div className="work-grid">
+            {projectIds.map((id, index) => {
               const node = byId.get(id)
-              return node && <ProjectCard key={id} node={node} />
+              return node && <ProjectCard key={id} node={node} featured={index === 0} />
             })}
           </div>
           {openSourceContributions.length > 0 && (
-            <div className="mt-12 border-t border-ink/10 pt-8">
-              <p className="eyebrow">Upstream contribution</p>
+            <div className="upstream">
+              <p className="eyebrow">Upstream</p>
               {openSourceContributions.map((item) => (
-                <article key={item.project} className="mt-5 grid gap-4 md:grid-cols-[.8fr_1.2fr]">
+                <article key={item.project} className="upstream__item">
                   <div>
-                    <h3 className="font-display text-2xl tracking-[-0.03em]">{item.project}</h3>
-                    <p className="mt-1 font-mono text-xs text-accent">{item.outcome}</p>
+                    <h3>{item.project}</h3>
+                    <p className="upstream__outcome">{item.outcome}</p>
                   </div>
                   <div>
-                    <p className="text-[15px] leading-7 text-muted">{item.blurb}</p>
-                    <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs">
+                    <p>{item.blurb}</p>
+                    <div className="upstream__links">
                       {item.links.map((link) => (
                         <ExternalLink key={link.href} link={link} />
                       ))}
@@ -323,54 +376,49 @@ export default function App() {
               ))}
             </div>
           )}
-          <div className="mt-12 border-t border-ink/10 pt-8">
-            <p className="eyebrow">Experiments</p>
-            <div className="mt-2 divide-y divide-ink/10">
+        </section>
+
+        <section id="experiments" className="section-shell section-shell--tint scroll-mt-20">
+          <div className="section-inner">
+            <div className="section-heading">
+              <p className="eyebrow">02 / Experiments</p>
+              <h2>Applied AI treated as software.</h2>
+            </div>
+            <div className="experiment-grid">
               {aiProjects.map((project) => (
-                <article key={project.title} className="grid gap-3 py-6 md:grid-cols-[.8fr_1.2fr]">
-                  <div>
-                    <h3 className="font-display text-xl tracking-[-0.025em]">{project.title}</h3>
-                    <p className="mt-2 font-mono text-xs text-accent">{project.outcome}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm leading-6 text-muted">{project.blurb}</p>
-                    <p className="mt-3 font-mono text-[11px] leading-5 text-muted">
-                      {project.stack}
-                    </p>
-                    <ExternalLink
-                      className="mt-4 font-mono text-xs"
-                      link={{ label: 'View project', href: project.href }}
-                    />
-                  </div>
+                <article key={project.title} className="experiment-card">
+                  <h3>{project.title}</h3>
+                  <p className="experiment-card__outcome">{project.outcome}</p>
+                  <p>{project.blurb}</p>
+                  <StackChips items={project.stack} />
+                  <ExternalLink link={{ label: 'View project', href: project.href }} />
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
-          <div className="section-inner px-5 sm:px-8">
-            <SectionIntro eyebrow="Experience" title="Roles and stacks.">
-              {careerIntro}
-            </SectionIntro>
-            <ol className="experience-list">
-              {experience.map((role) => (
-                <ExperienceItem key={role.id} role={role} />
-              ))}
-            </ol>
+        <section id="experience" className="section-shell scroll-mt-20">
+          <div className="section-heading">
+            <p className="eyebrow">03 / Experience</p>
+            <h2>Roles, tenure, and the stacks that shipped.</h2>
+            <p className="section-heading__note">{careerIntro}</p>
           </div>
+          <ol className="experience-list">
+            {experience.map((role) => (
+              <ExperienceItem key={role.id} role={role} />
+            ))}
+          </ol>
         </section>
       </main>
-      <footer className="border-t border-ink/10">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-6 font-mono text-[11px] text-muted sm:px-8">
-          <span>
-            © {new Date().getFullYear()} {profile.name}
-          </span>
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {profile.social.map((link) => (
-              <ExternalLink key={link.href} link={link} />
-            ))}
-          </div>
+      <footer className="site-footer">
+        <span>
+          © {new Date().getFullYear()} {profile.name}
+        </span>
+        <div className="site-footer__links">
+          {profile.social.map((link) => (
+            <ExternalLink key={link.href} link={link} />
+          ))}
         </div>
       </footer>
     </div>

@@ -6,11 +6,17 @@ describe('App', () => {
   it('leads with a short positioning line and a single work link', () => {
     render(<App />)
     expect(
-      screen.getByRole('heading', { level: 1, name: /I build platforms and developer tools\./i }),
+      screen.getByRole('heading', {
+        level: 1,
+        name: /Insurance platforms\.\s*Local-first tools\./i,
+      }),
     ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /See work/i })).toHaveAttribute('href', '#work')
     expect(screen.queryByRole('link', { name: /résumé/i })).not.toBeInTheDocument()
     expect(screen.getByText(/Khalid Shaikh · Software Engineer/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Guidewire Cloud Platform and AI-powered InsuranceSuite/i),
+    ).toBeInTheDocument()
     expect(screen.queryByText(/Bengaluru/i)).not.toBeInTheDocument()
   })
 
@@ -33,10 +39,11 @@ describe('App', () => {
     expect(screen.getByText('~1.5 years')).toBeInTheDocument()
     expect(screen.getByText('<1 year')).toBeInTheDocument()
     expect(screen.getByText('~2 years')).toBeInTheDocument()
-    expect(screen.getByText(/Java · Gosu · PCF · InsuranceSuite/i)).toBeInTheDocument()
+    expect(screen.getByText('Gosu')).toBeInTheDocument()
+    expect(screen.getByText('InsuranceSuite')).toBeInTheDocument()
     expect(
-      screen.getByText(/12\+ years across insurance, consulting, telecom, and banking/i),
-    ).toBeInTheDocument()
+      screen.getAllByText(/12\+ years across insurance, consulting, telecom, and banking/i).length,
+    ).toBeGreaterThan(0)
     expect(container.textContent).not.toMatch(/Bengaluru|Navi Mumbai|Pune/)
     expect(container.textContent).not.toMatch(/Oct 2021|Aug 2018|Feb 2017|Jun 2016|Mar 2014/)
   })
@@ -60,7 +67,7 @@ describe('App', () => {
     fireEvent.click(toggle)
     expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument()
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
-    expect(document.querySelector('#theme-color')).toHaveAttribute('content', '#17181b')
+    expect(document.querySelector('#theme-color')).toHaveAttribute('content', '#12100e')
   })
 
   it('opens and closes the mobile navigation menu', () => {
