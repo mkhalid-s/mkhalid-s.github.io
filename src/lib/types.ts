@@ -16,6 +16,12 @@ export interface GraphNode {
   links?: Link[]
 }
 
+export interface ExperienceProject {
+  title: string
+  summary: string
+  details: string[]
+}
+
 export interface ExperienceRole {
   id: string
   employer: string
@@ -26,7 +32,7 @@ export interface ExperienceRole {
   durationYears: number
   summary: string
   stack: string[]
-  highlights: string[]
+  projects: ExperienceProject[]
   href?: string
   shortLabel: string
 }

@@ -156,12 +156,22 @@ function ExperienceItem({ role }: { role: ExperienceRole }) {
         </div>
         <p className="experience-item__summary">{role.summary}</p>
         <StackChips items={role.stack} />
-        {role.highlights.length > 0 && (
-          <ul className="experience-item__highlights">
-            {role.highlights.map((highlight) => (
-              <li key={highlight}>{highlight}</li>
+        {role.projects.length > 0 && (
+          <div className="experience-projects">
+            {role.projects.map((project) => (
+              <article key={project.title} className="experience-project">
+                <h4 className="experience-project__title">{project.title}</h4>
+                <p className="experience-project__summary">{project.summary}</p>
+                {project.details.length > 0 && (
+                  <ul className="experience-project__details">
+                    {project.details.map((detail) => (
+                      <li key={detail}>{detail}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
             ))}
-          </ul>
+          </div>
         )}
       </article>
     </li>

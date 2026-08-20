@@ -61,9 +61,42 @@ export const experience: ExperienceRole[] = [
       'Bash',
       'DataDog',
     ],
-    highlights: [
-      'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
-      'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
+    projects: [
+      {
+        title: 'Guidewire Cloud Platform migration',
+        summary:
+          'End-to-end customer migrations from Classic AWS infrastructure to GCP.',
+        details: [
+          'Planned and executed zero-downtime cutovers for production insurers.',
+          'Built migration playbooks, validation gates, and rollback procedures.',
+        ],
+      },
+      {
+        title: 'InsuranceSuite market delivery',
+        summary:
+          'PolicyCenter, ClaimCenter, and BillingCenter for specialised insurance markets.',
+        details: [
+          'Australian Workers’ Compensation product configuration and feature delivery.',
+          'London insurance market rules, rating integrations, and billing workflows.',
+        ],
+      },
+      {
+        title: 'AI-powered workflow features',
+        summary: 'LLM-backed capabilities inside the Guidewire ecosystem.',
+        details: [
+          'Claims and policy workflow assistants embedded in InsuranceSuite.',
+          'Production-minded evaluation, guardrails, and Gosu/Java service integration.',
+        ],
+      },
+      {
+        title: 'Platform engineering',
+        summary: 'CI/CD, integration gateway, and release quality for cloud delivery.',
+        details: [
+          'TeamCity pipeline builds and deployment automation.',
+          'Integration Gateway configuration for London Market message processing.',
+          'Cross-release defect triage and resolution across InsuranceSuite.',
+        ],
+      },
     ],
     href: 'https://www.guidewire.com',
     shortLabel: 'Guidewire',
@@ -77,8 +110,24 @@ export const experience: ExperienceRole[] = [
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
     stack: ['Java', 'Angular 6/8/11', 'Spring Boot', 'Oracle 12c', 'AWS', 'Azure'],
-    highlights: [
-      'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
+    projects: [
+      {
+        title: 'PTC Arbortext knowledge-base platform',
+        summary:
+          'Technical documentation platform for agricultural and construction equipment.',
+        details: [
+          'Full-stack features across Java, Angular, and Spring Boot with Oracle 12c.',
+          'Content authoring, search, and dealer-facing publication workflows.',
+        ],
+      },
+      {
+        title: 'Cloud-integrated dealer customisations',
+        summary: 'Dealer-facing customisation and support across multiple equipment lines.',
+        details: [
+          'Triaged and delivered customisation requests from dealer networks.',
+          'Integrated AWS and Azure services for content delivery and authentication.',
+        ],
+      },
     ],
     href: 'https://www.capgemini.com',
     shortLabel: 'Capgemini',
@@ -92,8 +141,15 @@ export const experience: ExperienceRole[] = [
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
     stack: ['Java', 'Spring Boot', 'TIBCO', 'SAP'],
-    highlights: [
-      'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
+    projects: [
+      {
+        title: 'Digital eServices platform',
+        summary: 'Integration and deployment of telecom digital services.',
+        details: [
+          'Chat mobile application built in Java and Spring Boot.',
+          'TIBCO and SAP middleware orchestration for customer-facing eServices.',
+        ],
+      },
     ],
     href: 'https://www.jio.com',
     shortLabel: 'Jio',
@@ -106,8 +162,21 @@ export const experience: ExperienceRole[] = [
     durationYears: 0.7,
     summary: 'Customised multichannel chat & email customer-engagement software.',
     stack: [],
-    highlights: [
-      'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
+    projects: [
+      {
+        title: 'Multichannel customer engagement',
+        summary: 'Customisation of chat and email engagement products.',
+        details: [
+          'Workflow and UI customisations for enterprise customer-engagement deployments.',
+        ],
+      },
+      {
+        title: 'Security remediation',
+        summary: 'Vulnerability review across core product surfaces.',
+        details: [
+          'Assessed and mitigated security issues in CBR and Self-Service modules.',
+        ],
+      },
     ],
     href: 'https://www.egain.com',
     shortLabel: 'eGain',
@@ -120,7 +189,16 @@ export const experience: ExperienceRole[] = [
     durationYears: 2,
     summary: 'Treasury-management system features for banking clients.',
     stack: ['Java', 'SAP PowerBuilder 10/11', 'Oracle 10g/11c', 'PL/SQL'],
-    highlights: [],
+    projects: [
+      {
+        title: 'Treasury management system',
+        summary: 'Banking treasury operations for institutional clients.',
+        details: [
+          'Feature delivery in Java and SAP PowerBuilder for cash and liquidity workflows.',
+          'Oracle PL/SQL procedures, reports, and data migrations on 10g/11c.',
+        ],
+      },
+    ],
     href: 'https://www.3i-infotech.com',
     shortLabel: '3i',
   },
