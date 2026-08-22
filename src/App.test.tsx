@@ -41,7 +41,9 @@ describe('App', () => {
     expect(screen.getAllByText('~2 years').length).toBeGreaterThan(0)
     expect(screen.getByRole('navigation', { name: /relative tenure/i })).toBeInTheDocument()
     expect(screen.getByText('InsuranceSuite')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Guidewire Cloud Platform migration' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Guidewire Cloud Platform migration' }),
+    ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Treasury management system' })).toBeInTheDocument()
     expect(
       screen.getAllByText(/12\+ years across insurance, consulting, telecom, and banking/i).length,

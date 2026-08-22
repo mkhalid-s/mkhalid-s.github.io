@@ -64,8 +64,7 @@ export const experience: ExperienceRole[] = [
     projects: [
       {
         title: 'Guidewire Cloud Platform migration',
-        summary:
-          'End-to-end customer migrations from Classic AWS infrastructure to GCP.',
+        summary: 'End-to-end customer migrations from Classic AWS infrastructure to GCP.',
         details: [
           'Planned and executed zero-downtime cutovers for production insurers.',
           'Built migration playbooks, validation gates, and rollback procedures.',
@@ -73,8 +72,7 @@ export const experience: ExperienceRole[] = [
       },
       {
         title: 'InsuranceSuite market delivery',
-        summary:
-          'PolicyCenter, ClaimCenter, and BillingCenter for specialised insurance markets.',
+        summary: 'PolicyCenter, ClaimCenter, and BillingCenter for specialised insurance markets.',
         details: [
           'Australian Workers’ Compensation product configuration and feature delivery.',
           'London insurance market rules, rating integrations, and billing workflows.',
@@ -113,8 +111,7 @@ export const experience: ExperienceRole[] = [
     projects: [
       {
         title: 'PTC Arbortext knowledge-base platform',
-        summary:
-          'Technical documentation platform for agricultural and construction equipment.',
+        summary: 'Technical documentation platform for agricultural and construction equipment.',
         details: [
           'Full-stack features across Java, Angular, and Spring Boot with Oracle 12c.',
           'Content authoring, search, and dealer-facing publication workflows.',
@@ -166,16 +163,12 @@ export const experience: ExperienceRole[] = [
       {
         title: 'Multichannel customer engagement',
         summary: 'Customisation of chat and email engagement products.',
-        details: [
-          'Workflow and UI customisations for enterprise customer-engagement deployments.',
-        ],
+        details: ['Workflow and UI customisations for enterprise customer-engagement deployments.'],
       },
       {
         title: 'Security remediation',
         summary: 'Vulnerability review across core product surfaces.',
-        details: [
-          'Assessed and mitigated security issues in CBR and Self-Service modules.',
-        ],
+        details: ['Assessed and mitigated security issues in CBR and Self-Service modules.'],
       },
     ],
     href: 'https://www.egain.com',
