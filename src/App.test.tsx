@@ -77,12 +77,14 @@ describe('App', () => {
   it('opens and closes the mobile navigation menu', () => {
     render(<App />)
     const toggle = screen.getByRole('button', { name: /toggle menu/i })
+    expect(toggle).toHaveClass('mobile-only')
     fireEvent.click(toggle)
-    expect(screen.getByRole('navigation', { name: /mobile navigation/i })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: /mobile navigation/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /close menu/i })).toBeInTheDocument()
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
     const workLinks = screen.getAllByRole('link', { name: 'Work' })
     fireEvent.click(workLinks[workLinks.length - 1])
-    expect(screen.queryByRole('navigation', { name: /mobile navigation/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog', { name: /mobile navigation/i })).not.toBeInTheDocument()
   })
 
   it('scrolls to a desktop navigation section and updates the URL hash', () => {
@@ -108,8 +110,16 @@ describe('App', () => {
     const toggle = screen.getByRole('button', { name: /toggle menu/i })
     fireEvent.click(toggle)
     fireEvent.keyDown(window, { key: 'Escape' })
-    expect(screen.queryByRole('navigation', { name: /mobile navigation/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog', { name: /mobile navigation/i })).not.toBeInTheDocument()
     expect(toggle).toHaveFocus()
+  })
+
+  it('keeps desktop navigation separate from the mobile menu trigger', () => {
+    render(<App />)
+    expect(screen.getByRole('navigation', { name: /primary navigation/i })).toHaveClass(
+      'desktop-only',
+    )
+    expect(screen.queryByRole('dialog', { name: /mobile navigation/i })).not.toBeInTheDocument()
   })
 
   it('lists applied-AI experiments in their own section', () => {

@@ -261,6 +261,15 @@ export default function App() {
   }, [menuOpen])
 
   useEffect(() => {
+    if (!menuOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [menuOpen])
+
+  useEffect(() => {
     const restoreHashPosition = () => {
       if (location.hash) scrollToHash(location.hash, 'auto')
     }
@@ -327,7 +336,7 @@ export default function App() {
               KS<span className="text-accent">.</span>
               <span className="brand__meta">ledger</span>
             </a>
-            <nav aria-label="Primary navigation" className="hidden items-center gap-6 md:flex">
+            <nav aria-label="Primary navigation" className="site-nav desktop-only">
               {navigation.map((item) => (
                 <a
                   key={item.href}
@@ -355,7 +364,7 @@ export default function App() {
                 type="button"
                 ref={menuButtonRef}
                 onClick={() => setMenuOpen((open) => !open)}
-                className="icon-button md:hidden"
+                className="icon-button mobile-only"
                 aria-label="Toggle menu"
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
@@ -364,26 +373,43 @@ export default function App() {
               </button>
             </div>
           </div>
-          {menuOpen && (
+        </header>
+
+        {menuOpen && (
+          <div className="mobile-menu-layer mobile-only">
+            <button
+              type="button"
+              className="mobile-menu-backdrop"
+              aria-label="Close menu"
+              onClick={closeMenu}
+            />
             <nav
               id="mobile-menu"
               ref={mobileMenuRef}
-              aria-label="Mobile navigation"
               className="mobile-menu"
+              aria-label="Mobile navigation"
+              role="dialog"
+              aria-modal="true"
             >
+              <p className="mobile-menu__label">Navigate</p>
               {navigation.map((item) => (
                 <a
                   key={item.href}
-                  className="mobile-nav-link"
+                  className={
+                    'mobile-nav-link' +
+                    (activeSection === item.href.slice(1) ? ' mobile-nav-link--active' : '')
+                  }
                   onClick={(event) => scrollToSection(event, item.href)}
                   href={item.href}
+                  aria-current={activeSection === item.href.slice(1) ? 'location' : undefined}
                 >
+                  <span className="mobile-nav-link__key">{item.key}</span>
                   {item.label}
                 </a>
               ))}
             </nav>
-          )}
-        </header>
+          </div>
+        )}
 
         <main id="main-content" tabIndex={-1}>
           <section id="top" className="hero-shell">
