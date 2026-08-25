@@ -5,4 +5,7 @@ dist
 .vscode
 npm-debug.log*
 .claude
+# Private documents — never commit to the public repo
 RESUME.md
+*_CV.pdf
+*.pdf
