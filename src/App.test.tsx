@@ -59,9 +59,14 @@ describe('App', () => {
       'https://www.guidewire.com',
     )
     expect(screen.getByRole('heading', { name: 'Headroom' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'pxpipe' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /OAuth2 extension/i })).toHaveAttribute(
       'href',
       'https://github.com/headroomlabs-ai/headroom/pull/784',
+    )
+    expect(screen.getByRole('link', { name: /OAuth identity fix/i })).toHaveAttribute(
+      'href',
+      'https://github.com/teamchong/pxpipe/pull/99',
     )
   })
 
