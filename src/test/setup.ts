@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { vi } from 'vitest'
 
-// jsdom lacks IntersectionObserver, which framer-motion's whileInView uses.
 if (!('IntersectionObserver' in window)) {
   class IO {
     observe() {}
@@ -18,7 +17,6 @@ if (!('IntersectionObserver' in window)) {
   g.IntersectionObserver = IO
 }
 
-// jsdom lacks matchMedia; framer-motion / theme logic may probe it.
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
     matches: false,

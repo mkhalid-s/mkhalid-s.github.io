@@ -1,32 +1,65 @@
-export type NodeKind = 'project' | 'experience' | 'skill' | 'education' | 'idea'
+export type NodeKind = 'project'
 
 export interface Link {
   label: string
   href: string
 }
 
-// A content entry (experience / project / education / idea). Rendered by the
-// timeline, the collapsible lists, and the hero footnotes.
 export interface GraphNode {
   id: string
   label: string
   kind: NodeKind
-  /** period / role line, e.g. "Senior Software Engineer · Bengaluru · …" */
   meta?: string
   summary: string
-  /** detail bullets shown when the entry is expanded */
   detail?: string[]
+  stack?: string[]
   links?: Link[]
-  /** tech stack tags, e.g. "React · TypeScript · Vite" */
-  stack?: string
+}
+
+export interface ExperienceProject {
+  title: string
+  summary: string
+  details: string[]
+}
+
+export interface ExperienceRole {
+  id: string
+  employer: string
+  role: string
+  /** Approximate tenure derived from employment dates; exact months are not published. */
+  duration: string
+  /** Numeric years for the tenure meter; not shown as calendar dates. */
+  durationYears: number
+  summary: string
+  stack: string[]
+  projects: ExperienceProject[]
+  href?: string
+  shortLabel: string
+}
+
+export interface PracticeArea {
+  label: string
+  note: string
 }
 
 export interface Profile {
   name: string
   title: string
-  location: string
-  blurb: string
-  email?: string
   social: Link[]
-  cvHref: string
+}
+
+export interface AiProject {
+  title: string
+  blurb: string
+  stack: string[]
+  outcome: string
+  href: string
+}
+
+export interface OpenSourceContribution {
+  project: string
+  title: string
+  blurb: string
+  outcome: string
+  links: Link[]
 }

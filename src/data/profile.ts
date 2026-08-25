@@ -1,98 +1,208 @@
-import type { GraphNode, Link, Profile } from '../lib/types'
+import type {
+  AiProject,
+  ExperienceRole,
+  GraphNode,
+  OpenSourceContribution,
+  PracticeArea,
+  Profile,
+} from '../lib/types'
 
-// Content verified against the 2026 CV and public project repositories.
-// Editing this file reshapes the whole site.
+// Public site content. This is not a CV mirror: no cities, month-year dates,
+// email, or résumé PDF. Experience tenures are approximate durations derived
+// from the 2026 CV (Mar 2014 – present).
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
-  title: 'Senior Software Engineer',
-  location: 'Bengaluru, India',
-  blurb:
-    'I’m a senior software engineer with 12+ years across BFSI and telecom. I lead ' +
-    'Guidewire cloud delivery in Java and Gosu, and bring production engineering ' +
-    'discipline to RAG, agent, and evaluation workflows. I also build local-first, ' +
-    'open-source developer tools.',
-  cvHref: 'Khalid_Shaikh_CV.pdf',
+  title: 'Software Engineer',
   social: [
     { label: 'GitHub', href: 'https://github.com/mkhalid-s' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mkhalidshaikh' },
   ],
 }
 
-export const nodes: GraphNode[] = [
-  // ── Experience ─────────────────────────────────────────────────────────────
+export const careerIntro = '12+ years across insurance, consulting, telecom, and banking.'
+
+export const practice: PracticeArea[] = [
+  {
+    label: 'Insurance platforms',
+    note: 'PolicyCenter, ClaimCenter, BillingCenter, and Guidewire Cloud delivery.',
+  },
+  {
+    label: 'Cloud migration',
+    note: 'Classic AWS infrastructure to the Guidewire Cloud Platform (GCP).',
+  },
+  {
+    label: 'Local-first tools',
+    note: 'APX, FrameFuseVid, and a privacy-first personal assistant control plane.',
+  },
+  {
+    label: 'Applied AI',
+    note: 'LLM features treated as software: agents, RAG, evaluation, and MCP.',
+  },
+]
+
+export const experience: ExperienceRole[] = [
   {
     id: 'exp-guidewire',
-    label: 'Guidewire Software',
-    kind: 'experience',
-    meta: 'Senior Software Engineer · Bengaluru · Oct 2021 – Present',
+    employer: 'Guidewire Software',
+    role: 'Senior Software Engineer',
+    duration: '~5 years',
+    durationYears: 5,
     summary:
       'Building and modernising the Guidewire Cloud Platform for global insurers, and pioneering AI-powered features within InsuranceSuite.',
-    detail: [
-      'Lead and mentor several engineers and the wider team — interns, new joiners and SD1/SD2 engineers — on Guidewire best practices and development workflows.',
-      'Drove end-to-end migration of customers from Classic AWS infrastructure to the Guidewire Cloud Platform (GCP) with zero-downtime transitions.',
-      'Designed & developed PolicyCenter, ClaimCenter and BillingCenter features for the Australian Workers’ Compensation and London insurance markets.',
-      'Built AI-powered features for claims & policy workflows using LLMs, inside the Guidewire ecosystem.',
-      'Built TeamCity CI/CD pipelines; configured Integration Gateway for London Market message processing; resolved critical cross-release defects.',
-      'Stack: Java, Gosu, PCF, InsuranceSuite, SOAP/REST, Stash, Docker, Bash, DataDog.',
+    stack: [
+      'Java',
+      'Gosu',
+      'PCF',
+      'InsuranceSuite',
+      'SOAP/REST',
+      'Stash',
+      'Docker',
+      'Bash',
+      'DataDog',
     ],
-    links: [{ label: 'Guidewire', href: 'https://www.guidewire.com' }],
+    projects: [
+      {
+        title: 'Guidewire Cloud Platform migration',
+        summary: 'End-to-end customer migrations from Classic AWS infrastructure to GCP.',
+        details: [
+          'Planned and executed zero-downtime cutovers for production insurers.',
+          'Built migration playbooks, validation gates, and rollback procedures.',
+        ],
+      },
+      {
+        title: 'InsuranceSuite market delivery',
+        summary: 'PolicyCenter, ClaimCenter, and BillingCenter for specialised insurance markets.',
+        details: [
+          'Australian Workers’ Compensation product configuration and feature delivery.',
+          'London insurance market rules, rating integrations, and billing workflows.',
+        ],
+      },
+      {
+        title: 'AI-powered workflow features',
+        summary: 'LLM-backed capabilities inside the Guidewire ecosystem.',
+        details: [
+          'Claims and policy workflow assistants embedded in InsuranceSuite.',
+          'Production-minded evaluation, guardrails, and Gosu/Java service integration.',
+        ],
+      },
+      {
+        title: 'Platform engineering',
+        summary: 'CI/CD, integration gateway, and release quality for cloud delivery.',
+        details: [
+          'TeamCity pipeline builds and deployment automation.',
+          'Integration Gateway configuration for London Market message processing.',
+          'Cross-release defect triage and resolution across InsuranceSuite.',
+        ],
+      },
+    ],
+    href: 'https://www.guidewire.com',
+    shortLabel: 'Guidewire',
   },
   {
     id: 'exp-capgemini',
-    label: 'Capgemini India',
-    kind: 'experience',
-    meta: 'Senior Consultant · Navi Mumbai · Aug 2018 – Oct 2021',
+    employer: 'Capgemini India',
+    role: 'Senior Consultant',
+    duration: '~3 years',
+    durationYears: 3,
     summary:
       'Led full-stack development of a technical knowledge-base platform for agricultural & construction equipment (PTC Arbortext).',
-    detail: [
-      'Delivered features with Java, Angular 6/8/11, Spring Boot, Oracle 12c; integrated AWS and Azure cloud services.',
-      'Analysed and resolved dealer-facing customisation requests across multiple product lines.',
+    stack: ['Java', 'Angular 6/8/11', 'Spring Boot', 'Oracle 12c', 'AWS', 'Azure'],
+    projects: [
+      {
+        title: 'PTC Arbortext knowledge-base platform',
+        summary: 'Technical documentation platform for agricultural and construction equipment.',
+        details: [
+          'Full-stack features across Java, Angular, and Spring Boot with Oracle 12c.',
+          'Content authoring, search, and dealer-facing publication workflows.',
+        ],
+      },
+      {
+        title: 'Cloud-integrated dealer customisations',
+        summary: 'Dealer-facing customisation and support across multiple equipment lines.',
+        details: [
+          'Triaged and delivered customisation requests from dealer networks.',
+          'Integrated AWS and Azure services for content delivery and authentication.',
+        ],
+      },
     ],
-    links: [{ label: 'Capgemini', href: 'https://www.capgemini.com' }],
+    href: 'https://www.capgemini.com',
+    shortLabel: 'Capgemini',
   },
   {
     id: 'exp-jio',
-    label: 'Reliance Jio',
-    kind: 'experience',
-    meta: 'Deputy Manager · Navi Mumbai · Feb 2017 – Aug 2018',
+    employer: 'Reliance Jio',
+    role: 'Deputy Manager',
+    duration: '~1.5 years',
+    durationYears: 1.5,
     summary:
       'Integration & deployment of digital eServices for a major telecommunications platform.',
-    detail: [
-      'Built a chat mobile application in Java and Spring Boot; integrated TIBCO and SAP middleware systems.',
+    stack: ['Java', 'Spring Boot', 'TIBCO', 'SAP'],
+    projects: [
+      {
+        title: 'Digital eServices platform',
+        summary: 'Integration and deployment of telecom digital services.',
+        details: [
+          'Chat mobile application built in Java and Spring Boot.',
+          'TIBCO and SAP middleware orchestration for customer-facing eServices.',
+        ],
+      },
     ],
-    links: [{ label: 'Jio', href: 'https://www.jio.com' }],
+    href: 'https://www.jio.com',
+    shortLabel: 'Jio',
   },
   {
     id: 'exp-egain',
-    label: 'eGain Communications',
-    kind: 'experience',
-    meta: 'Technical Engineer · Pune · Jun 2016 – Feb 2017',
+    employer: 'eGain Communications',
+    role: 'Technical Engineer',
+    duration: '<1 year',
+    durationYears: 0.7,
     summary: 'Customised multichannel chat & email customer-engagement software.',
-    detail: [
-      'Reviewed and mitigated security vulnerabilities across CBR and Self-Service products.',
+    stack: [],
+    projects: [
+      {
+        title: 'Multichannel customer engagement',
+        summary: 'Customisation of chat and email engagement products.',
+        details: ['Workflow and UI customisations for enterprise customer-engagement deployments.'],
+      },
+      {
+        title: 'Security remediation',
+        summary: 'Vulnerability review across core product surfaces.',
+        details: ['Assessed and mitigated security issues in CBR and Self-Service modules.'],
+      },
     ],
-    links: [{ label: 'eGain', href: 'https://www.egain.com' }],
+    href: 'https://www.egain.com',
+    shortLabel: 'eGain',
   },
   {
     id: 'exp-3i',
-    label: '3i Infotech',
-    kind: 'experience',
-    meta: 'Associate Software Developer · Navi Mumbai · Mar 2014 – Jun 2016',
+    employer: '3i Infotech',
+    role: 'Associate Software Developer',
+    duration: '~2 years',
+    durationYears: 2,
     summary: 'Treasury-management system features for banking clients.',
-    detail: [
-      'Developed treasury-management system features for banking clients.',
-      'Stack: Java, SAP PowerBuilder 10/11, Oracle 10g/11c, PL/SQL.',
+    stack: ['Java', 'SAP PowerBuilder 10/11', 'Oracle 10g/11c', 'PL/SQL'],
+    projects: [
+      {
+        title: 'Treasury management system',
+        summary: 'Banking treasury operations for institutional clients.',
+        details: [
+          'Feature delivery in Java and SAP PowerBuilder for cash and liquidity workflows.',
+          'Oracle PL/SQL procedures, reports, and data migrations on 10g/11c.',
+        ],
+      },
     ],
-    links: [{ label: '3i Infotech', href: 'https://www.3i-infotech.com' }],
+    href: 'https://www.3i-infotech.com',
+    shortLabel: '3i',
   },
+]
 
-  // ── Projects ───────────────────────────────────────────────────────────────
+export const nodes: GraphNode[] = [
   {
     id: 'proj-apx',
     label: 'APX',
     kind: 'project',
-    meta: 'Open source · v0.4.0',
+    meta: 'Open source',
     summary:
       'Local macOS gateway for switching, chaining and measuring AI context proxies without reconfiguring Claude Code.',
     detail: [
@@ -100,19 +210,14 @@ export const nodes: GraphNode[] = [
       'Unified local dashboard tracks request volume, p95 latency, token and cache usage, estimated cost and tool calls.',
       'Ships SHA-verified releases, atomic version switching and rollback, launchd supervision, and privacy-safe metadata-only capture by default.',
     ],
-    links: [
-      { label: 'GitHub', href: 'https://github.com/mkhalid-s/ai-proxy-stack' },
-      {
-        label: 'v0.4.0 release',
-        href: 'https://github.com/mkhalid-s/ai-proxy-stack/releases/tag/v0.4.0',
-      },
-    ],
+    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/ai-proxy-stack' }],
+    stack: ['macOS', 'local gateway', 'Headroom', 'Claude Code'],
   },
   {
     id: 'proj-framefuse',
     label: 'FrameFuseVid',
     kind: 'project',
-    meta: 'Open source · 2026',
+    meta: 'Open source',
     summary:
       'Privacy-first desktop app to combine Zoom recordings into professional videos — PIP, side-by-side & sequential layouts.',
     detail: [
@@ -124,12 +229,13 @@ export const nodes: GraphNode[] = [
       { label: 'Live site', href: 'https://mkhalid-s.github.io/framefusevid/' },
       { label: 'GitHub', href: 'https://github.com/mkhalid-s/framefusevid' },
     ],
+    stack: ['Electron', 'React', 'FFmpeg'],
   },
   {
     id: 'proj-auth-scrape',
     label: 'auth-scrape',
     kind: 'project',
-    meta: 'Open source · 2026',
+    meta: 'Open source',
     summary:
       'Browser-session crawler that turns authorized SSO-protected documentation into LLM-ready Markdown.',
     detail: [
@@ -138,12 +244,13 @@ export const nodes: GraphNode[] = [
       'Backed by roughly 80 unit tests across seven modules, with no browser required for the fast test suite.',
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/auth-scrape' }],
+    stack: ['Playwright', 'Markdown', 'SSO'],
   },
   {
     id: 'proj-sir-saathi',
     label: 'SIR Saathi',
     kind: 'project',
-    meta: 'Civic-tech prototype · 2026',
+    meta: 'Civic-tech prototype',
     summary:
       'Privacy-first PWA that helps people understand India’s Special Intensive Revision process and find a safe next action.',
     detail: [
@@ -152,137 +259,16 @@ export const nodes: GraphNode[] = [
       'Includes 18 test modules, sensitive-data checks, source-provenance validation and a passing CI workflow.',
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/sir-saathi' }],
-  },
-
-  // ── Education ──────────────────────────────────────────────────────────────
-  {
-    id: 'edu-be',
-    label: 'B.E. Computer Science',
-    kind: 'education',
-    meta: 'University of Mumbai · 2009 – 2013 · Distinction',
-    summary:
-      'Bachelor of Engineering, Computer Science & Engineering — graduated with Distinction.',
-  },
-  {
-    id: 'edu-hsc',
-    label: 'HSC — Science',
-    kind: 'education',
-    meta: 'MH Saboo Siddik Technical Jr. College · 2007 – 2009',
-    summary: 'Higher Secondary Certificate, Science (Computer Science).',
-  },
-
-  // ── Idea ───────────────────────────────────────────────────────────────────
-  {
-    id: 'idea-less',
-    label: 'Do more with less',
-    kind: 'idea',
-    summary:
-      'The thread tying it all together: strip the noise, keep the signal. Whether it’s tokens, code or scope — subtract until only what matters remains.',
-  },
-  {
-    id: 'idea-ai',
-    label: 'Applied AI',
-    kind: 'idea',
-    meta: 'RAG · Agents · Evaluation',
-    summary:
-      'LLM features treated as software systems: grounded retrieval, constrained tools, repeatable evaluation, and explicit quality, latency and cost trade-offs.',
+    stack: ['Astro', 'Preact', 'FastAPI', 'PostgreSQL'],
   },
 ]
 
-// ── Skills, certifications & languages (rendered as their own sections) ───────
-export interface SkillGroup {
-  label: string
-  items: string[]
-}
-
-export const skillGroups: SkillGroup[] = [
-  {
-    label: 'AI / LLM',
-    items: ['RAG', 'Agents', 'Evaluation', 'MCP', 'LangChain', 'LangGraph', 'Qdrant', 'ChromaDB'],
-  },
-  {
-    label: 'Languages',
-    items: ['Java', 'Gosu', 'Python', 'TypeScript', 'JavaScript', 'SQL / PL-SQL'],
-  },
-  {
-    label: 'Backend & web',
-    items: ['Spring Boot', 'FastAPI', 'React', 'Vue', 'Angular', 'Electron', 'Astro / Preact'],
-  },
-  {
-    label: 'Guidewire',
-    items: ['PolicyCenter', 'ClaimCenter', 'BillingCenter', 'PCF', 'GPM', 'Integration Framework'],
-  },
-  {
-    label: 'Cloud & delivery',
-    items: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'TeamCity', 'Jenkins', 'GitHub Actions'],
-  },
-  {
-    label: 'Data & observability',
-    items: ['PostgreSQL', 'Oracle', 'Redis', 'SQLite', 'OpenTelemetry', 'Prometheus', 'DataDog'],
-  },
-  { label: 'Integration', items: ['REST', 'SOAP', 'IBM MQ', 'TIBCO', 'Integration Gateway'] },
-]
-
-export const certifications: string[] = [
-  'AWS Solutions Architect – Associate',
-  'AWS Developer – Associate',
-  'AWS Cloud Practitioner',
-  'Microsoft Azure Fundamentals (AZ-900)',
-]
-
-export const spokenLanguages: string[] = ['English — Professional', 'Hindi', 'Marathi']
-
-// ── Impact stats (skim strip) & AI capability pillars ────────────────────────
-export interface Stat {
-  value: string
-  label: string
-}
-export const impactStats: Stat[] = [
-  { value: '12+', label: 'years in production engineering' },
-  { value: '5', label: 'engineers led & mentored' },
-  { value: 'Zero', label: 'downtime during cloud migrations' },
-]
-
-export interface AiPillar {
-  label: string
-  blurb: string
-}
-export const aiPillars: AiPillar[] = [
-  {
-    label: 'Retrieval & grounding',
-    blurb: 'RAG pipelines and vector search over Qdrant and ChromaDB.',
-  },
-  {
-    label: 'Agent workflows',
-    blurb: 'Tool-using agents and multi-step workflows with LangChain and LangGraph.',
-  },
-  {
-    label: 'Evaluation',
-    blurb: 'Output quality measured alongside latency, token use and cost.',
-  },
-  {
-    label: 'Production fit',
-    blurb: 'Clear boundaries, observable failure modes and pragmatic fallbacks.',
-  },
-]
-
-// AI projects/POCs shown in the Applied AI section.
-// `nodeId` references an entry in `nodes` (e.g. the shipped flagship);
-// inline entries are standalone POCs — add yours here.
-export interface AiProject {
-  nodeId?: string
-  title?: string
-  blurb?: string
-  stack?: string
-  outcome?: string
-  href?: string
-}
 export const aiProjects: AiProject[] = [
   {
     title: 'OSS Bug Hunter',
     blurb:
       'Experimental multi-language agentic bug-hunting engine where LLMs propose reproducers and fixes while deterministic harnesses validate every gate.',
-    stack: 'Python · FastAPI · React · MCP · Docker / Podman · SSE',
+    stack: ['Python', 'FastAPI', 'React', 'MCP', 'Docker / Podman', 'SSE'],
     outcome: '5 languages · 18 MCP tools · 322 tests',
     href: 'https://github.com/mkhalid-s/oss-bug-hunter',
   },
@@ -290,7 +276,7 @@ export const aiProjects: AiProject[] = [
     title: 'QueryfyAI',
     blurb:
       'Natural-language analytics assistant that retrieves schema context, generates and validates SQL, executes read-only queries, and returns explanations and charts.',
-    stack: 'FastAPI · Vue · ReAct agents · ChromaDB / Qdrant · OpenTelemetry',
+    stack: ['FastAPI', 'Vue', 'ReAct agents', 'ChromaDB / Qdrant', 'OpenTelemetry'],
     outcome: '19 databases · 15+ LLM providers · 53 test files',
     href: 'https://github.com/mkhalid-s/queryfy-ai',
   },
@@ -298,19 +284,11 @@ export const aiProjects: AiProject[] = [
     title: 'Personal Assistant OS',
     blurb:
       'Local-first assistant control plane with provenance-aware retrieval, durable plans, approval-gated external actions, execution receipts, and privacy filters.',
-    stack: 'Python · SQLite · hybrid retrieval · agent backends · local-first',
+    stack: ['Python', 'SQLite', 'hybrid retrieval', 'agent backends', 'local-first'],
     outcome: '25 test modules · passing CI',
     href: 'https://github.com/mkhalid-s/personal-assistant-os',
   },
 ]
-
-export interface OpenSourceContribution {
-  project: string
-  title: string
-  blurb: string
-  outcome: string
-  links: Link[]
-}
 
 export const openSourceContributions: OpenSourceContribution[] = [
   {

@@ -1,27 +1,36 @@
-import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  aiPillars,
+  createContext,
+  type MouseEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
   aiProjects,
-  certifications,
-  impactStats,
+  careerIntro,
+  experience,
   nodes,
   openSourceContributions,
+  practice,
   profile,
-  skillGroups,
-  spokenLanguages,
 } from './data/profile'
-import type { GraphNode, Link } from './lib/types'
+import type { ExperienceRole, GraphNode, Link } from './lib/types'
 
 const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
-const experienceIds = ['exp-guidewire', 'exp-capgemini', 'exp-jio', 'exp-egain', 'exp-3i']
-const educationIds = ['edu-be', 'edu-hsc']
+const longestTenure = Math.max(...experience.map((role) => role.durationYears))
 
 const navigation = [
-  { href: '#work', label: 'Work' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#expertise', label: 'Expertise' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#work', label: 'Work', key: '1' },
+  { href: '#experiments', label: 'Experiments', key: '2' },
+  { href: '#experience', label: 'Experience', key: '3' },
 ]
+
+const StackFocus = createContext<{
+  focused: string | null
+  setFocused: (value: string | null) => void
+}>({ focused: null, setFocused: () => {} })
 
 function ExternalLink({ link, className = '' }: { link: Link; className?: string }) {
   return (
@@ -36,66 +45,136 @@ function ExternalLink({ link, className = '' }: { link: Link; className?: string
   )
 }
 
-function SectionIntro({
-  eyebrow,
-  title,
-  children,
-}: {
-  eyebrow: string
-  title: string
-  children?: React.ReactNode
-}) {
+function StackChips({ items }: { items: string[] }) {
+  const { focused, setFocused } = useContext(StackFocus)
+  if (items.length === 0) return null
   return (
-    <div className="mb-10 max-w-2xl">
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-4xl font-medium leading-[1.05] tracking-[-0.035em] text-ink sm:text-5xl">
-        {title}
-      </h2>
-      {children && <div className="mt-4 max-w-xl text-base leading-7 text-muted">{children}</div>}
-    </div>
+    <ul className="stack-chips">
+      {items.map((item) => {
+        const on = focused === item
+        return (
+          <li key={item}>
+            <button
+              type="button"
+              className={on ? 'is-on' : undefined}
+              aria-pressed={on}
+              onClick={() => setFocused(on ? null : item)}
+            >
+              {item}
+            </button>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function GatewayMark() {
+  return (
+    <svg className="gateway-mark" viewBox="0 0 360 140" role="img" aria-hidden="true">
+      <text x="18" y="28" className="gateway-label">
+        Claude Code
+      </text>
+      <text x="148" y="28" className="gateway-label">
+        APX
+      </text>
+      <text x="268" y="22" className="gateway-label">
+        Headroom
+      </text>
+      <text x="268" y="58" className="gateway-label">
+        pxpipe
+      </text>
+      <text x="268" y="94" className="gateway-label">
+        Squeezr
+      </text>
+      <text x="268" y="130" className="gateway-label">
+        direct
+      </text>
+      <rect x="12" y="38" width="88" height="44" rx="4" />
+      <rect x="136" y="30" width="88" height="80" rx="4" />
+      <rect x="256" y="8" width="92" height="20" rx="3" />
+      <rect x="256" y="44" width="92" height="20" rx="3" />
+      <rect x="256" y="80" width="92" height="20" rx="3" />
+      <rect x="256" y="116" width="92" height="20" rx="3" />
+      <path d="M100 60 H136" />
+      <path d="M224 50 H256" />
+      <path d="M224 70 H248 V54 H256" />
+      <path d="M224 70 H248 V90 H256" />
+      <path d="M224 90 H248 V126 H256" />
+    </svg>
   )
 }
 
 function ProjectCard({ node, featured = false }: { node: GraphNode; featured?: boolean }) {
-  const stack = node.detail?.find((item) => item.startsWith('Stack:'))?.replace('Stack: ', '')
   return (
-    <article className={`project-card ${featured ? 'project-card--featured' : ''}`}>
-      <div className="flex items-start justify-between gap-4">
+    <article className={featured ? 'project-card project-card--featured crop' : 'project-card'}>
+      <div className="project-card__meta">
         <p className="eyebrow !text-accent">{node.meta}</p>
-        <span aria-hidden="true" className="project-index">
-          0
-          {featured
-            ? '1'
-            : node.label === 'FrameFuseVid'
-              ? '2'
-              : node.label === 'auth-scrape'
-                ? '3'
-                : '4'}
-        </span>
       </div>
-      {featured && (
-        <img
-          src="/images/apx-routing-art.webp"
-          alt="Abstract routing diagram representing the APX local AI proxy gateway"
-          className="project-art"
-          width={1200}
-          height={800}
-          loading="lazy"
-        />
+      {featured && <GatewayMark />}
+      <h3 className="project-card__title">{node.label}</h3>
+      <p className="project-card__summary">{node.summary}</p>
+      {node.detail && (
+        <ul className="project-card__details">
+          {node.detail.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
       )}
-      <h3 className="mt-8 font-display text-3xl font-medium leading-none tracking-[-0.03em] text-ink sm:text-4xl">
-        {node.label}
-      </h3>
-      <p className="mt-4 max-w-lg text-[15px] leading-7 text-ink/75">{node.summary}</p>
-      {stack && <p className="mt-5 font-mono text-xs leading-5 text-muted">{stack}</p>}
+      {node.stack && <StackChips items={node.stack} />}
       {node.links && (
-        <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs font-medium">
+        <div className="project-card__links">
           {node.links.map((link) => (
             <ExternalLink key={link.href} link={link} />
           ))}
         </div>
       )}
     </article>
+  )
+}
+
+function ExperienceItem({ role }: { role: ExperienceRole }) {
+  const width = `${Math.max((role.durationYears / longestTenure) * 100, 12)}%`
+  return (
+    <li className="experience-item">
+      <article id={role.id}>
+        <div className="experience-item__top">
+          <h3 className="experience-item__employer">
+            {role.href ? (
+              <a href={role.href} target="_blank" rel="noreferrer">
+                {role.employer}
+              </a>
+            ) : (
+              role.employer
+            )}
+          </h3>
+          <p className="experience-item__duration">{role.duration}</p>
+        </div>
+        <p className="experience-item__role">{role.role}</p>
+        <div className="tenure-meter" aria-hidden="true">
+          <span style={{ width }} />
+        </div>
+        <p className="experience-item__summary">{role.summary}</p>
+        <StackChips items={role.stack} />
+        {role.projects.length > 0 && (
+          <div className="experience-projects">
+            {role.projects.map((project) => (
+              <article key={project.title} className="experience-project">
+                <h4 className="experience-project__title">{project.title}</h4>
+                <p className="experience-project__summary">{project.summary}</p>
+                {project.details.length > 0 && (
+                  <ul className="experience-project__details">
+                    {project.details.map((detail) => (
+                      <li key={detail}>{detail}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </article>
+    </li>
   )
 }
 
@@ -106,6 +185,8 @@ export default function App() {
   )
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
+  const [focusedStack, setFocusedStack] = useState<string | null>(null)
+  const [readProgress, setReadProgress] = useState(0)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const mobileMenuRef = useRef<HTMLElement>(null)
 
@@ -118,7 +199,7 @@ export default function App() {
       themeColor.name = 'theme-color'
       document.head.append(themeColor)
     }
-    themeColor.content = theme === 'dark' ? '#17181b' : '#f7f6f2'
+    themeColor.content = theme === 'dark' ? '#12100e' : '#f4efe6'
     try {
       localStorage.setItem('theme', theme)
     } catch {
@@ -143,20 +224,49 @@ export default function App() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && menuOpen) {
-        setMenuOpen(false)
-        menuButtonRef.current?.focus()
+      const target = event.target
+      if (
+        target instanceof HTMLElement &&
+        target.closest('input, textarea, select, [contenteditable="true"]')
+      ) {
+        return
       }
+      if (event.key === 'Escape') {
+        if (menuOpen) {
+          setMenuOpen(false)
+          menuButtonRef.current?.focus()
+          return
+        }
+        if (focusedStack) setFocusedStack(null)
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const item = navigation.find((entry) => entry.key === event.key)
+      if (!item) return
+      event.preventDefault()
+      scrollToHash(item.href)
+      history.pushState(null, '', item.href)
+      setActiveSection(item.href.slice(1))
+      closeMenu()
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [menuOpen])
+  }, [menuOpen, focusedStack])
 
   useEffect(() => {
     if (!menuOpen) return
     requestAnimationFrame(() =>
       mobileMenuRef.current?.querySelector<HTMLAnchorElement>('a')?.focus(),
     )
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
   }, [menuOpen])
 
   useEffect(() => {
@@ -185,376 +295,266 @@ export default function App() {
     return () => window.removeEventListener('scroll', updateActiveSection)
   }, [])
 
-  return (
-    <div className="min-h-full bg-paper text-ink">
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
+  useEffect(() => {
+    const updateProgress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setReadProgress(max > 0 ? Math.min(window.scrollY / max, 1) : 0)
+    }
+    updateProgress()
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    window.addEventListener('resize', updateProgress)
+    return () => {
+      window.removeEventListener('scroll', updateProgress)
+      window.removeEventListener('resize', updateProgress)
+    }
+  }, [])
 
-      <header className="site-header">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
-          <a
-            href="#top"
-            className="font-mono text-sm font-semibold tracking-tight"
-            aria-label="Khalid Shaikh — home"
-          >
-            KS<span className="text-accent">.</span>
-          </a>
-          <nav aria-label="Primary navigation" className="hidden items-center gap-7 md:flex">
-            {navigation.map((item) => (
-              <a
-                key={item.href}
-                className={
-                  'nav-link' +
-                  (activeSection === item.href.slice(1)
-                    ? ' text-ink underline decoration-accent decoration-2 underline-offset-[6px]'
-                    : '')
-                }
-                href={item.href}
-                onClick={(event) => scrollToSection(event, item.href)}
-                aria-current={activeSection === item.href.slice(1) ? 'location' : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2">
+  return (
+    <StackFocus.Provider value={{ focused: focusedStack, setFocused: setFocusedStack }}>
+      <div className="site-shell">
+        <div className="read-progress" style={{ transform: `scaleX(${readProgress})` }} />
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
+        <nav className="index-rail" aria-label="Section index">
+          {navigation.map((item) => (
             <a
-              href={profile.cvHref}
-              target="_blank"
-              rel="noreferrer"
-              className="button button--quiet hidden sm:inline-flex"
+              key={item.href}
+              href={item.href}
+              className={activeSection === item.href.slice(1) ? 'is-active' : undefined}
+              onClick={(event) => scrollToSection(event, item.href)}
             >
-              Résumé <span aria-hidden="true">↗</span>
+              <span>{item.key}</span>
+              {item.label}
             </a>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="icon-button"
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            >
-              <span aria-hidden="true">{theme === 'light' ? '◐' : '☀'}</span>
-            </button>
-            <button
-              type="button"
-              ref={menuButtonRef}
-              onClick={() => setMenuOpen((open) => !open)}
-              className="icon-button md:hidden"
-              aria-label="Toggle menu"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-            >
-              <span aria-hidden="true">{menuOpen ? '×' : '≡'}</span>
-            </button>
-          </div>
-        </div>
-        {menuOpen && (
-          <nav
-            id="mobile-menu"
-            ref={mobileMenuRef}
-            aria-label="Mobile navigation"
-            className="border-t border-ink/10 px-5 py-4 md:hidden"
-          >
-            <div className="mx-auto flex max-w-6xl flex-col gap-1">
+          ))}
+        </nav>
+
+        <header className="site-header">
+          <div className="site-header__inner">
+            <a href="#top" className="brand" aria-label="Khalid Shaikh — home">
+              KS<span className="text-accent">.</span>
+              <span className="brand__meta">ledger</span>
+            </a>
+            <nav aria-label="Primary navigation" className="site-nav desktop-only">
               {navigation.map((item) => (
                 <a
                   key={item.href}
-                  className="mobile-nav-link"
-                  onClick={(event) => scrollToSection(event, item.href)}
+                  className={
+                    'nav-link' + (activeSection === item.href.slice(1) ? ' nav-link--active' : '')
+                  }
                   href={item.href}
+                  onClick={(event) => scrollToSection(event, item.href)}
+                  aria-current={activeSection === item.href.slice(1) ? 'location' : undefined}
                 >
                   {item.label}
                 </a>
               ))}
-              <a
-                href={profile.cvHref}
-                onClick={closeMenu}
-                target="_blank"
-                rel="noreferrer"
-                className="mobile-nav-link"
+            </nav>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="icon-button"
+                aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               >
-                Résumé ↗
-              </a>
+                <span aria-hidden="true">{theme === 'light' ? '◐' : '☀'}</span>
+              </button>
+              <button
+                type="button"
+                ref={menuButtonRef}
+                onClick={() => setMenuOpen((open) => !open)}
+                className="icon-button mobile-only"
+                aria-label="Toggle menu"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+              >
+                <span aria-hidden="true">{menuOpen ? '×' : '≡'}</span>
+              </button>
             </div>
-          </nav>
-        )}
-      </header>
+          </div>
+        </header>
 
-      <main id="main-content" tabIndex={-1}>
-        <section id="top" className="hero-shell">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 pb-16 pt-20 sm:px-8 md:grid-cols-[1.35fr_.65fr] md:items-end md:pb-24 md:pt-28">
-            <div>
-              <p className="eyebrow">Khalid Shaikh · Senior software engineer · Bengaluru, India</p>
-              <h1 className="mt-5 max-w-4xl font-display text-[3.6rem] font-medium leading-[0.93] tracking-[-0.055em] text-ink sm:text-7xl lg:text-[6.5rem]">
-                Dependable systems.
-                <br />
-                Thoughtful AI.
-              </h1>
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-ink/75 sm:text-xl">
-                I build insurance platforms, cloud migrations and local-first developer tools with
-                twelve years of production engineering behind them.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
+        {menuOpen && (
+          <div className="mobile-menu-layer mobile-only">
+            <button
+              type="button"
+              className="mobile-menu-backdrop"
+              aria-label="Close menu"
+              onClick={closeMenu}
+            />
+            <nav
+              id="mobile-menu"
+              ref={mobileMenuRef}
+              className="mobile-menu"
+              aria-label="Mobile navigation"
+              role="dialog"
+              aria-modal="true"
+            >
+              <p className="mobile-menu__label">Navigate</p>
+              {navigation.map((item) => (
+                <a
+                  key={item.href}
+                  className={
+                    'mobile-nav-link' +
+                    (activeSection === item.href.slice(1) ? ' mobile-nav-link--active' : '')
+                  }
+                  onClick={(event) => scrollToSection(event, item.href)}
+                  href={item.href}
+                  aria-current={activeSection === item.href.slice(1) ? 'location' : undefined}
+                >
+                  <span className="mobile-nav-link__key">{item.key}</span>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        <main id="main-content" tabIndex={-1}>
+          <section id="top" className="hero-shell">
+            <div className="hero-grid">
+              <div>
+                <p className="eyebrow">
+                  {profile.name} · {profile.title}
+                </p>
+                <h1 className="hero-title">
+                  Insurance platforms.
+                  <br />
+                  Local-first tools.
+                </h1>
+                <p className="hero-copy">
+                  I ship Guidewire Cloud and InsuranceSuite systems, then build the local developer
+                  tools I wish production teams already had.
+                </p>
                 <a
                   href="#work"
                   onClick={(event) => scrollToSection(event, '#work')}
-                  className="button button--primary"
+                  className="hero-link"
                 >
-                  View selected work <span aria-hidden="true">↓</span>
-                </a>
-                <a
-                  href={profile.cvHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--secondary"
-                >
-                  Download résumé <span aria-hidden="true">↗</span>
+                  See work <span aria-hidden="true">↓</span>
                 </a>
               </div>
-            </div>
-            <aside className="border-l border-ink/15 pl-5 md:pb-1 md:pl-7">
-              <p className="eyebrow">Currently</p>
-              <p className="mt-3 font-display text-2xl leading-tight tracking-[-0.025em] text-ink">
-                Leading Guidewire Cloud delivery and exploring practical AI systems.
-              </p>
-              <a
-                href="#contact"
-                onClick={(event) => scrollToSection(event, '#contact')}
-                className="mt-7 inline-flex font-mono text-xs font-medium text-accent underline decoration-accent/40 underline-offset-4"
-              >
-                Start a conversation <span aria-hidden="true">↘</span>
-              </a>
-            </aside>
-          </div>
-          <div className="border-y border-ink/10">
-            <div className="mx-auto grid max-w-6xl divide-y divide-ink/10 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8">
-              {impactStats.map((stat) => (
-                <div key={stat.label} className="py-6 sm:px-7 sm:first:pl-0">
-                  <p className="font-display text-4xl font-medium leading-none tracking-[-0.04em] text-ink">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="work" className="section-shell scroll-mt-20">
-          <SectionIntro eyebrow="Selected work" title="Built for the real world.">
-            Open-source tools and practical products where reliability, privacy and clarity are
-            features—not afterthoughts.
-          </SectionIntro>
-          <div className="grid gap-4 lg:grid-cols-2">
-            {projectIds.map((id, index) => {
-              const node = byId.get(id)
-              return node && <ProjectCard key={id} node={node} featured={index === 0} />
-            })}
-          </div>
-          {openSourceContributions.length > 0 && (
-            <div className="mt-10 border-t border-ink/10 pt-8">
-              <p className="eyebrow">Upstream contribution</p>
-              {openSourceContributions.map((item) => (
-                <article key={item.project} className="mt-4 grid gap-4 md:grid-cols-[.8fr_1.2fr]">
+              <aside className="dossier crop" aria-label="Engineering focus">
+                <p className="dossier__label">Focus</p>
+                <dl className="dossier__list">
                   <div>
-                    <h3 className="font-display text-3xl tracking-[-0.03em]">{item.project}</h3>
-                    <p className="mt-1 font-mono text-xs text-accent">{item.outcome}</p>
+                    <dt>Tenure</dt>
+                    <dd>{careerIntro}</dd>
                   </div>
                   <div>
-                    <p className="text-[15px] leading-7 text-muted">{item.blurb}</p>
-                    <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs">
-                      {item.links.map((link) => (
-                        <ExternalLink key={link.href} link={link} />
-                      ))}
+                    <dt>Now</dt>
+                    <dd>Guidewire Cloud Platform and AI-powered InsuranceSuite features.</dd>
+                  </div>
+                  {practice.map((area) => (
+                    <div key={area.label}>
+                      <dt>{area.label}</dt>
+                      <dd>{area.note}</dd>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  ))}
+                </dl>
+              </aside>
             </div>
-          )}
-        </section>
+          </section>
 
-        <section id="experience" className="section-shell section-shell--tint scroll-mt-20">
-          <div className="section-inner px-5 sm:px-8">
-            <SectionIntro eyebrow="Experience" title="Calm delivery under real constraints.">
-              From insurance platforms to telecom integrations, I turn complex systems into
-              dependable releases.
-            </SectionIntro>
-            <ol className="experience-list">
-              {experienceIds.map((id) => {
+          <section id="work" className="section-shell scroll-mt-20">
+            <div className="section-heading">
+              <p className="eyebrow">01 / Work</p>
+              <h2>Open-source systems with production habits.</h2>
+            </div>
+            <div className="work-grid">
+              {projectIds.map((id, index) => {
                 const node = byId.get(id)
-                if (!node) return null
-                const parts = node.meta?.split(' · ') ?? []
-                const period = parts.pop()
-                return (
-                  <li key={id} className="experience-item">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2">
-                      <h3 className="font-display text-3xl font-medium tracking-[-0.03em]">
-                        {node.label}
-                      </h3>
-                      <p className="font-mono text-xs text-muted">{period}</p>
+                return node && <ProjectCard key={id} node={node} featured={index === 0} />
+              })}
+            </div>
+            {openSourceContributions.length > 0 && (
+              <div className="upstream">
+                <p className="eyebrow">Upstream</p>
+                {openSourceContributions.map((item) => (
+                  <article key={item.project} className="upstream__item">
+                    <div>
+                      <h3>{item.project}</h3>
+                      <p className="upstream__outcome">{item.outcome}</p>
                     </div>
-                    <p className="mt-1 font-mono text-xs text-accent">{parts.join(' · ')}</p>
-                    <p className="mt-4 max-w-2xl text-[15px] leading-7 text-ink/75">
-                      {node.summary}
-                    </p>
-                    <div className="mt-4 grid max-w-3xl gap-2 sm:grid-cols-2">
-                      {node.detail?.slice(0, 2).map((detail) => (
-                        <p
-                          key={detail}
-                          className="border-l border-accent/35 pl-3 text-sm leading-6 text-muted"
-                        >
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
-                    {node.links && (
-                      <div className="mt-4 font-mono text-xs">
-                        {node.links.map((link) => (
+                    <div>
+                      <p>{item.blurb}</p>
+                      <div className="upstream__links">
+                        {item.links.map((link) => (
                           <ExternalLink key={link.href} link={link} />
                         ))}
                       </div>
-                    )}
-                  </li>
-                )
-              })}
-            </ol>
-          </div>
-        </section>
-
-        <section id="expertise" className="section-shell scroll-mt-20">
-          <SectionIntro eyebrow="Applied AI" title="Software discipline for AI systems.">
-            Grounded retrieval, constrained tools and measurable outcomes—applied without the
-            theatre.
-          </SectionIntro>
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2">
-            {aiPillars.map((pillar) => (
-              <article key={pillar.label} className="bg-paper p-6 sm:p-7">
-                <p className="font-display text-2xl tracking-[-0.025em]">{pillar.label}</p>
-                <p className="mt-3 text-sm leading-6 text-muted">{pillar.blurb}</p>
-              </article>
-            ))}
-          </div>
-          <div className="mt-16">
-            <p className="eyebrow">Experiments & shipped work</p>
-            <div className="mt-5 divide-y divide-ink/10 border-y border-ink/10">
-              {aiProjects.map((project) => (
-                <article key={project.title} className="grid gap-4 py-7 md:grid-cols-[.8fr_1.2fr]">
-                  <div>
-                    <h3 className="font-display text-2xl tracking-[-0.025em]">{project.title}</h3>
-                    <p className="mt-2 font-mono text-xs text-accent">{project.outcome}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm leading-6 text-muted">{project.blurb}</p>
-                    <p className="mt-3 font-mono text-[11px] leading-5 text-muted">
-                      {project.stack}
-                    </p>
-                    {project.href && (
-                      <ExternalLink
-                        className="mt-4 font-mono text-xs"
-                        link={{ label: 'View project', href: project.href }}
-                      />
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section-shell section-shell--tint">
-          <div className="section-inner grid gap-14 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr]">
-            <div>
-              <p className="eyebrow">Capabilities</p>
-              <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-[-0.035em]">
-                A broad foundation, used with care.
-              </h2>
-              <p className="mt-5 max-w-md leading-7 text-muted">
-                Tools are useful when they make delivery clearer, safer and easier to evolve.
-              </p>
-            </div>
-            <div className="space-y-5">
-              {skillGroups.map((group) => (
-                <div
-                  key={group.label}
-                  className="grid gap-3 border-t border-ink/10 pt-4 sm:grid-cols-[10rem_1fr]"
-                >
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                    {group.label}
-                  </p>
-                  <p className="text-sm leading-6 text-ink/75">{group.items.join(' · ')}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="contact" className="section-shell scroll-mt-20">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 md:grid-cols-[1.2fr_.8fr] md:items-end">
-            <div>
-              <p className="eyebrow">Let’s work together</p>
-              <h2 className="mt-4 max-w-3xl font-display text-5xl font-medium leading-[.98] tracking-[-0.05em] sm:text-6xl">
-                A difficult platform problem deserves a thoughtful solution.
-              </h2>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
-                For platform engineering, applied AI, or an open-source collaboration, let’s
-                connect.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="https://www.linkedin.com/in/mkhalidshaikh"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--primary"
-                >
-                  Connect on LinkedIn <span aria-hidden="true">↗</span>
-                </a>
-                <a
-                  href={profile.cvHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button button--secondary"
-                >
-                  Download résumé <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-            <aside className="border-l border-ink/15 pl-6">
-              <p className="eyebrow">Elsewhere</p>
-              <div className="mt-4 flex flex-col items-start gap-3 font-mono text-sm">
-                {profile.social.map((link) => (
-                  <ExternalLink key={link.href} link={link} />
+                    </div>
+                  </article>
                 ))}
               </div>
-              <div className="mt-10 border-t border-ink/10 pt-5">
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                  Credentials
-                </p>
-                <p className="mt-3 text-sm leading-6 text-ink/75">{certifications.join(' · ')}</p>
-                <p className="mt-3 text-sm text-muted">Languages: {spokenLanguages.join(' · ')}</p>
-                {educationIds.map((id) => {
-                  const node = byId.get(id)
-                  return (
-                    node && (
-                      <p key={id} className="mt-2 text-sm text-muted">
-                        {node.label} · {node.meta}
-                      </p>
-                    )
-                  )
-                })}
+            )}
+          </section>
+
+          <section id="experiments" className="section-shell section-shell--tint scroll-mt-20">
+            <div className="section-inner">
+              <div className="section-heading">
+                <p className="eyebrow">02 / Experiments</p>
+                <h2>Applied AI treated as software.</h2>
               </div>
-            </aside>
+              <div className="experiment-grid">
+                {aiProjects.map((project) => (
+                  <article key={project.title} className="experiment-card">
+                    <h3>{project.title}</h3>
+                    <p className="experiment-card__outcome">{project.outcome}</p>
+                    <p>{project.blurb}</p>
+                    <StackChips items={project.stack} />
+                    <ExternalLink link={{ label: 'View project', href: project.href }} />
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="experience" className="section-shell scroll-mt-20">
+            <div className="section-heading">
+              <p className="eyebrow">03 / Experience</p>
+              <h2>Roles, tenure, and the stacks that shipped.</h2>
+              <p className="section-heading__note">{careerIntro}</p>
+            </div>
+            <nav
+              className="career-span"
+              aria-label="Relative tenure across five roles, newest first"
+            >
+              {experience.map((role) => (
+                <a
+                  key={role.id}
+                  href={`#${role.id}`}
+                  className="career-span__seg"
+                  style={{ flexGrow: role.durationYears }}
+                  title={`${role.employer} · ${role.duration}`}
+                >
+                  <span>{role.shortLabel}</span>
+                  <small>{role.duration}</small>
+                </a>
+              ))}
+            </nav>
+            <ol className="experience-list">
+              {experience.map((role) => (
+                <ExperienceItem key={role.id} role={role} />
+              ))}
+            </ol>
+          </section>
+        </main>
+        <footer className="site-footer">
+          <span>
+            © {new Date().getFullYear()} {profile.name}
+          </span>
+          <div className="site-footer__links">
+            {profile.social.map((link) => (
+              <ExternalLink key={link.href} link={link} />
+            ))}
           </div>
-        </section>
-      </main>
-      <footer className="border-t border-ink/10">
-        <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 px-5 py-6 font-mono text-[11px] text-muted sm:px-8">
-          <span>© {new Date().getFullYear()} Khalid Shaikh</span>
-          <span>Built with clarity, not clutter.</span>
-        </div>
-      </footer>
-    </div>
+          <p className="site-footer__hint">
+            Keys 1–3 jump sections. Click a stack chip to highlight it everywhere.
+          </p>
+        </footer>
+      </div>
+    </StackFocus.Provider>
   )
 }
