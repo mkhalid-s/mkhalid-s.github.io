@@ -308,4 +308,25 @@ export const openSourceContributions: OpenSourceContribution[] = [
       },
     ],
   },
+  {
+    project: 'pxpipe',
+    title: 'Proxy correctness, security posture, and CI hardening',
+    blurb:
+      'Contributed to the context-to-image Anthropic proxy: preserve Claude Code OAuth identity during compression, publish a vulnerability disclosure policy and threat model with CI audit gates, and pin trusted supply-chain inputs in release workflows.',
+    outcome: '3 merged PRs · OAuth compression fix · security & CI hardening',
+    links: [
+      {
+        label: 'OAuth identity fix · PR #99',
+        href: 'https://github.com/teamchong/pxpipe/pull/99',
+      },
+      {
+        label: 'Security model · PR #164',
+        href: 'https://github.com/teamchong/pxpipe/pull/164',
+      },
+      {
+        label: 'CI supply chain · PR #169',
+        href: 'https://github.com/teamchong/pxpipe/pull/169',
+      },
+    ],
+  },
 ]
