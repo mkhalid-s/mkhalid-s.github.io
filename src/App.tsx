@@ -18,7 +18,7 @@ import {
 } from './data/profile'
 import type { ExperienceRole, GraphNode, Link } from './lib/types'
 
-const projectIds = ['proj-apx', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
+const projectIds = ['proj-leanrelay', 'proj-framefuse', 'proj-auth-scrape', 'proj-sir-saathi']
 const longestTenure = Math.max(...experience.map((role) => role.durationYears))
 
 const navigation = [
@@ -76,7 +76,7 @@ function GatewayMark() {
         Claude Code
       </text>
       <text x="148" y="28" className="gateway-label">
-        APX
+        apx
       </text>
       <text x="268" y="22" className="gateway-label">
         Headroom

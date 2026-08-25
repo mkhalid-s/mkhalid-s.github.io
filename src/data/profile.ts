@@ -32,7 +32,7 @@ export const practice: PracticeArea[] = [
   },
   {
     label: 'Local-first tools',
-    note: 'APX, FrameFuseVid, and a privacy-first personal assistant control plane.',
+    note: 'LeanRelay, FrameFuseVid, and a privacy-first personal assistant control plane.',
   },
   {
     label: 'Applied AI',
@@ -198,19 +198,19 @@ export const experience: ExperienceRole[] = [
 
 export const nodes: GraphNode[] = [
   {
-    id: 'proj-apx',
-    label: 'APX',
+    id: 'proj-leanrelay',
+    label: 'LeanRelay',
     kind: 'project',
     meta: 'Open source',
     summary:
-      'Local macOS gateway for switching, chaining and measuring AI context proxies without reconfiguring Claude Code.',
+      'Cross-platform local gateway (`apx` CLI) for switching, chaining, and measuring AI context proxies without reconfiguring Claude Code.',
     detail: [
-      'Routes a stable local endpoint through Headroom, pxpipe, Squeezr or direct mode, with live chain switching and health checks.',
-      'Unified local dashboard tracks request volume, p95 latency, token and cache usage, estimated cost and tool calls.',
-      'Ships SHA-verified releases, atomic version switching and rollback, launchd supervision, and privacy-safe metadata-only capture by default.',
+      'Routes a stable Anthropic-compatible endpoint through Headroom, pxpipe, Squeezr, direct mode, or ordered custom chains, with live switching and health checks.',
+      'Unified local dashboard tracks request volume, p95 latency, token and cache usage, estimated cost, and tool calls across supported optimizers.',
+      'Ships versioned release installs, atomic switching and rollback, cross-platform service supervision, and privacy-safe metadata-only capture by default.',
     ],
-    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/ai-proxy-stack' }],
-    stack: ['macOS', 'local gateway', 'Headroom', 'Claude Code'],
+    links: [{ label: 'GitHub', href: 'https://github.com/mkhalid-s/lean-relay' }],
+    stack: ['apx CLI', 'local gateway', 'Headroom', 'Claude Code'],
   },
   {
     id: 'proj-framefuse',
