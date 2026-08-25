@@ -13,7 +13,7 @@ local-first open-source tools.
 - An experience timeline with roles, approximate tenure, and tech stacks — without cities or calendar dates.
 - Responsive light and dark themes with reduced-motion support.
 
-The public site is not a résumé. A full CV is not hosted here.
+The site and repository intentionally exclude résumé PDFs, email addresses, and other private documents. Content is curated in [`src/data/profile.ts`](src/data/profile.ts).
 
 ## Stack
 

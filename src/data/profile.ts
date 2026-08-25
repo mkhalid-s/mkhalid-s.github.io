@@ -7,9 +7,8 @@ import type {
   Profile,
 } from '../lib/types'
 
-// Public site content. This is not a CV mirror: no cities, month-year dates,
-// email, or résumé PDF. Experience tenures are approximate durations derived
-// from the 2026 CV (Mar 2014 – present).
+// Public site content. No cities, month-year dates, email, or résumé files.
+// Experience tenures are approximate durations, not calendar dates.
 
 export const profile: Profile = {
   name: 'Khalid Shaikh',
