@@ -23,7 +23,9 @@ describe('App', () => {
   it('renders selected work and does not pin a release tag', () => {
     const { container } = render(<App />)
     expect(screen.getByRole('heading', { name: 'LeanRelay' })).toBeInTheDocument()
-    expect(container.querySelector('a[href="https://github.com/mkhalid-s/lean-relay"]')).toBeTruthy()
+    expect(
+      container.querySelector('a[href="https://github.com/mkhalid-s/lean-relay"]'),
+    ).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'FrameFuseVid' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /v0\.4\.0 release/i })).not.toBeInTheDocument()
   })
